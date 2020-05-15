@@ -44,8 +44,7 @@ namespace EasyAbp.PaymentService.WeChatPay
             }
 
             var payeeAccount = payeeConfigurations.GetOrDefault("PayeeAccount") as string ??
-                               await _settingProvider.GetOrNullAsync(WeChatPaySettings.WeChatPayPaymentMethod
-                                   .MchId);
+                               await _settingProvider.GetOrNullAsync(WeChatPaySettings.MchId);
             
             payment.SetPayeeAccount(payeeAccount);
             

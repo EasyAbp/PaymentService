@@ -20,15 +20,15 @@ namespace EasyAbp.PaymentService.WeChatPay.Settings
              */
             
             context.Add(
-                new SettingDefinition(WeChatPaySettings.WeChatPayPaymentMethod.MchId),
-                new SettingDefinition(WeChatPaySettings.WeChatPayPaymentMethod.ApiKey),
-                new SettingDefinition(WeChatPaySettings.WeChatPayPaymentMethod.IsSandBox, "false"),
-                new SettingDefinition(WeChatPaySettings.WeChatPayPaymentMethod.NotifyUrl,
+                new SettingDefinition(WeChatPaySettings.MchId),
+                new SettingDefinition(WeChatPaySettings.ApiKey),
+                new SettingDefinition(WeChatPaySettings.IsSandBox, "false"),
+                new SettingDefinition(WeChatPaySettings.NotifyUrl,
                     _configuration["App:SelfUrl"]?.EnsureEndsWith('/') + "WeChatPay/Notify"),
-                new SettingDefinition(WeChatPaySettings.WeChatPayPaymentMethod.RefundNotifyUrl,
+                new SettingDefinition(WeChatPaySettings.RefundNotifyUrl,
                     _configuration["App:SelfUrl"]?.EnsureEndsWith('/') + "WeChatPay/RefundNotify"),
-                new SettingDefinition(WeChatPaySettings.WeChatPayPaymentMethod.CertificatePath),
-                new SettingDefinition(WeChatPaySettings.WeChatPayPaymentMethod.CertificateSecret)
+                new SettingDefinition(WeChatPaySettings.CertificatePath),
+                new SettingDefinition(WeChatPaySettings.CertificateSecret)
             );
         }
     }

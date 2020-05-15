@@ -19,13 +19,13 @@ namespace EasyAbp.PaymentService.WeChatPay
             var settingProvider = context.ServiceProvider.GetRequiredService<ISettingProvider>();
             context.Options = new AbpWeChatPayOptions
             {
-                ApiKey = await settingProvider.GetOrNullAsync(WeChatPaySettings.WeChatPayPaymentMethod.ApiKey),
-                MchId = await settingProvider.GetOrNullAsync(WeChatPaySettings.WeChatPayPaymentMethod.MchId),
-                IsSandBox = Convert.ToBoolean(await settingProvider.GetOrNullAsync(WeChatPaySettings.WeChatPayPaymentMethod.IsSandBox)),
-                NotifyUrl = await settingProvider.GetOrNullAsync(WeChatPaySettings.WeChatPayPaymentMethod.NotifyUrl),
-                RefundNotifyUrl = await settingProvider.GetOrNullAsync(WeChatPaySettings.WeChatPayPaymentMethod.RefundNotifyUrl),
-                CertificatePath = await settingProvider.GetOrNullAsync(WeChatPaySettings.WeChatPayPaymentMethod.CertificatePath),
-                CertificateSecret = await settingProvider.GetOrNullAsync(WeChatPaySettings.WeChatPayPaymentMethod.CertificateSecret)
+                ApiKey = await settingProvider.GetOrNullAsync(WeChatPaySettings.ApiKey),
+                MchId = await settingProvider.GetOrNullAsync(WeChatPaySettings.MchId),
+                IsSandBox = Convert.ToBoolean(await settingProvider.GetOrNullAsync(WeChatPaySettings.IsSandBox)),
+                NotifyUrl = await settingProvider.GetOrNullAsync(WeChatPaySettings.NotifyUrl),
+                RefundNotifyUrl = await settingProvider.GetOrNullAsync(WeChatPaySettings.RefundNotifyUrl),
+                CertificatePath = await settingProvider.GetOrNullAsync(WeChatPaySettings.CertificatePath),
+                CertificateSecret = await settingProvider.GetOrNullAsync(WeChatPaySettings.CertificateSecret)
             };
         }
     }
