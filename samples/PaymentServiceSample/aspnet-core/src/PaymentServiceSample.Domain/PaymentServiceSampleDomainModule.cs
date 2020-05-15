@@ -44,6 +44,7 @@ namespace PaymentServiceSample
         {
             var resolver = context.ServiceProvider.GetService<IPaymentServiceResolver>();
 
+            resolver.TryRegisterProvider(FreePaymentServiceProvider.PaymentMethod, typeof(FreePaymentServiceProvider));
             resolver.TryRegisterProvider(WeChatPayPaymentServiceProvider.PaymentMethod, typeof(WeChatPayPaymentServiceProvider));
         }
 
