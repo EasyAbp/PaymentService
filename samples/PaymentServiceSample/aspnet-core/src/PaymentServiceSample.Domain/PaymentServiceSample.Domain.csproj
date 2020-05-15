@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\common.props" />
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>PaymentServiceSample</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\src\EasyAbp.PaymentService.Domain\EasyAbp.PaymentService.Domain.csproj" />
+    <ProjectReference Include="..\..\..\..\..\providers\EasyAbp.PaymentService.WeChatPay\src\EasyAbp.PaymentService.WeChatPay.Domain\EasyAbp.PaymentService.WeChatPay.Domain.csproj" />
+    <ProjectReference Include="..\PaymentServiceSample.Domain.Shared\PaymentServiceSample.Domain.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Volo.Abp.Identity.Domain" Version="2.7.0" />
+    <PackageReference Include="Volo.Abp.PermissionManagement.Domain.Identity" Version="2.7.0" />
+    <PackageReference Include="Volo.Abp.IdentityServer.Domain" Version="2.7.0" />
+    <PackageReference Include="Volo.Abp.PermissionManagement.Domain.IdentityServer" Version="2.7.0" />
+    <PackageReference Include="Volo.Abp.BackgroundJobs.Domain" Version="2.7.0" />
+    <PackageReference Include="Volo.Abp.AuditLogging.Domain" Version="2.7.0" />
+    <PackageReference Include="Volo.Abp.TenantManagement.Domain" Version="2.7.0" />
+    <PackageReference Include="Volo.Abp.FeatureManagement.Domain" Version="2.7.0" />
+    <PackageReference Include="Volo.Abp.SettingManagement.Domain" Version="2.7.0" />
+  </ItemGroup>
+
+</Project>

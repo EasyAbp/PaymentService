@@ -1,0 +1,46 @@
+@page
+@using Volo.Abp.AspNetCore.Mvc.UI.Layout
+@inherits EasyAbp.PaymentService.Web.Pages.PaymentServicePage
+@model EasyAbp.PaymentService.Web.Pages.PaymentService.Refunds.Refund.IndexModel
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.Title = L["Refund"].Value;
+    PageLayout.Content.BreadCrumb.Add(L["Menu:Refund"].Value);
+    PageLayout.Content.MenuItemName = "Refund";
+}
+
+@section scripts
+{
+    <abp-script src="/Pages/PaymentService/Refunds/Refund/index.js" />
+}
+@section styles
+{
+    <abp-style src="/Pages/PaymentService/Refunds/Refund/index.css"/>
+}
+
+<abp-card>
+    <abp-card-header>
+        <abp-row>
+            <abp-column size-md="_6">
+                <abp-card-title>@L["Refund"]</abp-card-title>
+            </abp-column>
+        </abp-row>
+    </abp-card-header>
+    <abp-card-body>
+        <abp-table striped-rows="true" id="RefundTable" class="nowrap">
+            <thead>
+            <tr>
+                <th>@L["Actions"]</th>
+                <th>@L["RefundPaymentId"]</th>
+                <th>@L["RefundPaymentItemId"]</th>
+                <th>@L["RefundRefundPaymentMethod"]</th>
+                <th>@L["RefundExternalTradingCode"]</th>
+                <th>@L["RefundCurrency"]</th>
+                <th>@L["RefundRefundAmount"]</th>
+                <th>@L["RefundCustomerRemark"]</th>
+                <th>@L["RefundStaffRemark"]</th>
+            </tr>
+            </thead>
+        </abp-table>
+    </abp-card-body>
+</abp-card>
