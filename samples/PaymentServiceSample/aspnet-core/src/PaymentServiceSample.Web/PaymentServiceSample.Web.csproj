@@ -41,8 +41,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\src\EasyAbp.PaymentService.Web\EasyAbp.PaymentService.Web.csproj" />
-    <ProjectReference Include="..\..\..\..\..\providers\EasyAbp.PaymentService.WeChatPay\src\EasyAbp.PaymentService.WeChatPay.Web\EasyAbp.PaymentService.WeChatPay.Web.csproj" />
+    <ProjectReference Include="..\..\..\..\..\modules\EasyAbp.PaymentService\src\EasyAbp.PaymentService.Web\EasyAbp.PaymentService.Web.csproj" />
+    <ProjectReference Include="..\..\..\..\..\modules\EasyAbp.PaymentService.WeChatPay\src\EasyAbp.PaymentService.WeChatPay.Web\EasyAbp.PaymentService.WeChatPay.Web.csproj" />
     <ProjectReference Include="..\PaymentServiceSample.Application\PaymentServiceSample.Application.csproj" />
     <ProjectReference Include="..\PaymentServiceSample.HttpApi\PaymentServiceSample.HttpApi.csproj" />
     <ProjectReference Include="..\PaymentServiceSample.EntityFrameworkCore.DbMigrations\PaymentServiceSample.EntityFrameworkCore.DbMigrations.csproj" />

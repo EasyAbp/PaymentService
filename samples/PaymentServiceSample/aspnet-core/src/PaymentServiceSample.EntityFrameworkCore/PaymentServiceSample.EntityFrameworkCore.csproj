@@ -8,8 +8,8 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\src\EasyAbp.PaymentService.EntityFrameworkCore\EasyAbp.PaymentService.EntityFrameworkCore.csproj" />
-    <ProjectReference Include="..\..\..\..\..\providers\EasyAbp.PaymentService.WeChatPay\src\EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore\EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\..\..\..\..\modules\EasyAbp.PaymentService\src\EasyAbp.PaymentService.EntityFrameworkCore\EasyAbp.PaymentService.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\..\..\..\..\modules\EasyAbp.PaymentService.WeChatPay\src\EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore\EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\PaymentServiceSample.Domain\PaymentServiceSample.Domain.csproj" />
     <PackageReference Include="Volo.Abp.EntityFrameworkCore.SqlServer" Version="2.7.0" />
     <PackageReference Include="Volo.Abp.PermissionManagement.EntityFrameworkCore" Version="2.7.0" />

@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\src\EasyAbp.PaymentService.HttpApi.Client\EasyAbp.PaymentService.HttpApi.Client.csproj" />
-    <ProjectReference Include="..\..\..\..\..\providers\EasyAbp.PaymentService.WeChatPay\src\EasyAbp.PaymentService.WeChatPay.HttpApi.Client\EasyAbp.PaymentService.WeChatPay.HttpApi.Client.csproj" />
+    <ProjectReference Include="..\..\..\..\..\modules\EasyAbp.PaymentService\src\EasyAbp.PaymentService.HttpApi.Client\EasyAbp.PaymentService.HttpApi.Client.csproj" />
+    <ProjectReference Include="..\..\..\..\..\modules\EasyAbp.PaymentService.WeChatPay\src\EasyAbp.PaymentService.WeChatPay.HttpApi.Client\EasyAbp.PaymentService.WeChatPay.HttpApi.Client.csproj" />
     <ProjectReference Include="..\PaymentServiceSample.Application.Contracts\PaymentServiceSample.Application.Contracts.csproj" />
   </ItemGroup>
 
