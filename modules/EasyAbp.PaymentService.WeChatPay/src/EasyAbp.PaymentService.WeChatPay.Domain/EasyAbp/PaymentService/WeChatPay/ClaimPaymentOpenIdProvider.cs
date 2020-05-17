@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Volo.Abp.Authorization;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Users;
 
@@ -21,8 +22,8 @@ namespace EasyAbp.PaymentService.WeChatPay
         public Task<string> FindUserOpenIdAsync(Guid userId)
         {
             return Task.FromResult(userId == _currentUser.Id
-                ? _currentUser.FindClaim(OpenIdClaimType).Value
-                : throw new UserOpenIdNotFoundException(userId));
+                ? _currentUser.FindClaim(OpenIdClaimType)?.Value ?? throw new UserOpenIdNotFoundException(userId)
+                : throw new AbpAuthorizationException("Should ensure current user is the order owner."));
         }
     }
 }
