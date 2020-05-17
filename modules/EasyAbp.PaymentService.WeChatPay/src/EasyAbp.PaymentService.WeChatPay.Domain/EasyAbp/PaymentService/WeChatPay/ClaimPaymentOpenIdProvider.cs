@@ -22,7 +22,7 @@ namespace EasyAbp.PaymentService.WeChatPay
         {
             return Task.FromResult(userId == _currentUser.Id
                 ? _currentUser.FindClaim(OpenIdClaimType).Value
-                : throw new NotSupportedException());
+                : throw new UserOpenIdNotFoundException(userId));
         }
     }
 }
