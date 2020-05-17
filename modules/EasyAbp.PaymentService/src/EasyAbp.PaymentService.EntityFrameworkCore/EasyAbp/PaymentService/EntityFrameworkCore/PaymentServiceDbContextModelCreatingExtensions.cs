@@ -44,7 +44,7 @@ namespace EasyAbp.PaymentService.EntityFrameworkCore
 
             builder.Entity<Payment>(b =>
             {
-                b.ToTable(options.TablePrefix + "PaymentService", options.Schema);
+                b.ToTable(options.TablePrefix + "Payments", options.Schema);
                 b.ConfigureByConvention();
                 /* Configure more properties here */
                 b.Property(x => x.ActualPaymentAmount).HasColumnType("decimal(18,6)");
