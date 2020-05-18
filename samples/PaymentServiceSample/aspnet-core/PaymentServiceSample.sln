@@ -103,8 +103,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.WeCh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore.Tests", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\test\EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore.Tests\EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore.Tests.csproj", "{00F84DCE-C9B3-4A1F-BBC1-19D26B2F4214}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.WeChatPay.HttpApi.Client.ConsoleTestApp", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\test\EasyAbp.PaymentService.WeChatPay.HttpApi.Client.ConsoleTestApp\EasyAbp.PaymentService.WeChatPay.HttpApi.Client.ConsoleTestApp.csproj", "{F323CD51-10C2-4B0C-8C50-EE5707D55066}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.WeChatPay.MongoDB.Tests", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\test\EasyAbp.PaymentService.WeChatPay.MongoDB.Tests\EasyAbp.PaymentService.WeChatPay.MongoDB.Tests.csproj", "{5474ECC0-44E4-482C-805D-F04A576C58FF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.WeChatPay.TestBase", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\test\EasyAbp.PaymentService.WeChatPay.TestBase\EasyAbp.PaymentService.WeChatPay.TestBase.csproj", "{43DAF4F0-7A4D-4554-965A-40BD438173EE}"
@@ -112,6 +110,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\src\EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore\EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore.csproj", "{6218522A-21D8-466A-B46C-7E5461FC3E62}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.WeChatPay.HttpApi", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\src\EasyAbp.PaymentService.WeChatPay.HttpApi\EasyAbp.PaymentService.WeChatPay.HttpApi.csproj", "{96E610FF-3936-454A-A8F9-AA9F7E0B9530}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentServiceSample.HttpApi.Client.ConsoleTestApp", "test\PaymentServiceSample.HttpApi.Client.ConsoleTestApp\PaymentServiceSample.HttpApi.Client.ConsoleTestApp.csproj", "{8094BA4B-5CBE-463A-8CA4-68255BA8575E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -283,10 +283,6 @@ Global
 		{00F84DCE-C9B3-4A1F-BBC1-19D26B2F4214}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00F84DCE-C9B3-4A1F-BBC1-19D26B2F4214}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00F84DCE-C9B3-4A1F-BBC1-19D26B2F4214}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F323CD51-10C2-4B0C-8C50-EE5707D55066}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F323CD51-10C2-4B0C-8C50-EE5707D55066}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F323CD51-10C2-4B0C-8C50-EE5707D55066}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F323CD51-10C2-4B0C-8C50-EE5707D55066}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5474ECC0-44E4-482C-805D-F04A576C58FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5474ECC0-44E4-482C-805D-F04A576C58FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5474ECC0-44E4-482C-805D-F04A576C58FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -303,6 +299,10 @@ Global
 		{96E610FF-3936-454A-A8F9-AA9F7E0B9530}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96E610FF-3936-454A-A8F9-AA9F7E0B9530}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96E610FF-3936-454A-A8F9-AA9F7E0B9530}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8094BA4B-5CBE-463A-8CA4-68255BA8575E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8094BA4B-5CBE-463A-8CA4-68255BA8575E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8094BA4B-5CBE-463A-8CA4-68255BA8575E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8094BA4B-5CBE-463A-8CA4-68255BA8575E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -355,11 +355,11 @@ Global
 		{94258B3A-A1F0-4B9F-90EF-3602825D775E} = {26EC0A00-3EA3-4C73-A3D9-21BC7AF4C206}
 		{19597EEE-C5BC-4EB7-8E19-79983B2ACF93} = {26EC0A00-3EA3-4C73-A3D9-21BC7AF4C206}
 		{00F84DCE-C9B3-4A1F-BBC1-19D26B2F4214} = {26EC0A00-3EA3-4C73-A3D9-21BC7AF4C206}
-		{F323CD51-10C2-4B0C-8C50-EE5707D55066} = {26EC0A00-3EA3-4C73-A3D9-21BC7AF4C206}
 		{5474ECC0-44E4-482C-805D-F04A576C58FF} = {26EC0A00-3EA3-4C73-A3D9-21BC7AF4C206}
 		{43DAF4F0-7A4D-4554-965A-40BD438173EE} = {26EC0A00-3EA3-4C73-A3D9-21BC7AF4C206}
 		{6218522A-21D8-466A-B46C-7E5461FC3E62} = {4D2E014A-433C-4557-8BD5-AE0788A5D5CD}
 		{96E610FF-3936-454A-A8F9-AA9F7E0B9530} = {4D2E014A-433C-4557-8BD5-AE0788A5D5CD}
+		{8094BA4B-5CBE-463A-8CA4-68255BA8575E} = {26EC0A00-3EA3-4C73-A3D9-21BC7AF4C206}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28315BFD-90E7-4E14-A2EA-F3D23AF4126F}
