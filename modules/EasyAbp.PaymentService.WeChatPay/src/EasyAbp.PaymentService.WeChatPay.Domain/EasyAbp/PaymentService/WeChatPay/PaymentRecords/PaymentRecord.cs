@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.MultiTenancy;
 
-namespace EasyAbp.PaymentService.WeChatPay.Records
+namespace EasyAbp.PaymentService.WeChatPay.PaymentRecords
 {
     public class PaymentRecord : CreationAuditedAggregateRoot<Guid>, IMultiTenant
     {
