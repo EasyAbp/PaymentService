@@ -31,11 +31,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentServiceSample.HttpAp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentServiceSample.EntityFrameworkCore.Tests", "test\PaymentServiceSample.EntityFrameworkCore.Tests\PaymentServiceSample.EntityFrameworkCore.Tests.csproj", "{1FE30EB9-74A9-47F5-A9F6-7B1FAB672D81}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentServiceSample.HttpApi.Client.ConsoleTestApp", "test\PaymentServiceSample.HttpApi.Client.ConsoleTestApp\PaymentServiceSample.HttpApi.Client.ConsoleTestApp.csproj", "{8094BA4B-5CBE-463A-8CA4-68255BA8575E}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentServiceSample.TestBase", "test\PaymentServiceSample.TestBase\PaymentServiceSample.TestBase.csproj", "{91853F21-9CD9-4132-BC29-A7D5D84FFFE7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentServiceSample.Domain.Tests", "test\PaymentServiceSample.Domain.Tests\PaymentServiceSample.Domain.Tests.csproj", "{E512F4D9-9375-480F-A2F6-A46509F9D824}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentServiceSample.HttpApi.Client.ConsoleTestApp", "test\PaymentServiceSample.HttpApi.Client.ConsoleTestApp\PaymentServiceSample.HttpApi.Client.ConsoleTestApp.csproj", "{EF480016-9127-4916-8735-D2466BDBC582}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentServiceSample.DbMigrator", "src\PaymentServiceSample.DbMigrator\PaymentServiceSample.DbMigrator.csproj", "{AA94D832-1CCC-4715-95A9-A483F23A1A5D}"
 EndProject
@@ -47,35 +47,35 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C3616716-481
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{D6291390-A21C-406D-8C9B-13F31B2636C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.Application", "..\..\..\modules\EasyAbp.PaymentService\src\EasyAbp.PaymentService.Application\EasyAbp.PaymentService.Application.csproj", "{5EE6FDA9-F8C0-4DEB-ACF3-23C08B8711A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAbp.PaymentService.Application", "..\..\..\modules\EasyAbp.PaymentService\src\EasyAbp.PaymentService.Application\EasyAbp.PaymentService.Application.csproj", "{5EE6FDA9-F8C0-4DEB-ACF3-23C08B8711A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.Application.Contracts", "..\..\..\modules\EasyAbp.PaymentService\src\EasyAbp.PaymentService.Application.Contracts\EasyAbp.PaymentService.Application.Contracts.csproj", "{E6B7BEDC-BDBF-45B8-8FB9-25DFB1315B0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAbp.PaymentService.Application.Contracts", "..\..\..\modules\EasyAbp.PaymentService\src\EasyAbp.PaymentService.Application.Contracts\EasyAbp.PaymentService.Application.Contracts.csproj", "{E6B7BEDC-BDBF-45B8-8FB9-25DFB1315B0C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.Domain", "..\..\..\modules\EasyAbp.PaymentService\src\EasyAbp.PaymentService.Domain\EasyAbp.PaymentService.Domain.csproj", "{81D9CEC4-C972-4460-A3A8-6480C8EBCD25}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAbp.PaymentService.Domain", "..\..\..\modules\EasyAbp.PaymentService\src\EasyAbp.PaymentService.Domain\EasyAbp.PaymentService.Domain.csproj", "{81D9CEC4-C972-4460-A3A8-6480C8EBCD25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.Domain.Shared", "..\..\..\modules\EasyAbp.PaymentService\src\EasyAbp.PaymentService.Domain.Shared\EasyAbp.PaymentService.Domain.Shared.csproj", "{4C2E56C8-9DA2-4012-82C3-1B7C0F7CB966}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAbp.PaymentService.Domain.Shared", "..\..\..\modules\EasyAbp.PaymentService\src\EasyAbp.PaymentService.Domain.Shared\EasyAbp.PaymentService.Domain.Shared.csproj", "{4C2E56C8-9DA2-4012-82C3-1B7C0F7CB966}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.EntityFrameworkCore", "..\..\..\modules\EasyAbp.PaymentService\src\EasyAbp.PaymentService.EntityFrameworkCore\EasyAbp.PaymentService.EntityFrameworkCore.csproj", "{5A3FF212-1457-4A24-9144-08FF8EC4B3F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAbp.PaymentService.EntityFrameworkCore", "..\..\..\modules\EasyAbp.PaymentService\src\EasyAbp.PaymentService.EntityFrameworkCore\EasyAbp.PaymentService.EntityFrameworkCore.csproj", "{5A3FF212-1457-4A24-9144-08FF8EC4B3F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.HttpApi", "..\..\..\modules\EasyAbp.PaymentService\src\EasyAbp.PaymentService.HttpApi\EasyAbp.PaymentService.HttpApi.csproj", "{AE34C2B6-FA4F-4580-8938-8000748FFDE0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAbp.PaymentService.HttpApi", "..\..\..\modules\EasyAbp.PaymentService\src\EasyAbp.PaymentService.HttpApi\EasyAbp.PaymentService.HttpApi.csproj", "{AE34C2B6-FA4F-4580-8938-8000748FFDE0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.HttpApi.Client", "..\..\..\modules\EasyAbp.PaymentService\src\EasyAbp.PaymentService.HttpApi.Client\EasyAbp.PaymentService.HttpApi.Client.csproj", "{23123742-D736-4B32-8F21-39E3FD621067}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAbp.PaymentService.HttpApi.Client", "..\..\..\modules\EasyAbp.PaymentService\src\EasyAbp.PaymentService.HttpApi.Client\EasyAbp.PaymentService.HttpApi.Client.csproj", "{23123742-D736-4B32-8F21-39E3FD621067}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.MongoDB", "..\..\..\modules\EasyAbp.PaymentService\src\EasyAbp.PaymentService.MongoDB\EasyAbp.PaymentService.MongoDB.csproj", "{CF376DDA-964F-4728-B495-990748662A71}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAbp.PaymentService.MongoDB", "..\..\..\modules\EasyAbp.PaymentService\src\EasyAbp.PaymentService.MongoDB\EasyAbp.PaymentService.MongoDB.csproj", "{CF376DDA-964F-4728-B495-990748662A71}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.Web", "..\..\..\modules\EasyAbp.PaymentService\src\EasyAbp.PaymentService.Web\EasyAbp.PaymentService.Web.csproj", "{4D498509-D9B6-428A-8E54-72A012F0E668}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAbp.PaymentService.Web", "..\..\..\modules\EasyAbp.PaymentService\src\EasyAbp.PaymentService.Web\EasyAbp.PaymentService.Web.csproj", "{4D498509-D9B6-428A-8E54-72A012F0E668}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.Application.Tests", "..\..\..\modules\EasyAbp.PaymentService\test\EasyAbp.PaymentService.Application.Tests\EasyAbp.PaymentService.Application.Tests.csproj", "{EF8F496C-F1CE-44BC-8FEC-9323CBD99CAD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAbp.PaymentService.Application.Tests", "..\..\..\modules\EasyAbp.PaymentService\test\EasyAbp.PaymentService.Application.Tests\EasyAbp.PaymentService.Application.Tests.csproj", "{EF8F496C-F1CE-44BC-8FEC-9323CBD99CAD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.Domain.Tests", "..\..\..\modules\EasyAbp.PaymentService\test\EasyAbp.PaymentService.Domain.Tests\EasyAbp.PaymentService.Domain.Tests.csproj", "{266852E2-098E-4F23-8B3F-6320929B4947}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAbp.PaymentService.Domain.Tests", "..\..\..\modules\EasyAbp.PaymentService\test\EasyAbp.PaymentService.Domain.Tests\EasyAbp.PaymentService.Domain.Tests.csproj", "{266852E2-098E-4F23-8B3F-6320929B4947}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.EntityFrameworkCore.Tests", "..\..\..\modules\EasyAbp.PaymentService\test\EasyAbp.PaymentService.EntityFrameworkCore.Tests\EasyAbp.PaymentService.EntityFrameworkCore.Tests.csproj", "{45494865-D1FF-4A48-AA7D-AD85E717C2AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAbp.PaymentService.EntityFrameworkCore.Tests", "..\..\..\modules\EasyAbp.PaymentService\test\EasyAbp.PaymentService.EntityFrameworkCore.Tests\EasyAbp.PaymentService.EntityFrameworkCore.Tests.csproj", "{45494865-D1FF-4A48-AA7D-AD85E717C2AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.HttpApi.Client.ConsoleTestApp", "..\..\..\modules\EasyAbp.PaymentService\test\EasyAbp.PaymentService.HttpApi.Client.ConsoleTestApp\EasyAbp.PaymentService.HttpApi.Client.ConsoleTestApp.csproj", "{E70D3977-DC6A-4A0A-9857-7D75DADF296E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAbp.PaymentService.HttpApi.Client.ConsoleTestApp", "..\..\..\modules\EasyAbp.PaymentService\test\EasyAbp.PaymentService.HttpApi.Client.ConsoleTestApp\EasyAbp.PaymentService.HttpApi.Client.ConsoleTestApp.csproj", "{E70D3977-DC6A-4A0A-9857-7D75DADF296E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.MongoDB.Tests", "..\..\..\modules\EasyAbp.PaymentService\test\EasyAbp.PaymentService.MongoDB.Tests\EasyAbp.PaymentService.MongoDB.Tests.csproj", "{5177BD4A-A370-4D51-B757-96DB80B6FF44}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAbp.PaymentService.MongoDB.Tests", "..\..\..\modules\EasyAbp.PaymentService\test\EasyAbp.PaymentService.MongoDB.Tests\EasyAbp.PaymentService.MongoDB.Tests.csproj", "{5177BD4A-A370-4D51-B757-96DB80B6FF44}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.TestBase", "..\..\..\modules\EasyAbp.PaymentService\test\EasyAbp.PaymentService.TestBase\EasyAbp.PaymentService.TestBase.csproj", "{CC1D055F-4F38-4BBD-B72D-A2855D069E85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAbp.PaymentService.TestBase", "..\..\..\modules\EasyAbp.PaymentService\test\EasyAbp.PaymentService.TestBase\EasyAbp.PaymentService.TestBase.csproj", "{CC1D055F-4F38-4BBD-B72D-A2855D069E85}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EasyAbp.PaymentService.WeChatPay", "EasyAbp.PaymentService.WeChatPay", "{9A6B15DF-EA80-4B8F-AEE6-FE84FA14F0F5}"
 EndProject
@@ -83,35 +83,35 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4D2E014A-433
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{26EC0A00-3EA3-4C73-A3D9-21BC7AF4C206}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.WeChatPay.Application", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\src\EasyAbp.PaymentService.WeChatPay.Application\EasyAbp.PaymentService.WeChatPay.Application.csproj", "{EC3A13E6-A0F6-4233-98FF-107698F7F83B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAbp.PaymentService.WeChatPay.Application", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\src\EasyAbp.PaymentService.WeChatPay.Application\EasyAbp.PaymentService.WeChatPay.Application.csproj", "{EC3A13E6-A0F6-4233-98FF-107698F7F83B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.WeChatPay.Application.Contracts", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\src\EasyAbp.PaymentService.WeChatPay.Application.Contracts\EasyAbp.PaymentService.WeChatPay.Application.Contracts.csproj", "{92B407F1-F54B-4ADB-9FF1-E2438FF99A7F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.WeChatPay.Domain", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\src\EasyAbp.PaymentService.WeChatPay.Domain\EasyAbp.PaymentService.WeChatPay.Domain.csproj", "{FD509137-F4DF-4E7B-92D2-FA10B25D279D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAbp.PaymentService.WeChatPay.Domain", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\src\EasyAbp.PaymentService.WeChatPay.Domain\EasyAbp.PaymentService.WeChatPay.Domain.csproj", "{FD509137-F4DF-4E7B-92D2-FA10B25D279D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.WeChatPay.Domain.Shared", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\src\EasyAbp.PaymentService.WeChatPay.Domain.Shared\EasyAbp.PaymentService.WeChatPay.Domain.Shared.csproj", "{9EF90A28-5785-429A-AE2E-D1366D146C29}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAbp.PaymentService.WeChatPay.Domain.Shared", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\src\EasyAbp.PaymentService.WeChatPay.Domain.Shared\EasyAbp.PaymentService.WeChatPay.Domain.Shared.csproj", "{9EF90A28-5785-429A-AE2E-D1366D146C29}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.WeChatPay.HttpApi.Client", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\src\EasyAbp.PaymentService.WeChatPay.HttpApi.Client\EasyAbp.PaymentService.WeChatPay.HttpApi.Client.csproj", "{B02B9E1C-16AD-46B0-A453-DBDDBC30B2C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAbp.PaymentService.WeChatPay.HttpApi.Client", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\src\EasyAbp.PaymentService.WeChatPay.HttpApi.Client\EasyAbp.PaymentService.WeChatPay.HttpApi.Client.csproj", "{B02B9E1C-16AD-46B0-A453-DBDDBC30B2C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.WeChatPay.MongoDB", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\src\EasyAbp.PaymentService.WeChatPay.MongoDB\EasyAbp.PaymentService.WeChatPay.MongoDB.csproj", "{464F96C7-7283-44EC-84A9-0FE734912D1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAbp.PaymentService.WeChatPay.MongoDB", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\src\EasyAbp.PaymentService.WeChatPay.MongoDB\EasyAbp.PaymentService.WeChatPay.MongoDB.csproj", "{464F96C7-7283-44EC-84A9-0FE734912D1F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.WeChatPay.Web", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\src\EasyAbp.PaymentService.WeChatPay.Web\EasyAbp.PaymentService.WeChatPay.Web.csproj", "{1C7401D8-D1CE-465D-AAD8-1F22BCE87A47}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAbp.PaymentService.WeChatPay.Web", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\src\EasyAbp.PaymentService.WeChatPay.Web\EasyAbp.PaymentService.WeChatPay.Web.csproj", "{1C7401D8-D1CE-465D-AAD8-1F22BCE87A47}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.WeChatPay.Application.Tests", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\test\EasyAbp.PaymentService.WeChatPay.Application.Tests\EasyAbp.PaymentService.WeChatPay.Application.Tests.csproj", "{94258B3A-A1F0-4B9F-90EF-3602825D775E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAbp.PaymentService.WeChatPay.Application.Tests", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\test\EasyAbp.PaymentService.WeChatPay.Application.Tests\EasyAbp.PaymentService.WeChatPay.Application.Tests.csproj", "{94258B3A-A1F0-4B9F-90EF-3602825D775E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.WeChatPay.Domain.Tests", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\test\EasyAbp.PaymentService.WeChatPay.Domain.Tests\EasyAbp.PaymentService.WeChatPay.Domain.Tests.csproj", "{19597EEE-C5BC-4EB7-8E19-79983B2ACF93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAbp.PaymentService.WeChatPay.Domain.Tests", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\test\EasyAbp.PaymentService.WeChatPay.Domain.Tests\EasyAbp.PaymentService.WeChatPay.Domain.Tests.csproj", "{19597EEE-C5BC-4EB7-8E19-79983B2ACF93}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore.Tests", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\test\EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore.Tests\EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore.Tests.csproj", "{00F84DCE-C9B3-4A1F-BBC1-19D26B2F4214}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.WeChatPay.MongoDB.Tests", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\test\EasyAbp.PaymentService.WeChatPay.MongoDB.Tests\EasyAbp.PaymentService.WeChatPay.MongoDB.Tests.csproj", "{5474ECC0-44E4-482C-805D-F04A576C58FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAbp.PaymentService.WeChatPay.MongoDB.Tests", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\test\EasyAbp.PaymentService.WeChatPay.MongoDB.Tests\EasyAbp.PaymentService.WeChatPay.MongoDB.Tests.csproj", "{5474ECC0-44E4-482C-805D-F04A576C58FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.WeChatPay.TestBase", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\test\EasyAbp.PaymentService.WeChatPay.TestBase\EasyAbp.PaymentService.WeChatPay.TestBase.csproj", "{43DAF4F0-7A4D-4554-965A-40BD438173EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAbp.PaymentService.WeChatPay.TestBase", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\test\EasyAbp.PaymentService.WeChatPay.TestBase\EasyAbp.PaymentService.WeChatPay.TestBase.csproj", "{43DAF4F0-7A4D-4554-965A-40BD438173EE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\src\EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore\EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore.csproj", "{6218522A-21D8-466A-B46C-7E5461FC3E62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.WeChatPay.HttpApi", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\src\EasyAbp.PaymentService.WeChatPay.HttpApi\EasyAbp.PaymentService.WeChatPay.HttpApi.csproj", "{96E610FF-3936-454A-A8F9-AA9F7E0B9530}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAbp.PaymentService.WeChatPay.HttpApi", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\src\EasyAbp.PaymentService.WeChatPay.HttpApi\EasyAbp.PaymentService.WeChatPay.HttpApi.csproj", "{96E610FF-3936-454A-A8F9-AA9F7E0B9530}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentServiceSample.HttpApi.Client.ConsoleTestApp", "test\PaymentServiceSample.HttpApi.Client.ConsoleTestApp\PaymentServiceSample.HttpApi.Client.ConsoleTestApp.csproj", "{8094BA4B-5CBE-463A-8CA4-68255BA8575E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAbp.PaymentService.WeChatPay.HttpApi.Client.ConsoleTestApp", "..\..\..\modules\EasyAbp.PaymentService.WeChatPay\test\EasyAbp.PaymentService.WeChatPay.HttpApi.Client.ConsoleTestApp\EasyAbp.PaymentService.WeChatPay.HttpApi.Client.ConsoleTestApp.csproj", "{A0BB8A26-08C1-43C1-BEB0-E206E291F71C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -167,6 +167,10 @@ Global
 		{1FE30EB9-74A9-47F5-A9F6-7B1FAB672D81}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1FE30EB9-74A9-47F5-A9F6-7B1FAB672D81}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1FE30EB9-74A9-47F5-A9F6-7B1FAB672D81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8094BA4B-5CBE-463A-8CA4-68255BA8575E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8094BA4B-5CBE-463A-8CA4-68255BA8575E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8094BA4B-5CBE-463A-8CA4-68255BA8575E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8094BA4B-5CBE-463A-8CA4-68255BA8575E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{91853F21-9CD9-4132-BC29-A7D5D84FFFE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{91853F21-9CD9-4132-BC29-A7D5D84FFFE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91853F21-9CD9-4132-BC29-A7D5D84FFFE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -175,10 +179,6 @@ Global
 		{E512F4D9-9375-480F-A2F6-A46509F9D824}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E512F4D9-9375-480F-A2F6-A46509F9D824}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E512F4D9-9375-480F-A2F6-A46509F9D824}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EF480016-9127-4916-8735-D2466BDBC582}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EF480016-9127-4916-8735-D2466BDBC582}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EF480016-9127-4916-8735-D2466BDBC582}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EF480016-9127-4916-8735-D2466BDBC582}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AA94D832-1CCC-4715-95A9-A483F23A1A5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AA94D832-1CCC-4715-95A9-A483F23A1A5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA94D832-1CCC-4715-95A9-A483F23A1A5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -299,10 +299,10 @@ Global
 		{96E610FF-3936-454A-A8F9-AA9F7E0B9530}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96E610FF-3936-454A-A8F9-AA9F7E0B9530}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96E610FF-3936-454A-A8F9-AA9F7E0B9530}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8094BA4B-5CBE-463A-8CA4-68255BA8575E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8094BA4B-5CBE-463A-8CA4-68255BA8575E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8094BA4B-5CBE-463A-8CA4-68255BA8575E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8094BA4B-5CBE-463A-8CA4-68255BA8575E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0BB8A26-08C1-43C1-BEB0-E206E291F71C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0BB8A26-08C1-43C1-BEB0-E206E291F71C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0BB8A26-08C1-43C1-BEB0-E206E291F71C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0BB8A26-08C1-43C1-BEB0-E206E291F71C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -320,9 +320,9 @@ Global
 		{4164BDF7-F527-4E85-9CE6-E3C2D7426A27} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 		{3B5A0094-670D-4BB1-BFDD-61B88A8773DC} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 		{1FE30EB9-74A9-47F5-A9F6-7B1FAB672D81} = {04DBDB01-70F4-4E06-B468-8F87850B22BE}
+		{8094BA4B-5CBE-463A-8CA4-68255BA8575E} = {04DBDB01-70F4-4E06-B468-8F87850B22BE}
 		{91853F21-9CD9-4132-BC29-A7D5D84FFFE7} = {04DBDB01-70F4-4E06-B468-8F87850B22BE}
 		{E512F4D9-9375-480F-A2F6-A46509F9D824} = {04DBDB01-70F4-4E06-B468-8F87850B22BE}
-		{EF480016-9127-4916-8735-D2466BDBC582} = {04DBDB01-70F4-4E06-B468-8F87850B22BE}
 		{AA94D832-1CCC-4715-95A9-A483F23A1A5D} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 		{183F35FF-27E6-4E2F-9263-24E4EE0445E9} = {D136E692-21B7-4BFE-BE2F-2E4CD5DB74E6}
 		{C3616716-4819-48C8-B52C-597C926C0A30} = {183F35FF-27E6-4E2F-9263-24E4EE0445E9}
@@ -359,7 +359,7 @@ Global
 		{43DAF4F0-7A4D-4554-965A-40BD438173EE} = {26EC0A00-3EA3-4C73-A3D9-21BC7AF4C206}
 		{6218522A-21D8-466A-B46C-7E5461FC3E62} = {4D2E014A-433C-4557-8BD5-AE0788A5D5CD}
 		{96E610FF-3936-454A-A8F9-AA9F7E0B9530} = {4D2E014A-433C-4557-8BD5-AE0788A5D5CD}
-		{8094BA4B-5CBE-463A-8CA4-68255BA8575E} = {26EC0A00-3EA3-4C73-A3D9-21BC7AF4C206}
+		{A0BB8A26-08C1-43C1-BEB0-E206E291F71C} = {26EC0A00-3EA3-4C73-A3D9-21BC7AF4C206}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28315BFD-90E7-4E14-A2EA-F3D23AF4126F}
