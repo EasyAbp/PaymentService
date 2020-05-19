@@ -10,10 +10,10 @@ namespace EasyAbp.PaymentService.Authorization
         {
             var moduleGroup = context.AddGroup(PaymentServicePermissions.GroupName, L("Permission:PaymentService"));
             
-            var payment = moduleGroup.AddPermission(PaymentServicePermissions.PaymentService.Default, L("Permission:Payment"));
-            payment.AddChild(PaymentServicePermissions.PaymentService.Manage, L("Permission:Manage"));
-            payment.AddChild(PaymentServicePermissions.PaymentService.CrossStore, L("Permission:CrossStore"));
-            payment.AddChild(PaymentServicePermissions.PaymentService.Create, L("Permission:Create"));
+            var payment = moduleGroup.AddPermission(PaymentServicePermissions.Payments.Default, L("Permission:Payment"));
+            payment.AddChild(PaymentServicePermissions.Payments.Manage, L("Permission:Manage"));
+            payment.AddChild(PaymentServicePermissions.Payments.CrossStore, L("Permission:CrossStore"));
+            payment.AddChild(PaymentServicePermissions.Payments.Create, L("Permission:Create"));
             
             var refund = moduleGroup.AddPermission(PaymentServicePermissions.Refunds.Default, L("Permission:Refund"));
             refund.AddChild(PaymentServicePermissions.Refunds.Manage, L("Permission:Manage"));

@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using JetBrains.Annotations;
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.MultiTenancy;
 
-namespace EasyAbp.PaymentService.WeChatPay.Records
+namespace EasyAbp.PaymentService.WeChatPay.RefundRecords
 {
     public class RefundRecord : CreationAuditedAggregateRoot<Guid>, IMultiTenant
     {
@@ -66,5 +66,57 @@ namespace EasyAbp.PaymentService.WeChatPay.Records
         
         [NotNull]
         public virtual string RefundRequestSource { get; protected set; }
+
+        protected RefundRecord()
+        {
+        }
+
+        public RefundRecord(
+            Guid id,
+            Guid? tenantId,
+            Guid paymentId,
+            string returnCode,
+            string returnMsg,
+            string appId,
+            string mchId,
+            string nonceStr,
+            string reqInfo,
+            string transactionId,
+            string outTradeNo,
+            string refundId,
+            string outRefundNo,
+            int totalFee,
+            int? settlementTotalFee,
+            int refundFee,
+            int settlementRefundFee,
+            string refundStatus,
+            string successTime,
+            string refundRecvAccout,
+            string refundAccount,
+            string refundRequestSource
+        ) :base(id)
+        {
+            TenantId = tenantId;
+            PaymentId = paymentId;
+            ReturnCode = returnCode;
+            ReturnMsg = returnMsg;
+            AppId = appId;
+            MchId = mchId;
+            NonceStr = nonceStr;
+            ReqInfo = reqInfo;
+            TransactionId = transactionId;
+            OutTradeNo = outTradeNo;
+            RefundId = refundId;
+            OutRefundNo = outRefundNo;
+            TotalFee = totalFee;
+            SettlementTotalFee = settlementTotalFee;
+            RefundFee = refundFee;
+            SettlementRefundFee = settlementRefundFee;
+            RefundStatus = refundStatus;
+            SuccessTime = successTime;
+            RefundRecvAccout = refundRecvAccout;
+            RefundAccount = refundAccount;
+            RefundRequestSource = refundRequestSource;
+        }
     }
 }

@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Pay.Services.Pay;
 using EasyAbp.PaymentService.Payments;
+using EasyAbp.PaymentService.WeChatPay.PaymentRecords;
 using EasyAbp.PaymentService.WeChatPay.Settings;
 using Microsoft.Extensions.Configuration;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
+using Volo.Abp.Guids;
+using Volo.Abp.MultiTenancy;
 using Volo.Abp.Settings;
 
 namespace EasyAbp.PaymentService.WeChatPay
@@ -16,6 +19,9 @@ namespace EasyAbp.PaymentService.WeChatPay
         private readonly ServiceProviderPayService _serviceProviderPayService;
         private readonly IConfiguration _configuration;
         private readonly ISettingProvider _settingProvider;
+        private readonly IGuidGenerator _guidGenerator;
+        private readonly ICurrentTenant _currentTenant;
+        private readonly IPaymentRecordRepository _paymentRecordRepository;
         private readonly IPaymentOpenIdProvider _paymentOpenIdProvider;
         private readonly IPaymentRepository _paymentRepository;
         
@@ -25,12 +31,18 @@ namespace EasyAbp.PaymentService.WeChatPay
             ServiceProviderPayService serviceProviderPayService,
             IConfiguration configuration,
             ISettingProvider settingProvider,
+            IGuidGenerator guidGenerator,
+            ICurrentTenant currentTenant,
+            IPaymentRecordRepository paymentRecordRepository,
             IPaymentOpenIdProvider paymentOpenIdProvider,
             IPaymentRepository paymentRepository)
         {
             _serviceProviderPayService = serviceProviderPayService;
             _configuration = configuration;
             _settingProvider = settingProvider;
+            _guidGenerator = guidGenerator;
+            _currentTenant = currentTenant;
+            _paymentRecordRepository = paymentRecordRepository;
             _paymentOpenIdProvider = paymentOpenIdProvider;
             _paymentRepository = paymentRepository;
         }
@@ -95,6 +107,9 @@ namespace EasyAbp.PaymentService.WeChatPay
             payment.SetProperty("trade_type", xml.SelectSingleNode("trade_type")?.InnerText);
             payment.SetProperty("prepay_id", xml.SelectSingleNode("prepay_id")?.InnerText);
             payment.SetProperty("code_url", xml.SelectSingleNode("code_url")?.InnerText);
+            
+            await _paymentRecordRepository.InsertAsync(
+                new PaymentRecord(_guidGenerator.Create(), _currentTenant.Id, payment.Id));
             
             return await _paymentRepository.UpdateAsync(payment, true);
         }

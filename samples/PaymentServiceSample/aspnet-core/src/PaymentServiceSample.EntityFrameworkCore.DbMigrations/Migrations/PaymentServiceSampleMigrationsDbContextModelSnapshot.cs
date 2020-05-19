@@ -28,6 +28,9 @@ namespace PaymentServiceSample.Migrations
                     b.Property<decimal>("ActualPaymentAmount")
                         .HasColumnType("decimal(18,6)");
 
+                    b.Property<DateTime?>("CancelledTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("CompletionTime")
                         .HasColumnType("datetime2");
 
@@ -246,6 +249,220 @@ namespace PaymentServiceSample.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PaymentServiceRefunds");
+                });
+
+            modelBuilder.Entity("EasyAbp.PaymentService.WeChatPay.PaymentRecords.PaymentRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AppId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Attach")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BankType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CashFee")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CashFeeType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnName("ConcurrencyStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("CouponCount")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CouponFee")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CouponFees")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CouponIds")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CouponTypes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnName("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnName("CreatorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("DeviceInfo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ErrCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ErrCodeDes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ExtraProperties")
+                        .HasColumnName("ExtraProperties")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FeeType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IsSubscribe")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MchId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NonceStr")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Openid")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OutTradeNo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("PaymentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ResultCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReturnCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReturnMsg")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SettlementTotalFee")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Sign")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SignType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnName("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("TimeEnd")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TotalFee")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TradeType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TransactionId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PaymentServiceWeChatPayPaymentRecords");
+                });
+
+            modelBuilder.Entity("EasyAbp.PaymentService.WeChatPay.RefundRecords.RefundRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AppId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnName("ConcurrencyStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnName("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnName("CreatorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ExtraProperties")
+                        .HasColumnName("ExtraProperties")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MchId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NonceStr")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OutRefundNo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OutTradeNo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("PaymentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("RefundAccount")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RefundFee")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RefundId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RefundRecvAccout")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RefundRequestSource")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RefundStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReqInfo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReturnCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReturnMsg")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SettlementRefundFee")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SettlementTotalFee")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SuccessTime")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnName("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("TotalFee")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TransactionId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PaymentServiceWeChatPayRefundRecords");
                 });
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLog", b =>

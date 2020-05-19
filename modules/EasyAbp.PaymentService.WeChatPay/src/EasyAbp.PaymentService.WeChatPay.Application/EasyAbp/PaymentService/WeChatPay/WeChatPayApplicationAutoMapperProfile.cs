@@ -1,4 +1,8 @@
-﻿using AutoMapper;
+using EasyAbp.PaymentService.WeChatPay.RefundRecords;
+using EasyAbp.PaymentService.WeChatPay.RefundRecords.Dtos;
+using EasyAbp.PaymentService.WeChatPay.PaymentRecords;
+using EasyAbp.PaymentService.WeChatPay.PaymentRecords.Dtos;
+using AutoMapper;
 
 namespace EasyAbp.PaymentService.WeChatPay
 {
@@ -9,6 +13,8 @@ namespace EasyAbp.PaymentService.WeChatPay
             /* You can configure your AutoMapper mapping configuration here.
              * Alternatively, you can split your mapping configurations
              * into multiple profile classes for a better organization. */
+            CreateMap<RefundRecord, RefundRecordDto>();
+            CreateMap<PaymentRecord, PaymentRecordDto>();
         }
     }
 }

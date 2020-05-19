@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using JetBrains.Annotations;
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.MultiTenancy;
 
-namespace EasyAbp.PaymentService.WeChatPay.Records
+namespace EasyAbp.PaymentService.WeChatPay.PaymentRecords
 {
     public class PaymentRecord : CreationAuditedAggregateRoot<Guid>, IMultiTenant
     {
@@ -92,5 +92,80 @@ namespace EasyAbp.PaymentService.WeChatPay.Records
         
         [NotNull]
         public virtual string TimeEnd { get; protected set; }
+
+        protected PaymentRecord()
+        {
+        }
+
+        public PaymentRecord(
+            Guid id,
+            Guid? tenantId,
+            Guid paymentId) : base(id)
+        {
+            TenantId = tenantId;
+            PaymentId = paymentId;
+        }
+
+        public void SetResult(
+            string returnCode,
+            string returnMsg,
+            string appId,
+            string mchId,
+            string deviceInfo,
+            string nonceStr,
+            string sign,
+            string signType,
+            string resultCode,
+            string errCode,
+            string errCodeDes,
+            string openid,
+            string isSubscribe,
+            string tradeType,
+            string bankType,
+            int totalFee,
+            int? settlementTotalFee,
+            string feeType,
+            int cashFee,
+            string cashFeeType,
+            int? couponFee,
+            int? couponCount,
+            string couponTypes,
+            string couponIds,
+            string couponFees,
+            string transactionId,
+            string outTradeNo,
+            string attach,
+            string timeEnd)
+        {
+            ReturnCode = returnCode;
+            ReturnMsg = returnMsg;
+            AppId = appId;
+            MchId = mchId;
+            DeviceInfo = deviceInfo;
+            NonceStr = nonceStr;
+            Sign = sign;
+            SignType = signType;
+            ResultCode = resultCode;
+            ErrCode = errCode;
+            ErrCodeDes = errCodeDes;
+            Openid = openid;
+            IsSubscribe = isSubscribe;
+            TradeType = tradeType;
+            BankType = bankType;
+            TotalFee = totalFee;
+            SettlementTotalFee = settlementTotalFee;
+            FeeType = feeType;
+            CashFee = cashFee;
+            CashFeeType = cashFeeType;
+            CouponFee = couponFee;
+            CouponCount = couponCount;
+            CouponTypes = couponTypes;
+            CouponIds = couponIds;
+            CouponFees = couponFees;
+            TransactionId = transactionId;
+            OutTradeNo = outTradeNo;
+            Attach = attach;
+            TimeEnd = timeEnd;
+        }
     }
 }

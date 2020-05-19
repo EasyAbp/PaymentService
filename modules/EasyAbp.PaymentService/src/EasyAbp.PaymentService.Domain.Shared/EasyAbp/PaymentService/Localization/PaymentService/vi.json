@@ -13,6 +13,7 @@
     "PaymentActualPaymentAmount": "PaymentActualPaymentAmount",
     "PaymentRefundAmount": "PaymentRefundAmount",
     "PaymentCompletionTime": "PaymentCompletionTime",
+    "PaymentCancelledTime": "PaymentCancelledTime",
     "CreatePayment": "CreatePayment",
     "EditPayment": "EditPayment",
     "PaymentDeletionConfirmationMessage": "Are you sure to delete the payment {0}?",

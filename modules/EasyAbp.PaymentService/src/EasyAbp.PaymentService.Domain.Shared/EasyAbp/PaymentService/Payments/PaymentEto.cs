@@ -28,6 +28,8 @@ namespace EasyAbp.PaymentService.Payments
         
         public DateTime? CompletionTime { get; set; }
         
+        public DateTime? CancelledTime { get; set; }
+        
         public List<PaymentItemEto> PaymentItems { get; set; }
     }
 }

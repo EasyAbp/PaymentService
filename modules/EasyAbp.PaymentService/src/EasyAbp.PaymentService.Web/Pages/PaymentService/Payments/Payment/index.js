@@ -34,6 +34,7 @@ $(function () {
             { data: "actualPaymentAmount" },
             { data: "refundAmount" },
             { data: "completionTime" },
+            { data: "cancelledTime" },
         ]
     }));
 });

@@ -34,6 +34,8 @@ namespace EasyAbp.PaymentService.Payments
         
         public virtual DateTime? CompletionTime { get; protected set; }
         
+        public virtual DateTime? CancelledTime { get; protected set; }
+        
         public virtual List<PaymentItem> PaymentItems { get; protected set; }
 
         protected Payment()
@@ -68,14 +70,14 @@ namespace EasyAbp.PaymentService.Payments
 
         public void SetExternalTradingCode([NotNull] string externalTradingCode)
         {
-            CheckPaymentIsNotCompleted();
+            CheckPaymentIsNotFinished();
 
             ExternalTradingCode = externalTradingCode;
         }
 
         public void SetPaymentDiscount(decimal paymentDiscount)
         {
-            CheckPaymentIsNotCompleted();
+            CheckPaymentIsNotFinished();
 
             PaymentDiscount = paymentDiscount;
             ActualPaymentAmount -= paymentDiscount;
@@ -83,14 +85,21 @@ namespace EasyAbp.PaymentService.Payments
 
         public void CompletePayment(DateTime completionTime)
         {
-            CheckPaymentIsNotCompleted();
+            CheckPaymentIsNotFinished();
 
             CompletionTime = completionTime;
         }
-
-        private void CheckPaymentIsNotCompleted()
+        
+        public void CancelPayment(DateTime cancelledTime)
         {
-            if (CompletionTime.HasValue)
+            CheckPaymentIsNotFinished();
+
+            CancelledTime = cancelledTime;
+        }
+
+        private void CheckPaymentIsNotFinished()
+        {
+            if (CompletionTime.HasValue || CancelledTime.HasValue)
             {
                 throw new PaymentHasAlreadyBeenCompletedException(Id);
             }

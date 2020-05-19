@@ -11,7 +11,7 @@ namespace EasyAbp.PaymentService.Authorization
             return ReflectionHelper.GetPublicConstantsRecursively(typeof(PaymentServicePermissions));
         }
         
-        public class PaymentService
+        public class Payments
         {
             public const string Default = GroupName + ".Payment";
             public const string Manage = Default + ".Manage";

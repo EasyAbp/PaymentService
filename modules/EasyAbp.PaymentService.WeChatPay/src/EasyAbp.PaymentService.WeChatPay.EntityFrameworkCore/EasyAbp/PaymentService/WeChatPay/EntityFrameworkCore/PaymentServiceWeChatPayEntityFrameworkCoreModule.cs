@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using EasyAbp.PaymentService.WeChatPay.PaymentRecords;
+using EasyAbp.PaymentService.WeChatPay.RefundRecords;
+using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.Modularity;
 
@@ -17,6 +19,8 @@ namespace EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore
                 /* Add custom repositories here. Example:
                  * options.AddRepository<Question, EfCoreQuestionRepository>();
                  */
+                options.AddRepository<RefundRecord, RefundRecordRepository>();
+                options.AddRepository<PaymentRecord, PaymentRecordRepository>();
             });
         }
     }
