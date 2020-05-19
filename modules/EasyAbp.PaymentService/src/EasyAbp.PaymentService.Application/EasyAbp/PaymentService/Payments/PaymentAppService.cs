@@ -14,16 +14,13 @@ namespace EasyAbp.PaymentService.Payments
     public class PaymentAppService : CrudAppService<Payment, PaymentDto, Guid, PagedAndSortedResultRequestDto, CreatePaymentDto, object>,
         IPaymentAppService
     {
-        private readonly IPaymentPayeeAccountProvider _paymentPayeeAccountProvider;
         private readonly IPaymentServiceResolver _paymentServiceResolver;
         private readonly IPaymentRepository _repository;
 
         public PaymentAppService(
-            IPaymentPayeeAccountProvider paymentPayeeAccountProvider,
             IPaymentServiceResolver paymentServiceResolver,
             IPaymentRepository repository) : base(repository)
         {
-            _paymentPayeeAccountProvider = paymentPayeeAccountProvider;
             _paymentServiceResolver = paymentServiceResolver;
             _repository = repository;
         }
