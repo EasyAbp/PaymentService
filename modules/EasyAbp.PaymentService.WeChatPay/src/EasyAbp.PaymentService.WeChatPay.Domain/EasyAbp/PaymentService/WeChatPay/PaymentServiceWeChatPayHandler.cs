@@ -49,10 +49,10 @@ namespace EasyAbp.PaymentService.WeChatPay
 
             // Todo: sign check
 
-            var orderId = Guid.Parse(xml["out_trade_no"]?.InnerText ??
+            var paymentId = Guid.Parse(xml["out_trade_no"]?.InnerText ??
                                      throw new XmlDocumentMissingRequiredElementException("out_trade_no"));
             
-            var payment = await _paymentRepository.GetAsync(orderId);
+            var payment = await _paymentRepository.GetAsync(paymentId);
 
             payment.SetExternalTradingCode(xml["transaction_id"]?.InnerText ??
                                            throw new XmlDocumentMissingRequiredElementException("transaction_id"));
