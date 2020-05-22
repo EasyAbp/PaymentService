@@ -19,7 +19,7 @@ namespace EasyAbp.PaymentService.WeChatPay
             _currentUser = currentUser;
         }
         
-        public Task<string> FindUserOpenIdAsync(Guid userId)
+        public Task<string> FindUserOpenIdAsync(string appId, Guid userId)
         {
             return Task.FromResult(userId == _currentUser.Id
                 ? _currentUser.FindClaim(OpenIdClaimType)?.Value ?? throw new UserOpenIdNotFoundException(userId)

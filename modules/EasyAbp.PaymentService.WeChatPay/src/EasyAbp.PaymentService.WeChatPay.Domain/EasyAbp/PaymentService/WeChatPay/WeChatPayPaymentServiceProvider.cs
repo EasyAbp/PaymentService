@@ -59,13 +59,15 @@ namespace EasyAbp.PaymentService.WeChatPay
                                await _settingProvider.GetOrNullAsync(WeChatPaySettings.MchId);
             
             payment.SetPayeeAccount(payeeAccount);
+
+            var appId = inputExtraProperties.GetOrDefault("appid") as string;
             
-            var openId = await _paymentOpenIdProvider.FindUserOpenIdAsync(payment.UserId);
+            var openId = await _paymentOpenIdProvider.FindUserOpenIdAsync(appId, payment.UserId);
             
             var outTradeNo = payment.Id.ToString("N");
 
             var result = await _serviceProviderPayService.UnifiedOrderAsync(
-                appId: inputExtraProperties.GetOrDefault("appid") as string,
+                appId: appId,
                 subAppId: null,
                 mchId: payment.PayeeAccount,
                 subMchId: null,
