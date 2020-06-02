@@ -2,7 +2,7 @@ $(function () {
 
     var l = abp.localization.getResource('EasyAbpPaymentService');
 
-    var service = EasyAbp.PaymentService.payments.PaymentItem;
+    var service = easyAbp.paymentService.payments.PaymentItem;
 
     var dataTable = $('#PaymentItemTable').DataTable(abp.libs.datatables.normalizeConfiguration({
         processing: true,
