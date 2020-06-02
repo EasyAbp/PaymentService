@@ -1,0 +1,60 @@
+@page
+@using EasyAbp.PaymentService.WeChatPay.Web.Pages.PaymentService.WeChatPay.RefundRecords.RefundRecord
+@using Volo.Abp.AspNetCore.Mvc.UI.Layout
+@inherits EasyAbp.PaymentService.WeChatPay.Web.Pages.WeChatPayPage
+@model IndexModel
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.Title = L["RefundRecord"].Value;
+    PageLayout.Content.BreadCrumb.Add(L["Menu:RefundRecord"].Value);
+    PageLayout.Content.MenuItemName = "RefundRecord";
+}
+
+@section scripts
+{
+    <abp-script src="/Pages/PaymentService/WeChatPay/RefundRecords/RefundRecord/index.js" />
+}
+@section styles
+{
+    <abp-style src="/Pages/PaymentService/WeChatPay/RefundRecords/RefundRecord/index.css"/>
+}
+
+<abp-card>
+    <abp-card-header>
+        <abp-row>
+            <abp-column size-md="_6">
+                <abp-card-title>@L["RefundRecord"]</abp-card-title>
+            </abp-column>
+        </abp-row>
+    </abp-card-header>
+    <abp-card-body>
+        <abp-table striped-rows="true" id="RefundRecordTable" class="nowrap">
+            <thead>
+            <tr>
+                <th>@L["Actions"]</th>
+                <th>@L["RefundRecordTenantId"]</th>
+                <th>@L["RefundRecordPaymentId"]</th>
+                <th>@L["RefundRecordReturnCode"]</th>
+                <th>@L["RefundRecordReturnMsg"]</th>
+                <th>@L["RefundRecordAppId"]</th>
+                <th>@L["RefundRecordMchId"]</th>
+                <th>@L["RefundRecordNonceStr"]</th>
+                <th>@L["RefundRecordReqInfo"]</th>
+                <th>@L["RefundRecordTransactionId"]</th>
+                <th>@L["RefundRecordOutTradeNo"]</th>
+                <th>@L["RefundRecordRefundId"]</th>
+                <th>@L["RefundRecordOutRefundNo"]</th>
+                <th>@L["RefundRecordTotalFee"]</th>
+                <th>@L["RefundRecordSettlementTotalFee"]</th>
+                <th>@L["RefundRecordRefundFee"]</th>
+                <th>@L["RefundRecordSettlementRefundFee"]</th>
+                <th>@L["RefundRecordRefundStatus"]</th>
+                <th>@L["RefundRecordSuccessTime"]</th>
+                <th>@L["RefundRecordRefundRecvAccout"]</th>
+                <th>@L["RefundRecordRefundAccount"]</th>
+                <th>@L["RefundRecordRefundRequestSource"]</th>
+            </tr>
+            </thead>
+        </abp-table>
+    </abp-card-body>
+</abp-card>

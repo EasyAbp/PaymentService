@@ -1,6 +1,9 @@
-﻿using System;
+using EasyAbp.PaymentService.WeChatPay.PaymentRecords;
+using EasyAbp.PaymentService.WeChatPay.RefundRecords;
+using System;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp;
+using Volo.Abp.EntityFrameworkCore.Modeling;
 
 namespace EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore
 {
@@ -38,6 +41,20 @@ namespace EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore
                 b.HasIndex(q => q.CreationTime);
             });
             */
+
+            builder.Entity<RefundRecord>(b =>
+            {
+                b.ToTable(options.TablePrefix + "RefundRecords", options.Schema);
+                b.ConfigureByConvention(); 
+                /* Configure more properties here */
+            });
+
+            builder.Entity<PaymentRecord>(b =>
+            {
+                b.ToTable(options.TablePrefix + "PaymentRecords", options.Schema);
+                b.ConfigureByConvention(); 
+                /* Configure more properties here */
+            });
         }
     }
 }

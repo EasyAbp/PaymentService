@@ -1,0 +1,138 @@
+name: publish to nuget
+on:
+  push:
+    branches:
+      - master # Default release branch
+jobs:
+  publish:
+    name: list on nuget
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      # Publish
+      - name: publish EasyAbp.PaymentService.Application.dll
+        uses: brandedoutcast/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: modules/EasyAbp.PaymentService/src/EasyAbp.PaymentService.Application/EasyAbp.PaymentService.Application.csproj
+          VERSION_FILE_PATH: modules/EasyAbp.PaymentService/common.props
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+          
+      - name: publish EasyAbp.PaymentService.Application.Contracts.dll
+        uses: brandedoutcast/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: modules/EasyAbp.PaymentService/src/EasyAbp.PaymentService.Application.Contracts/EasyAbp.PaymentService.Application.Contracts.csproj
+          VERSION_FILE_PATH: modules/EasyAbp.PaymentService/common.props
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+
+      - name: publish EasyAbp.PaymentService.Domain.dll
+        uses: brandedoutcast/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: modules/EasyAbp.PaymentService/src/EasyAbp.PaymentService.Domain/EasyAbp.PaymentService.Domain.csproj
+          VERSION_FILE_PATH: modules/EasyAbp.PaymentService/common.props
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+
+      - name: publish EasyAbp.PaymentService.Domain.Shared.dll
+        uses: brandedoutcast/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: modules/EasyAbp.PaymentService/src/EasyAbp.PaymentService.Domain.Shared/EasyAbp.PaymentService.Domain.Shared.csproj
+          VERSION_FILE_PATH: modules/EasyAbp.PaymentService/common.props
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+
+      - name: publish EasyAbp.PaymentService.EntityFrameworkCore.dll
+        uses: brandedoutcast/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: modules/EasyAbp.PaymentService/src/EasyAbp.PaymentService.EntityFrameworkCore/EasyAbp.PaymentService.EntityFrameworkCore.csproj
+          VERSION_FILE_PATH: modules/EasyAbp.PaymentService/common.props
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+
+      - name: publish EasyAbp.PaymentService.HttpApi.dll
+        uses: brandedoutcast/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: modules/EasyAbp.PaymentService/src/EasyAbp.PaymentService.HttpApi/EasyAbp.PaymentService.HttpApi.csproj
+          VERSION_FILE_PATH: modules/EasyAbp.PaymentService/common.props
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+
+      - name: publish EasyAbp.PaymentService.HttpApi.Client.dll
+        uses: brandedoutcast/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: modules/EasyAbp.PaymentService/src/EasyAbp.PaymentService.HttpApi.Client/EasyAbp.PaymentService.HttpApi.Client.csproj
+          VERSION_FILE_PATH: modules/EasyAbp.PaymentService/common.props
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+
+      - name: publish EasyAbp.PaymentService.MongoDB.dll
+        uses: brandedoutcast/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: modules/EasyAbp.PaymentService/src/EasyAbp.PaymentService.MongoDB/EasyAbp.PaymentService.MongoDB.csproj
+          VERSION_FILE_PATH: modules/EasyAbp.PaymentService/common.props
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+
+      - name: publish EasyAbp.PaymentService.Web.dll
+        uses: brandedoutcast/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: modules/EasyAbp.PaymentService/src/EasyAbp.PaymentService.Web/EasyAbp.PaymentService.Web.csproj
+          VERSION_FILE_PATH: modules/EasyAbp.PaymentService/common.props
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+
+      - name: publish EasyAbp.PaymentService.WeChatPay.Application.dll
+        uses: brandedoutcast/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: modules/EasyAbp.PaymentService.WeChatPay/src/EasyAbp.PaymentService.WeChatPay.Application/EasyAbp.PaymentService.WeChatPay.Application.csproj
+          VERSION_FILE_PATH: modules/EasyAbp.PaymentService.WeChatPay/common.props
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+
+      - name: publish EasyAbp.PaymentService.WeChatPay.Application.Contracts.dll
+        uses: brandedoutcast/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: modules/EasyAbp.PaymentService.WeChatPay/src/EasyAbp.PaymentService.WeChatPay.Application.Contracts/EasyAbp.PaymentService.WeChatPay.Application.Contracts.csproj
+          VERSION_FILE_PATH: modules/EasyAbp.PaymentService.WeChatPay/common.props
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+
+      - name: publish EasyAbp.PaymentService.WeChatPay.Domain.dll
+        uses: brandedoutcast/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: modules/EasyAbp.PaymentService.WeChatPay/src/EasyAbp.PaymentService.WeChatPay.Domain/EasyAbp.PaymentService.WeChatPay.Domain.csproj
+          VERSION_FILE_PATH: modules/EasyAbp.PaymentService.WeChatPay/common.props
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+
+      - name: publish EasyAbp.PaymentService.WeChatPay.Domain.Shared.dll
+        uses: brandedoutcast/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: modules/EasyAbp.PaymentService.WeChatPay/src/EasyAbp.PaymentService.WeChatPay.Domain.Shared/EasyAbp.PaymentService.WeChatPay.Domain.Shared.csproj
+          VERSION_FILE_PATH: modules/EasyAbp.PaymentService.WeChatPay/common.props
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+
+      - name: publish EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore.dll
+        uses: brandedoutcast/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: modules/EasyAbp.PaymentService.WeChatPay/src/EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore/EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore.csproj
+          VERSION_FILE_PATH: modules/EasyAbp.PaymentService.WeChatPay/common.props
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+
+      - name: publish EasyAbp.PaymentService.WeChatPay.HttpApi.dll
+        uses: brandedoutcast/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: modules/EasyAbp.PaymentService.WeChatPay/src/EasyAbp.PaymentService.WeChatPay.HttpApi/EasyAbp.PaymentService.WeChatPay.HttpApi.csproj
+          VERSION_FILE_PATH: modules/EasyAbp.PaymentService.WeChatPay/common.props
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+
+      - name: publish EasyAbp.PaymentService.WeChatPay.HttpApi.Client.dll
+        uses: brandedoutcast/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: modules/EasyAbp.PaymentService.WeChatPay/src/EasyAbp.PaymentService.WeChatPay.HttpApi.Client/EasyAbp.PaymentService.WeChatPay.HttpApi.Client.csproj
+          VERSION_FILE_PATH: modules/EasyAbp.PaymentService.WeChatPay/common.props
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+
+      - name: publish EasyAbp.PaymentService.WeChatPay.MongoDB.dll
+        uses: brandedoutcast/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: modules/EasyAbp.PaymentService.WeChatPay/src/EasyAbp.PaymentService.WeChatPay.MongoDB/EasyAbp.PaymentService.WeChatPay.MongoDB.csproj
+          VERSION_FILE_PATH: modules/EasyAbp.PaymentService.WeChatPay/common.props
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+
+      - name: publish EasyAbp.PaymentService.WeChatPay.Web.dll
+        uses: brandedoutcast/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: modules/EasyAbp.PaymentService.WeChatPay/src/EasyAbp.PaymentService.WeChatPay.Web/EasyAbp.PaymentService.WeChatPay.Web.csproj
+          VERSION_FILE_PATH: modules/EasyAbp.PaymentService.WeChatPay/common.props
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}

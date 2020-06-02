@@ -27,7 +27,7 @@ namespace EasyAbp.PaymentService.Web
 
             var paymentManagementMenuItem = new ApplicationMenuItem("PaymentManagement", l["Menu:PaymentManagement"]);
 
-            if (await authorizationService.IsGrantedAsync(PaymentServicePermissions.PaymentService.Manage))
+            if (await authorizationService.IsGrantedAsync(PaymentServicePermissions.Payments.Manage))
             {
                 paymentManagementMenuItem.AddItem(
                     new ApplicationMenuItem("Payment", l["Menu:Payment"], "/PaymentService/Payments/Payment")

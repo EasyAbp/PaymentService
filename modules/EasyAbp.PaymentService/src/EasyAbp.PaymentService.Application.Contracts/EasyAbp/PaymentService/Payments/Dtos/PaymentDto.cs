@@ -23,6 +23,8 @@ namespace EasyAbp.PaymentService.Payments.Dtos
         public decimal RefundAmount { get; set; }
 
         public DateTime? CompletionTime { get; set; }
+        
+        public DateTime? CancelledTime { get; set; }
 
         public List<PaymentItemDto> PaymentItems { get; set; }
     }

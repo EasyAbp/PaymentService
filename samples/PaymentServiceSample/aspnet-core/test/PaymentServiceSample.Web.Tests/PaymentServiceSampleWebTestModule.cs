@@ -107,7 +107,7 @@ namespace PaymentServiceSample
                 }
             });
 
-            app.UseMvcWithDefaultRouteAndArea();
+            app.UseConfiguredEndpoints();
         }
     }
 }

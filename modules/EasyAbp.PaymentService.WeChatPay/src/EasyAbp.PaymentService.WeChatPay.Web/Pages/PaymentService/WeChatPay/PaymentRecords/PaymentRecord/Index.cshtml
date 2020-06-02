@@ -1,0 +1,70 @@
+@page
+@using EasyAbp.PaymentService.WeChatPay.Web.Pages.PaymentService.WeChatPay.PaymentRecords.PaymentRecord
+@using Volo.Abp.AspNetCore.Mvc.UI.Layout
+@inherits EasyAbp.PaymentService.WeChatPay.Web.Pages.WeChatPayPage
+@model IndexModel
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.Title = L["PaymentRecord"].Value;
+    PageLayout.Content.BreadCrumb.Add(L["Menu:PaymentRecord"].Value);
+    PageLayout.Content.MenuItemName = "PaymentRecord";
+}
+
+@section scripts
+{
+    <abp-script src="/Pages/PaymentService/WeChatPay/PaymentRecords/PaymentRecord/index.js" />
+}
+@section styles
+{
+    <abp-style src="/Pages/PaymentService/WeChatPay/PaymentRecords/PaymentRecord/index.css"/>
+}
+
+<abp-card>
+    <abp-card-header>
+        <abp-row>
+            <abp-column size-md="_6">
+                <abp-card-title>@L["PaymentRecord"]</abp-card-title>
+            </abp-column>
+        </abp-row>
+    </abp-card-header>
+    <abp-card-body>
+        <abp-table striped-rows="true" id="PaymentRecordTable" class="nowrap">
+            <thead>
+            <tr>
+                <th>@L["Actions"]</th>
+                <th>@L["PaymentRecordTenantId"]</th>
+                <th>@L["PaymentRecordPaymentId"]</th>
+                <th>@L["PaymentRecordReturnCode"]</th>
+                <th>@L["PaymentRecordReturnMsg"]</th>
+                <th>@L["PaymentRecordAppId"]</th>
+                <th>@L["PaymentRecordMchId"]</th>
+                <th>@L["PaymentRecordDeviceInfo"]</th>
+                <th>@L["PaymentRecordNonceStr"]</th>
+                <th>@L["PaymentRecordSign"]</th>
+                <th>@L["PaymentRecordSignType"]</th>
+                <th>@L["PaymentRecordResultCode"]</th>
+                <th>@L["PaymentRecordErrCode"]</th>
+                <th>@L["PaymentRecordErrCodeDes"]</th>
+                <th>@L["PaymentRecordOpenid"]</th>
+                <th>@L["PaymentRecordIsSubscribe"]</th>
+                <th>@L["PaymentRecordTradeType"]</th>
+                <th>@L["PaymentRecordBankType"]</th>
+                <th>@L["PaymentRecordTotalFee"]</th>
+                <th>@L["PaymentRecordSettlementTotalFee"]</th>
+                <th>@L["PaymentRecordFeeType"]</th>
+                <th>@L["PaymentRecordCashFee"]</th>
+                <th>@L["PaymentRecordCashFeeType"]</th>
+                <th>@L["PaymentRecordCouponFee"]</th>
+                <th>@L["PaymentRecordCouponCount"]</th>
+                <th>@L["PaymentRecordCouponTypes"]</th>
+                <th>@L["PaymentRecordCouponIds"]</th>
+                <th>@L["PaymentRecordCouponFees"]</th>
+                <th>@L["PaymentRecordTransactionId"]</th>
+                <th>@L["PaymentRecordOutTradeNo"]</th>
+                <th>@L["PaymentRecordAttach"]</th>
+                <th>@L["PaymentRecordTimeEnd"]</th>
+            </tr>
+            </thead>
+        </abp-table>
+    </abp-card-body>
+</abp-card>

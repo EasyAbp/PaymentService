@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Data;
 using Volo.Abp.EntityFrameworkCore;
+using EasyAbp.PaymentService.WeChatPay.RefundRecords;
+using EasyAbp.PaymentService.WeChatPay.PaymentRecords;
 
 namespace EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore
 {
@@ -10,6 +12,8 @@ namespace EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore
         /* Add DbSet for each Aggregate Root here. Example:
          * public DbSet<Question> Questions { get; set; }
          */
+        public DbSet<RefundRecord> RefundRecords { get; set; }
+        public DbSet<PaymentRecord> PaymentRecords { get; set; }
 
         public WeChatPayDbContext(DbContextOptions<WeChatPayDbContext> options) 
             : base(options)

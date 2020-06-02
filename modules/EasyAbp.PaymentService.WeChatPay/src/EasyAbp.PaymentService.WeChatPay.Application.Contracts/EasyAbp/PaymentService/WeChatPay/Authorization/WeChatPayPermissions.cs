@@ -10,5 +10,15 @@ namespace EasyAbp.PaymentService.WeChatPay.Authorization
         {
             return ReflectionHelper.GetPublicConstantsRecursively(typeof(WeChatPayPermissions));
         }
+        
+        public class PaymentRecords
+        {
+            public const string Default = GroupName + ".PaymentRecord";
+        }
+        
+        public class RefundRecords
+        {
+            public const string Default = GroupName + ".RefundRecord";
+        }
     }
 }
