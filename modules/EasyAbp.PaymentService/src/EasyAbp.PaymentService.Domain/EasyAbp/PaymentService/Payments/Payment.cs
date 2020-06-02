@@ -6,7 +6,7 @@ using Volo.Abp.MultiTenancy;
 
 namespace EasyAbp.PaymentService.Payments
 {
-    public class Payment : FullAuditedAggregateRoot<Guid>, IMultiTenant
+    public class Payment : FullAuditedAggregateRoot<Guid>, IPayment
     {
         public virtual Guid? TenantId { get; protected set; }
         
