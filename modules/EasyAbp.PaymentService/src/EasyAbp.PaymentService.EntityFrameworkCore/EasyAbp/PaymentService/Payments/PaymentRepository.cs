@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using EasyAbp.PaymentService.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
@@ -16,6 +17,15 @@ namespace EasyAbp.PaymentService.Payments
         public override IQueryable<Payment> WithDetails()
         {
             return base.WithDetails().Include(x => x.PaymentItems);
+        }
+
+        public virtual async Task<Payment> FindPaymentInProgressByPaymentItem(string paymentItemType, Guid paymentItemKey)
+        {
+            return await base.WithDetails()
+                .Where(payment => !payment.CompletionTime.HasValue && !payment.CancelledTime.HasValue)
+                .FirstOrDefaultAsync(payment =>
+                    payment.PaymentItems.Any(item =>
+                        item.ItemType == paymentItemType && item.ItemKey == paymentItemKey));
         }
     }
 }

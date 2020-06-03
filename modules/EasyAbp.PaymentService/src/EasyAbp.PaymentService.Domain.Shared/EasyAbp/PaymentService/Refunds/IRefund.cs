@@ -1,10 +1,8 @@
 ﻿using System;
-using Volo.Abp.Domain.Entities;
-using Volo.Abp.MultiTenancy;
 
 namespace EasyAbp.PaymentService.Refunds
 {
-    public interface IRefund : IAggregateRoot<Guid>, IMultiTenant
+    public interface IRefund
     {
         Guid PaymentId { get; }
         

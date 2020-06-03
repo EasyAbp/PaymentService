@@ -20,8 +20,7 @@ namespace EasyAbp.PaymentService.Payments
             _paymentRepository = paymentRepository;
         }
 
-        public async Task<Payment> PayAsync(Payment payment, Dictionary<string, object> inputExtraProperties,
-            Dictionary<string, object> payeeConfigurations)
+        public async Task<Payment> PayAsync(Payment payment, Dictionary<string, object> payeeConfigurations)
         {
             if (payment.ActualPaymentAmount != decimal.Zero)
             {

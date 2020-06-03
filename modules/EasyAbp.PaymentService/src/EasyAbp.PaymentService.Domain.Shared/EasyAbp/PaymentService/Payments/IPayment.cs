@@ -1,10 +1,10 @@
 ﻿using System;
-using Volo.Abp.Domain.Entities;
+using System.Collections.Generic;
 using Volo.Abp.MultiTenancy;
 
 namespace EasyAbp.PaymentService.Payments
 {
-    public interface IPayment : IAggregateRoot<Guid>, IMultiTenant
+    public interface IPayment
     {
         Guid UserId { get; }
         

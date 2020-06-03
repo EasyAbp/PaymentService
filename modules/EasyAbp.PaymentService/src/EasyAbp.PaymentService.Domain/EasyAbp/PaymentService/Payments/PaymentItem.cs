@@ -4,7 +4,7 @@ using Volo.Abp.Domain.Entities.Auditing;
 
 namespace EasyAbp.PaymentService.Payments
 {
-    public class PaymentItem : FullAuditedEntity<Guid>
+    public class PaymentItem : FullAuditedEntity<Guid>, IPaymentItemEntity
     {
         [NotNull]
         public virtual string ItemType { get; protected set; }

@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
+using Volo.Abp.Data;
 using Volo.Abp.Users;
 
 namespace EasyAbp.PaymentService.Payments
@@ -56,25 +57,45 @@ namespace EasyAbp.PaymentService.Payments
                 throw new MultiCurrencyNotSupportedException();
             }
 
+            if (await HasDuplicatePaymentItemInProgressAsync(paymentItems))
+            {
+                throw new DuplicatePaymentRequestException();
+            }
+
             var payment = new Payment(GuidGenerator.Create(), CurrentTenant.Id, CurrentUser.GetId(),
                 input.PaymentMethod, input.Currency, paymentItems.Select(item => item.OriginalPaymentAmount).Sum(),
                 paymentItems);
+            
+            foreach (var property in input.ExtraProperties)
+            {
+                payment.SetProperty(property.Key, property.Value);
+            }
 
             await Repository.InsertAsync(payment, autoSave: true);
-
-            await CheckPayableAsync(payment, input.ExtraProperties);
             
-            var payeeConfigurations = await GetPayeeConfigurationsAsync(payment, input.ExtraProperties);
+            var payeeConfigurations = await GetPayeeConfigurationsAsync(payment);
 
             // Todo: payment discount
 
-            await provider.PayAsync(payment, input.ExtraProperties, payeeConfigurations);
+            await provider.PayAsync(payment, payeeConfigurations);
 
             return MapToGetOutputDto(payment);
         }
 
-        protected virtual Task<Dictionary<string, object>> GetPayeeConfigurationsAsync(Payment payment,
-            Dictionary<string, object> inputExtraProperties)
+        protected virtual async Task<bool> HasDuplicatePaymentItemInProgressAsync(IEnumerable<PaymentItem> paymentItems)
+        {
+            foreach (var item in paymentItems)
+            {
+                if (await _repository.FindPaymentInProgressByPaymentItem(item.ItemType, item.ItemKey) != null)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        protected virtual Task<Dictionary<string, object>> GetPayeeConfigurationsAsync(Payment payment)
         {
             // Todo: use payee configurations provider.
             // Todo: get store side payee configurations.
@@ -82,27 +103,6 @@ namespace EasyAbp.PaymentService.Payments
             var payeeConfigurations = new Dictionary<string, object>();
             
             return Task.FromResult(payeeConfigurations);
-        }
-
-        protected virtual async Task CheckPayableAsync(Payment payment, Dictionary<string, object> inputExtraProperties)
-        {
-            var itemSet = new HashSet<PaymentItem>(payment.PaymentItems);
-
-            foreach (var authorizer in ServiceProvider.GetServices<IPaymentAuthorizer>())
-            {
-                foreach (var item in itemSet.ToList())
-                {
-                    if (await authorizer.IsPaymentItemAllowedAsync(payment, item, inputExtraProperties))
-                    {
-                        itemSet.Remove(item);
-                    }
-                }
-            }
-
-            if (!itemSet.IsNullOrEmpty())
-            {
-                throw new PaymentItemNotPayableException(itemSet.Select(item => item.ItemKey).ToList());
-            }
         }
 
         [RemoteService(false)]

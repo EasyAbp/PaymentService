@@ -5,7 +5,7 @@ using Volo.Abp.MultiTenancy;
 
 namespace EasyAbp.PaymentService.Refunds
 {
-    public class Refund : FullAuditedAggregateRoot<Guid>, IRefund
+    public class Refund : FullAuditedAggregateRoot<Guid>, IRefundEntity
     {
         public virtual Guid? TenantId { get; protected set; }
         

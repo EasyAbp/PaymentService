@@ -47,8 +47,7 @@ namespace EasyAbp.PaymentService.WeChatPay
             _paymentRepository = paymentRepository;
         }
 
-        public async Task<Payment> PayAsync(Payment payment, Dictionary<string, object> inputExtraProperties,
-            Dictionary<string, object> payeeConfigurations)
+        public async Task<Payment> PayAsync(Payment payment, Dictionary<string, object> payeeConfigurations)
         {
             if (payment.Currency != "CNY")
             {
@@ -60,7 +59,7 @@ namespace EasyAbp.PaymentService.WeChatPay
             
             payment.SetPayeeAccount(payeeAccount);
 
-            var appId = inputExtraProperties.GetOrDefault("appid") as string;
+            var appId = payment.ExtraProperties.GetOrDefault("appid") as string;
             
             var openId = await _paymentOpenIdProvider.FindUserOpenIdAsync(appId, payment.UserId);
             
@@ -84,7 +83,7 @@ namespace EasyAbp.PaymentService.WeChatPay
                 goodsTag: payeeConfigurations.GetOrDefault("goods_tag") as string,
                 notifyUrl: payeeConfigurations.GetOrDefault("notify_url") as string 
                            ?? _configuration["App:SelfUrl"].EnsureEndsWith('/') + "WeChatPay/Notify",
-                tradeType: inputExtraProperties.GetOrDefault("trade_type") as string,
+                tradeType: payment.ExtraProperties.GetOrDefault("trade_type") as string,
                 productId: null,
                 limitPay: payeeConfigurations.GetOrDefault("limit_pay") as string,
                 openId: openId,

@@ -3,7 +3,7 @@
 namespace EasyAbp.PaymentService.Payments
 {
     [Serializable]
-    public class PaymentItemEto
+    public class PaymentItemEto : IPaymentItem
     {
         public Guid Id { get; set; }
         

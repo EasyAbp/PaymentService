@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Volo.Abp.Data;
 
 namespace EasyAbp.PaymentService.Payments
 {
     [Serializable]
-    public class PaymentEto
+    public class PaymentEto : IPayment, IHasExtraProperties
     {
         public Guid UserId { get; set; }
 
@@ -14,6 +15,8 @@ namespace EasyAbp.PaymentService.Payments
         
         public string PaymentMethod { get; set; }
         
+        public string PayeeAccount { get; set; }
+
         public string ExternalTradingCode { get; set; }
         
         public string Currency { get; set; }
@@ -29,7 +32,9 @@ namespace EasyAbp.PaymentService.Payments
         public DateTime? CompletionTime { get; set; }
         
         public DateTime? CancelledTime { get; set; }
-        
+    
+        public Dictionary<string, object> ExtraProperties { get; set; }
+
         public List<PaymentItemEto> PaymentItems { get; set; }
     }
 }

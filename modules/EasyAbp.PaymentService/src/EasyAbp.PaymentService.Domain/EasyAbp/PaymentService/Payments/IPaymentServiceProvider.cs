@@ -5,7 +5,6 @@ namespace EasyAbp.PaymentService.Payments
 {
     public interface IPaymentServiceProvider
     {
-        Task<Payment> PayAsync(Payment payment, Dictionary<string, object> inputExtraProperties,
-            Dictionary<string, object> payeeConfigurations);
+        Task<Payment> PayAsync(Payment payment, Dictionary<string, object> payeeConfigurations);
     }
 }
