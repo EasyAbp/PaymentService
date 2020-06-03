@@ -32,6 +32,8 @@ namespace EasyAbp.PaymentService.Payments
         public DateTime? CompletionTime { get; set; }
         
         public DateTime? CancelledTime { get; set; }
+        
+        public DateTime CreationTime { get; set; }
     
         public Dictionary<string, object> ExtraProperties { get; set; }
 
