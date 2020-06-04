@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EasyAbp.PaymentService.Authorization;
 using EasyAbp.PaymentService.Payments.Dtos;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
@@ -15,6 +16,9 @@ namespace EasyAbp.PaymentService.Payments
     public class PaymentAppService : CrudAppService<Payment, PaymentDto, Guid, PagedAndSortedResultRequestDto, CreatePaymentDto, object>,
         IPaymentAppService
     {
+        protected override string GetPolicyName { get; set; } = PaymentServicePermissions.Payments.Default;
+        protected override string GetListPolicyName { get; set; } = PaymentServicePermissions.Payments.Default;
+        
         private readonly IPaymentServiceResolver _paymentServiceResolver;
         private readonly IPaymentRepository _repository;
 
