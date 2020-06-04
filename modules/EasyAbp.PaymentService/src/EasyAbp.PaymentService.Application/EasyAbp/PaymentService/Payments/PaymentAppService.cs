@@ -85,11 +85,16 @@ namespace EasyAbp.PaymentService.Payments
             var provider = ServiceProvider.GetService(providerType) as IPaymentServiceProvider ??
                            throw new UnknownPaymentMethodException(payment.PaymentMethod);
             
-            var payeeConfigurations = await GetPayeeConfigurationsAsync(payment);
+            var configurations = await GetPayeeConfigurationsAsync(payment);
 
+            foreach (var property in input.ExtraProperties)
+            {
+                configurations.AddIfNotContains(new KeyValuePair<string, object>(property.Key, property.Value));
+            }
+            
             // Todo: payment discount
 
-            await provider.PayAsync(payment, payeeConfigurations);
+            await provider.PayAsync(payment, configurations);
 
             return MapToGetOutputDto(payment);
         }

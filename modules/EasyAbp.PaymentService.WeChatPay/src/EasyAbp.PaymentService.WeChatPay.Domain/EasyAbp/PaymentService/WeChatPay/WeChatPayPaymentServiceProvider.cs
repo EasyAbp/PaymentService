@@ -47,19 +47,19 @@ namespace EasyAbp.PaymentService.WeChatPay
             _paymentRepository = paymentRepository;
         }
 
-        public async Task<Payment> PayAsync(Payment payment, Dictionary<string, object> payeeConfigurations)
+        public async Task<Payment> PayAsync(Payment payment, Dictionary<string, object> configurations)
         {
             if (payment.Currency != "CNY")
             {
                 throw new CurrencyNotSupportedException(payment.PaymentMethod, payment.Currency);
             }
 
-            var payeeAccount = payeeConfigurations.GetOrDefault("PayeeAccount") as string ??
+            var payeeAccount = configurations.GetOrDefault("PayeeAccount") as string ??
                                await _settingProvider.GetOrNullAsync(WeChatPaySettings.MchId);
             
             payment.SetPayeeAccount(payeeAccount);
 
-            var appId = payment.ExtraProperties.GetOrDefault("appid") as string;
+            var appId = configurations.GetOrDefault("appid") as string;
             
             var openId = await _paymentOpenIdProvider.FindUserOpenIdAsync(appId, payment.UserId);
             
@@ -70,25 +70,25 @@ namespace EasyAbp.PaymentService.WeChatPay
                 subAppId: null,
                 mchId: payment.PayeeAccount,
                 subMchId: null,
-                deviceInfo: payeeConfigurations.GetOrDefault("deviceInfo") as string ?? "EasyAbp Payment Service",
-                body: payeeConfigurations.GetOrDefault("body") as string ?? "EasyAbp Payment Service",
-                detail: payeeConfigurations.GetOrDefault("detail") as string,
-                attach: payeeConfigurations.GetOrDefault("attach") as string,
+                deviceInfo: configurations.GetOrDefault("deviceInfo") as string ?? "EasyAbp Payment Service",
+                body: configurations.GetOrDefault("body") as string ?? "EasyAbp Payment Service",
+                detail: configurations.GetOrDefault("detail") as string,
+                attach: configurations.GetOrDefault("attach") as string,
                 outTradeNo: outTradeNo,
                 feeType: payment.Currency,
                 totalFee: ConvertDecimalToWeChatPayFee(payment.ActualPaymentAmount),
                 billCreateIp: "127.0.0.1",
                 timeStart: null,
                 timeExpire: null,
-                goodsTag: payeeConfigurations.GetOrDefault("goods_tag") as string,
-                notifyUrl: payeeConfigurations.GetOrDefault("notify_url") as string 
+                goodsTag: configurations.GetOrDefault("goods_tag") as string,
+                notifyUrl: configurations.GetOrDefault("notify_url") as string 
                            ?? _configuration["App:SelfUrl"].EnsureEndsWith('/') + "WeChatPay/Notify",
-                tradeType: payment.ExtraProperties.GetOrDefault("trade_type") as string,
+                tradeType: configurations.GetOrDefault("trade_type") as string,
                 productId: null,
-                limitPay: payeeConfigurations.GetOrDefault("limit_pay") as string,
+                limitPay: configurations.GetOrDefault("limit_pay") as string,
                 openId: openId,
                 subOpenId: null,
-                receipt: payeeConfigurations.GetOrDefault("receipt") as string ?? "N",
+                receipt: configurations.GetOrDefault("receipt") as string ?? "N",
                 sceneInfo: null);
 
             var xml = result.SelectSingleNode("xml") ?? throw new UnifiedOrderFailedException();
@@ -105,6 +105,8 @@ namespace EasyAbp.PaymentService.WeChatPay
                     xml.SelectSingleNode("err_code")?.InnerText);
             }
 
+            payment.SetProperty("appid", configurations.GetOrDefault("appid") as string);
+            
             payment.SetProperty("trade_type", xml.SelectSingleNode("trade_type")?.InnerText);
             payment.SetProperty("prepay_id", xml.SelectSingleNode("prepay_id")?.InnerText);
             payment.SetProperty("code_url", xml.SelectSingleNode("code_url")?.InnerText);

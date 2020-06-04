@@ -48,18 +48,13 @@ namespace EasyAbp.PaymentService.Payments
 
             if (await HasDuplicatePaymentItemInProgressAsync(paymentItems))
             {
-                return;
+                throw new DuplicatePaymentRequestException();
             }
 
             var payment = new Payment(_guidGenerator.Create(), eventData.TenantId, eventData.UserId,
                 eventData.PaymentMethod, eventData.Currency, paymentItems.Select(item => item.OriginalPaymentAmount).Sum(),
                 paymentItems);
             
-            foreach (var property in eventData.ExtraProperties)
-            {
-                payment.SetProperty(property.Key, property.Value);
-            }
-
             await _paymentRepository.InsertAsync(payment, autoSave: true);
         }
         
