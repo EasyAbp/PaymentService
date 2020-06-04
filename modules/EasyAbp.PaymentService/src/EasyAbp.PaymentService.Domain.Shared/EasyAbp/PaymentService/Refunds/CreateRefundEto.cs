@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using Volo.Abp.Data;
 
 namespace EasyAbp.PaymentService.Refunds
 {
-    public class CreateRefundEto
+    public class CreateRefundEto : IHasExtraProperties
     {
         public Guid? TenantId { get; set; }
         
@@ -21,5 +23,7 @@ namespace EasyAbp.PaymentService.Refunds
         public string CustomerRemark { get; set; }
 
         public string StaffRemark { get; set; }
+        
+        public Dictionary<string, object> ExtraProperties { get; set; }
     }
 }

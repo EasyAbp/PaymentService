@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Volo.Abp.Data;
 
 namespace EasyAbp.PaymentService.Payments
 {
-    public class CreatePaymentEto
+    public class CreatePaymentEto : IHasExtraProperties
     {
         public Guid? TenantId { get; set; }
         
@@ -13,6 +14,8 @@ namespace EasyAbp.PaymentService.Payments
 
         public string Currency { get; set; }
         
+        public Dictionary<string, object> ExtraProperties { get; set; }
+
         public List<CreatePaymentItemEto> PaymentItems { get; set; }
     }
 }

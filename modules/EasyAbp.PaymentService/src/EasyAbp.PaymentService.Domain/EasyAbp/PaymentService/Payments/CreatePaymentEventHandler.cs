@@ -55,6 +55,11 @@ namespace EasyAbp.PaymentService.Payments
                 eventData.PaymentMethod, eventData.Currency, paymentItems.Select(item => item.OriginalPaymentAmount).Sum(),
                 paymentItems);
             
+            foreach (var property in eventData.ExtraProperties)
+            {
+                payment.SetProperty(property.Key, property.Value);
+            }
+            
             await _paymentRepository.InsertAsync(payment, autoSave: true);
         }
         
