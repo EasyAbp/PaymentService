@@ -10,7 +10,7 @@ namespace EasyAbp.PaymentService.Refunds
             RefundDto, 
             Guid, 
             PagedAndSortedResultRequestDto,
-            CreateRefundDto,
+            object,
             object>
     {
 

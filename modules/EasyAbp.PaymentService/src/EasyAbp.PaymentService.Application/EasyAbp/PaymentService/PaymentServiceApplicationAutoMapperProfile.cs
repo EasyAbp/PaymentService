@@ -16,7 +16,6 @@ namespace EasyAbp.PaymentService
              * into multiple profile classes for a better organization. */
             CreateMap<Payment, PaymentDto>();
             CreateMap<Refund, RefundDto>();
-            CreateMap<CreateRefundDto, Refund>(MemberList.Source);
             CreateMap<PaymentItem, PaymentItemDto>();
         }
     }
