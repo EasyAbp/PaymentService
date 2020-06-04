@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using EasyAbp.PaymentService.Authorization;
+using EasyAbp.PaymentService.Localization;
 using EasyAbp.PaymentService.Payments.Dtos;
+using Microsoft.Extensions.Localization;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
@@ -14,14 +17,17 @@ namespace EasyAbp.PaymentService.Payments
     {
         protected override string GetPolicyName { get; set; } = PaymentServicePermissions.Payments.Default;
         protected override string GetListPolicyName { get; set; } = PaymentServicePermissions.Payments.Default;
-        
+
+        private readonly IStringLocalizer<PaymentServiceResource> _stringLocalizer;
         private readonly IPaymentServiceResolver _paymentServiceResolver;
         private readonly IPaymentRepository _repository;
 
         public PaymentAppService(
+            IStringLocalizer<PaymentServiceResource> stringLocalizer,
             IPaymentServiceResolver paymentServiceResolver,
             IPaymentRepository repository) : base(repository)
         {
+            _stringLocalizer = stringLocalizer;
             _paymentServiceResolver = paymentServiceResolver;
             _repository = repository;
         }
@@ -54,6 +60,19 @@ namespace EasyAbp.PaymentService.Payments
         public override Task DeleteAsync(Guid id)
         {
             throw new NotSupportedException();
+        }
+
+        public virtual Task<ListResultDto<PaymentMethodDto>> GetListPaymentMethod()
+        {
+            var paymentMethods = _paymentServiceResolver.GetPaymentMethods().Select(paymentMethod =>
+                new PaymentMethodDto
+                {
+                    PaymentMethod = paymentMethod,
+                    Name = _stringLocalizer[paymentMethod]
+                }).ToList();
+
+            // Todo: cache the result.
+            return Task.FromResult(new ListResultDto<PaymentMethodDto>(paymentMethods));
         }
 
         public virtual async Task<PaymentDto> PayAsync(PayDto input)
