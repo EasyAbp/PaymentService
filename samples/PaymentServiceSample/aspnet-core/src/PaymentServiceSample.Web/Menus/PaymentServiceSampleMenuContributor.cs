@@ -26,7 +26,7 @@ namespace PaymentServiceSample.Web.Menus
                 administration.TryRemoveMenuItem(TenantManagementMenuNames.GroupName);
             }
 
-            var l = context.ServiceProvider.GetRequiredService<IStringLocalizer<PaymentServiceSampleResource>>();
+            var l = context.GetLocalizer<PaymentServiceSampleResource>();
 
             context.Menu.Items.Insert(0, new ApplicationMenuItem("PaymentServiceSample.Home", l["Menu:Home"], "/"));
         }

@@ -24,7 +24,7 @@ namespace EasyAbp.PaymentService.WeChatPay.Web
 
         private async Task ConfigureMainMenu(MenuConfigurationContext context)
         {
-            var l = context.ServiceProvider.GetRequiredService<IStringLocalizer<WeChatPayResource>>();            //Add main menu items.
+            var l = context.GetLocalizer<WeChatPayResource>();            //Add main menu items.
 
             var authorizationService = context.ServiceProvider.GetRequiredService<IAuthorizationService>();
 
