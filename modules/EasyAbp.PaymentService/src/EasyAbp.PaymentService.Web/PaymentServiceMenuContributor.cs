@@ -23,18 +23,16 @@ namespace EasyAbp.PaymentService.Web
         {
             var l = context.GetLocalizer<PaymentServiceResource>();            //Add main menu items.
 
-            var authorizationService = context.ServiceProvider.GetRequiredService<IAuthorizationService>();
-
             var paymentManagementMenuItem = new ApplicationMenuItem("PaymentManagement", l["Menu:PaymentManagement"]);
 
-            if (await authorizationService.IsGrantedAsync(PaymentServicePermissions.Payments.Manage))
+            if (await context.IsGrantedAsync(PaymentServicePermissions.Payments.Manage))
             {
                 paymentManagementMenuItem.AddItem(
                     new ApplicationMenuItem("Payment", l["Menu:Payment"], "/PaymentService/Payments/Payment")
                 );
             }
             
-            if (await authorizationService.IsGrantedAsync(PaymentServicePermissions.Refunds.Manage))
+            if (await context.IsGrantedAsync(PaymentServicePermissions.Refunds.Manage))
             {
                 paymentManagementMenuItem.AddItem(
                     new ApplicationMenuItem("Refund", l["Menu:Refund"], "/PaymentService/Refunds/Refund")
