@@ -26,19 +26,19 @@ namespace EasyAbp.PaymentService.WeChatPay.Web
         {
             var l = context.GetLocalizer<WeChatPayResource>();            //Add main menu items.
 
-            var weChatPayManagementMenuItem = new ApplicationMenuItem("WeChatPayManagement", l["Menu:WeChatPayManagement"]);
+            var weChatPayManagementMenuItem = new ApplicationMenuItem("EasyAbpPaymentServiceWeChatPay", l["Menu:WeChatPayManagement"]);
 
             if (await context.IsGrantedAsync(WeChatPayPermissions.PaymentRecords.Default))
             {
                 weChatPayManagementMenuItem.AddItem(
-                    new ApplicationMenuItem("PaymentRecord", l["Menu:PaymentRecord"], "/PaymentService/WeChatPay/PaymentRecords/PaymentRecord")
+                    new ApplicationMenuItem("EasyAbpPaymentServiceWeChatPayPaymentRecord", l["Menu:PaymentRecord"], "/PaymentService/WeChatPay/PaymentRecords/PaymentRecord")
                 );
             }
             
             if (await context.IsGrantedAsync(WeChatPayPermissions.RefundRecords.Default))
             {
                 weChatPayManagementMenuItem.AddItem(
-                    new ApplicationMenuItem("RefundRecord", l["Menu:RefundRecord"], "/PaymentService/WeChatPay/RefundRecords/RefundRecord")
+                    new ApplicationMenuItem("EasyAbpPaymentServiceWeChatPayRefundRecord", l["Menu:RefundRecord"], "/PaymentService/WeChatPay/RefundRecords/RefundRecord")
                 );
             }
 

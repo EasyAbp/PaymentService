@@ -23,19 +23,19 @@ namespace EasyAbp.PaymentService.Web
         {
             var l = context.GetLocalizer<PaymentServiceResource>();            //Add main menu items.
 
-            var paymentManagementMenuItem = new ApplicationMenuItem("PaymentManagement", l["Menu:PaymentManagement"]);
+            var paymentManagementMenuItem = new ApplicationMenuItem("EasyAbpPaymentService", l["Menu:PaymentManagement"]);
 
             if (await context.IsGrantedAsync(PaymentServicePermissions.Payments.Manage))
             {
                 paymentManagementMenuItem.AddItem(
-                    new ApplicationMenuItem("Payment", l["Menu:Payment"], "/PaymentService/Payments/Payment")
+                    new ApplicationMenuItem("EasyAbpPaymentServicePayment", l["Menu:Payment"], "/PaymentService/Payments/Payment")
                 );
             }
             
             if (await context.IsGrantedAsync(PaymentServicePermissions.Refunds.Manage))
             {
                 paymentManagementMenuItem.AddItem(
-                    new ApplicationMenuItem("Refund", l["Menu:Refund"], "/PaymentService/Refunds/Refund")
+                    new ApplicationMenuItem("EasyAbpPaymentServiceRefund", l["Menu:Refund"], "/PaymentService/Refunds/Refund")
                 );
             }
             
