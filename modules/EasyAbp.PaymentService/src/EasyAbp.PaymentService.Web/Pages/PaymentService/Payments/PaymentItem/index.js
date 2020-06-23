@@ -21,6 +21,7 @@ $(function () {
             { data: "paymentDiscount" },
             { data: "actualPaymentAmount" },
             { data: "refundAmount" },
+            { data: "pendingRefundAmount" },
         ]
     }));
 });

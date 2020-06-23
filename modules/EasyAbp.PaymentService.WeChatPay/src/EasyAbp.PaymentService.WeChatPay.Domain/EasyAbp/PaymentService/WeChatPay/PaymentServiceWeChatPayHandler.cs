@@ -17,20 +17,17 @@ namespace EasyAbp.PaymentService.WeChatPay
     {
         private readonly IClock _clock;
         private readonly IDataFilter _dataFilter;
-        private readonly IGuidGenerator _guidGenerator;
         private readonly IPaymentRecordRepository _paymentRecordRepository;
         private readonly IPaymentRepository _paymentRepository;
 
         public PaymentServiceWeChatPayHandler(
             IClock clock,
             IDataFilter dataFilter,
-            IGuidGenerator guidGenerator,
             IPaymentRecordRepository paymentRecordRepository,
             IPaymentRepository paymentRepository)
         {
             _clock = clock;
             _dataFilter = dataFilter;
-            _guidGenerator = guidGenerator;
             _paymentRecordRepository = paymentRecordRepository;
             _paymentRepository = paymentRepository;
         }
@@ -38,26 +35,23 @@ namespace EasyAbp.PaymentService.WeChatPay
         public virtual async Task HandleAsync(XmlDocument xmlDocument)
         {
             using var disabledDataFilter = _dataFilter.Disable<IMultiTenant>();
+            
+            var reader = new XmlNodeReader(xmlDocument.SelectSingleNode("xml") ?? throw new NullReferenceException());
 
-            var xml = xmlDocument.SelectSingleNode("xml") ??
-                      throw new XmlDocumentMissingRequiredElementException("xml");
-
-            if (xml["return_code"]?.InnerText != "SUCCESS")
+            if (reader["return_code"] != "SUCCESS" || reader["device_info"] != PaymentServiceWeChatPayConsts.DeviceInfo)
             {
                 return;
             }
 
-            // Todo: sign check
-
-            var paymentId = Guid.Parse(xml["out_trade_no"]?.InnerText ??
-                                     throw new XmlDocumentMissingRequiredElementException("out_trade_no"));
+            var paymentId = Guid.Parse(reader["out_trade_no"] ??
+                                       throw new XmlDocumentMissingRequiredElementException("out_trade_no"));
             
             var payment = await _paymentRepository.GetAsync(paymentId);
 
-            payment.SetExternalTradingCode(xml["transaction_id"]?.InnerText ??
+            payment.SetExternalTradingCode(reader["transaction_id"] ??
                                            throw new XmlDocumentMissingRequiredElementException("transaction_id"));
             
-            if (xml["result_code"]?.InnerText == "SUCCESS")
+            if (reader["result_code"] == "SUCCESS")
             {
                 payment.CompletePayment(_clock.Now);
             }
@@ -68,67 +62,46 @@ namespace EasyAbp.PaymentService.WeChatPay
 
             await _paymentRepository.UpdateAsync(payment, true);
 
-            await RecordPaymentResultAsync(xml, payment.Id);
+            // Todo: Failure also needs to be recorded.
+            await RecordPaymentResultAsync(reader, payment.Id);
         }
 
-        protected virtual async Task<PaymentRecord> RecordPaymentResultAsync(XmlNode xml, Guid paymentId)
+        protected virtual async Task<PaymentRecord> RecordPaymentResultAsync(XmlNodeReader reader, Guid paymentId)
         {
-            var couponCount = ConvertToNullableInt32(xml["coupon_count"]?.InnerText);
+            var couponCount = ConvertToNullableInt32(reader["coupon_count"]);
             
             var record = await _paymentRecordRepository.GetAsync(x => x.PaymentId == paymentId);
             
             record.SetResult(
-                returnCode: xml["return_code"]?.InnerText,
-                returnMsg: xml["return_msg"]?.InnerText,
-                appId: xml["appid"]?.InnerText,
-                mchId: xml["mch_id"]?.InnerText,
-                deviceInfo: xml["device_info"]?.InnerText,
-                nonceStr: xml["nonce_str"]?.InnerText,
-                sign: xml["sign"]?.InnerText,
-                signType: xml["sign_type"]?.InnerText,
-                resultCode: xml["result_code"]?.InnerText,
-                errCode: xml["err_code"]?.InnerText,
-                errCodeDes: xml["err_code_des"]?.InnerText,
-                openid: xml["openid"]?.InnerText,
-                isSubscribe: xml["is_subscribe"]?.InnerText,
-                tradeType: xml["trade_type"]?.InnerText,
-                bankType: xml["bank_type"]?.InnerText,
-                totalFee: ConvertToInt32(xml["total_fee"]?.InnerText),
-                settlementTotalFee: ConvertToNullableInt32(xml["total_fee"]?.InnerText),
-                feeType: xml["fee_type"]?.InnerText,
-                cashFee: ConvertToInt32(xml["cash_fee"]?.InnerText),
-                cashFeeType: xml["cash_fee_type"]?.InnerText,
-                couponFee: ConvertToNullableInt32(xml["coupon_fee"]?.InnerText),
+                returnCode: reader["return_code"],
+                returnMsg: reader["return_msg"],
+                appId: reader["appid"],
+                mchId: reader["mch_id"],
+                deviceInfo: reader["device_info"],
+                resultCode: reader["result_code"],
+                errCode: reader["err_code"],
+                errCodeDes: reader["err_code_des"],
+                openid: reader["openid"],
+                isSubscribe: reader["is_subscribe"],
+                tradeType: reader["trade_type"],
+                bankType: reader["bank_type"],
+                totalFee: ConvertToInt32(reader["total_fee"]),
+                settlementTotalFee: ConvertToNullableInt32(reader["total_fee"]),
+                feeType: reader["fee_type"],
+                cashFee: ConvertToInt32(reader["cash_fee"]),
+                cashFeeType: reader["cash_fee_type"],
+                couponFee: ConvertToNullableInt32(reader["coupon_fee"]),
                 couponCount: couponCount,
-                couponTypes: couponCount != null ? JoinNodesInnerTextAsString(xml, "coupon_type_", couponCount.Value) : null,
-                couponIds: couponCount != null ? JoinNodesInnerTextAsString(xml, "coupon_id_", couponCount.Value) : null,
-                couponFees: couponCount != null ? JoinNodesInnerTextAsString(xml, "coupon_fee_", couponCount.Value) : null,
-                transactionId: xml["transaction_id"]?.InnerText,
-                outTradeNo: xml["out_trade_no"]?.InnerText,
-                attach: xml["attach"]?.InnerText,
-                timeEnd: xml["time_end"]?.InnerText
+                couponTypes: couponCount != null ? reader.JoinNodesInnerTextAsString("coupon_type_", couponCount.Value) : null,
+                couponIds: couponCount != null ? reader.JoinNodesInnerTextAsString("coupon_id_", couponCount.Value) : null,
+                couponFees: couponCount != null ? reader.JoinNodesInnerTextAsString("coupon_fee_", couponCount.Value) : null,
+                transactionId: reader["transaction_id"],
+                outTradeNo: reader["out_trade_no"],
+                attach: reader["attach"],
+                timeEnd: reader["time_end"]
             );
 
             return await _paymentRecordRepository.UpdateAsync(record, true);
-        }
-
-        private static string JoinNodesInnerTextAsString(XmlNode xml, string prefix, int count, string separator = ",")
-        {
-            var innerTexts = new List<string>();
-            
-            for (var i = 0; i < count; i++)
-            {
-                var nodeName = prefix + i;
-
-                var innerText = xml[nodeName]?.InnerText;
-
-                if (innerText != null)
-                {
-                    innerTexts.Add(innerText);
-                }
-            }
-
-            return innerTexts.JoinAsString(separator);
         }
 
         private static int? ConvertToNullableInt32(string text)

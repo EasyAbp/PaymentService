@@ -21,6 +21,8 @@ namespace EasyAbp.PaymentService.Payments
         public virtual decimal ActualPaymentAmount { get; protected set; }
         
         public virtual decimal RefundAmount { get; protected set; }
+        
+        public virtual decimal PendingRefundAmount { get; protected set; }
 
         protected PaymentItem()
         {
@@ -48,6 +50,44 @@ namespace EasyAbp.PaymentService.Payments
             PaymentDiscount = paymentDiscount;
             ActualPaymentAmount = actualPaymentAmount;
             RefundAmount = refundAmount;
+        }
+        
+        internal bool TryStartRefund(decimal refundAmount)
+        {
+            if (refundAmount <= decimal.Zero || ActualPaymentAmount < RefundAmount + refundAmount)
+            {
+                return false;
+            }
+
+            PendingRefundAmount = refundAmount;
+
+            return true;
+        }
+        
+        internal bool TryCompleteRefund()
+        {
+            if (PendingRefundAmount <= decimal.Zero)
+            {
+                return false;
+            }
+
+            RefundAmount += PendingRefundAmount;
+
+            PendingRefundAmount = decimal.Zero;
+
+            return true;
+        }
+        
+        internal bool TryRollbackRefund()
+        {
+            if (PendingRefundAmount <= decimal.Zero)
+            {
+                return false;
+            }
+
+            PendingRefundAmount = decimal.Zero;
+
+            return true;
         }
     }
 }

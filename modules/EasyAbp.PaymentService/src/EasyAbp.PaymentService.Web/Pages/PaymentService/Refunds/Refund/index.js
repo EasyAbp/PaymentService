@@ -34,6 +34,8 @@ $(function () {
             { data: "refundAmount" },
             { data: "customerRemark" },
             { data: "staffRemark" },
+            { data: "completedTime" },
+            { data: "cancelledTime" },
         ]
     }));
 });

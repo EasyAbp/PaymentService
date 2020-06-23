@@ -15,10 +15,6 @@ namespace EasyAbp.PaymentService.WeChatPay.RefundRecords.Dtos
 
         public string MchId { get; set; }
 
-        public string NonceStr { get; set; }
-
-        public string ReqInfo { get; set; }
-
         public string TransactionId { get; set; }
 
         public string OutTradeNo { get; set; }
@@ -35,6 +31,24 @@ namespace EasyAbp.PaymentService.WeChatPay.RefundRecords.Dtos
 
         public int SettlementRefundFee { get; set; }
 
+        public string FeeType { get; set; }
+        
+        public int CashFee { get; set; }
+        
+        public string CashFeeType { get; set; }
+        
+        public int? CashRefundFee { get; set; }
+
+        public int? CouponRefundFee { get; set; }
+        
+        public int? CouponRefundCount { get; set; }
+        
+        public string CouponTypes { get; set; }
+        
+        public string CouponIds { get; set; }
+        
+        public string CouponRefundFees { get; set; }
+        
         public string RefundStatus { get; set; }
 
         public string SuccessTime { get; set; }

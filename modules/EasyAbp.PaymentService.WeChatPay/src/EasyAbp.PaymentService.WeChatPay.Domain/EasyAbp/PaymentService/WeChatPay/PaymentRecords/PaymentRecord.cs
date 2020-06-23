@@ -25,15 +25,6 @@ namespace EasyAbp.PaymentService.WeChatPay.PaymentRecords
 
         [CanBeNull]
         public virtual string DeviceInfo { get; protected set; }
-        
-        [NotNull]
-        public virtual string NonceStr { get; protected set; }
-
-        [NotNull]
-        public virtual string Sign { get; protected set; }
-
-        [CanBeNull]
-        public virtual string SignType { get; protected set; }
 
         [NotNull]
         public virtual string ResultCode { get; protected set; }
@@ -112,9 +103,6 @@ namespace EasyAbp.PaymentService.WeChatPay.PaymentRecords
             string appId,
             string mchId,
             string deviceInfo,
-            string nonceStr,
-            string sign,
-            string signType,
             string resultCode,
             string errCode,
             string errCodeDes,
@@ -142,9 +130,6 @@ namespace EasyAbp.PaymentService.WeChatPay.PaymentRecords
             AppId = appId;
             MchId = mchId;
             DeviceInfo = deviceInfo;
-            NonceStr = nonceStr;
-            Sign = sign;
-            SignType = signType;
             ResultCode = resultCode;
             ErrCode = errCode;
             ErrCodeDes = errCodeDes;

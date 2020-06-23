@@ -22,12 +22,6 @@ namespace EasyAbp.PaymentService.WeChatPay.RefundRecords
         
         [NotNull]
         public virtual string MchId { get; protected set; }
-
-        [NotNull]
-        public virtual string NonceStr { get; protected set; }
-        
-        [NotNull]
-        public virtual string ReqInfo { get; protected set; }
         
         [NotNull]
         public virtual string TransactionId { get; protected set; }
@@ -47,7 +41,30 @@ namespace EasyAbp.PaymentService.WeChatPay.RefundRecords
         
         public virtual int RefundFee { get; protected set; }
         
-        public virtual int SettlementRefundFee { get; protected set; }
+        public virtual int? SettlementRefundFee { get; protected set; }
+        
+        [CanBeNull]
+        public virtual string FeeType { get; protected set; }
+        
+        public virtual int CashFee { get; protected set; }
+        
+        [CanBeNull]
+        public virtual string CashFeeType { get; protected set; }
+        
+        public virtual int? CashRefundFee { get; protected set; }
+
+        public virtual int? CouponRefundFee { get; protected set; }
+        
+        public virtual int? CouponRefundCount { get; protected set; }
+        
+        [CanBeNull]
+        public virtual string CouponTypes { get; protected set; }
+        
+        [CanBeNull]
+        public virtual string CouponIds { get; protected set; }
+        
+        [CanBeNull]
+        public virtual string CouponRefundFees { get; protected set; }
         
         [NotNull]
         public virtual string RefundStatus { get; protected set; }
@@ -79,8 +96,6 @@ namespace EasyAbp.PaymentService.WeChatPay.RefundRecords
             string returnMsg,
             string appId,
             string mchId,
-            string nonceStr,
-            string reqInfo,
             string transactionId,
             string outTradeNo,
             string refundId,
@@ -88,13 +103,17 @@ namespace EasyAbp.PaymentService.WeChatPay.RefundRecords
             int totalFee,
             int? settlementTotalFee,
             int refundFee,
-            int settlementRefundFee,
-            string refundStatus,
-            string successTime,
-            string refundRecvAccout,
-            string refundAccount,
-            string refundRequestSource
-        ) :base(id)
+            int? settlementRefundFee,
+            string feeType,
+            int cashFee,
+            string cashFeeType,
+            int? cashRefundFee,
+            int? couponRefundFee,
+            int? couponRefundCount,
+            string couponTypes,
+            string couponIds,
+            string couponRefundFees
+        ) : base(id)
         {
             TenantId = tenantId;
             PaymentId = paymentId;
@@ -102,8 +121,6 @@ namespace EasyAbp.PaymentService.WeChatPay.RefundRecords
             ReturnMsg = returnMsg;
             AppId = appId;
             MchId = mchId;
-            NonceStr = nonceStr;
-            ReqInfo = reqInfo;
             TransactionId = transactionId;
             OutTradeNo = outTradeNo;
             RefundId = refundId;
@@ -112,11 +129,31 @@ namespace EasyAbp.PaymentService.WeChatPay.RefundRecords
             SettlementTotalFee = settlementTotalFee;
             RefundFee = refundFee;
             SettlementRefundFee = settlementRefundFee;
+            FeeType = feeType;
+            CashFee = cashFee;
+            CashFeeType = cashFeeType;
+            CashRefundFee = cashRefundFee;
+            CouponRefundFee = couponRefundFee;
+            CouponRefundCount = couponRefundCount;
+            CouponTypes = couponTypes;
+            CouponIds = couponIds;
+            CouponRefundFees = couponRefundFees;
+        }
+
+        public void SetInformationInNotify(
+            string refundStatus,
+            string successTime,
+            string refundRecvAccout,
+            string refundAccount,
+            string refundRequestSource,
+            int settlementRefundFee)
+        {
             RefundStatus = refundStatus;
             SuccessTime = successTime;
             RefundRecvAccout = refundRecvAccout;
             RefundAccount = refundAccount;
             RefundRequestSource = refundRequestSource;
+            SettlementRefundFee = settlementRefundFee;
         }
     }
 }

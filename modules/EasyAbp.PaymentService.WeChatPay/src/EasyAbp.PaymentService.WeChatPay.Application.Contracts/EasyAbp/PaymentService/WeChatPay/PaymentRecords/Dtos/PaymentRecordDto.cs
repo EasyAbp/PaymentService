@@ -17,12 +17,6 @@ namespace EasyAbp.PaymentService.WeChatPay.PaymentRecords.Dtos
 
         public string DeviceInfo { get; set; }
 
-        public string NonceStr { get; set; }
-
-        public string Sign { get; set; }
-
-        public string SignType { get; set; }
-
         public string ResultCode { get; set; }
 
         public string ErrCode { get; set; }

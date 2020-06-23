@@ -47,6 +47,7 @@ namespace EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore
                 b.ToTable(options.TablePrefix + "RefundRecords", options.Schema);
                 b.ConfigureByConvention(); 
                 /* Configure more properties here */
+                b.HasIndex(x => x.PaymentId);
             });
 
             builder.Entity<PaymentRecord>(b =>
@@ -54,6 +55,7 @@ namespace EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore
                 b.ToTable(options.TablePrefix + "PaymentRecords", options.Schema);
                 b.ConfigureByConvention(); 
                 /* Configure more properties here */
+                b.HasIndex(x => x.PaymentId);
             });
         }
     }

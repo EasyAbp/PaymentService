@@ -16,7 +16,7 @@ namespace EasyAbp.PaymentService.Refunds
         [NotNull]
         public virtual string RefundPaymentMethod { get; protected set; }
         
-        [NotNull]
+        [CanBeNull]
         public virtual string ExternalTradingCode { get; protected set; }
         
         [NotNull]
@@ -29,6 +29,10 @@ namespace EasyAbp.PaymentService.Refunds
         
         [CanBeNull]
         public virtual string StaffRemark { get; protected set; }
+        
+        public virtual DateTime? CompletedTime { get; protected set; }
+        
+        public virtual DateTime? CancelledTime { get; protected set; }
 
         protected Refund()
         {
@@ -39,12 +43,12 @@ namespace EasyAbp.PaymentService.Refunds
             Guid? tenantId,
             Guid paymentId,
             Guid paymentItemId,
-            string refundPaymentMethod,
-            string externalTradingCode,
-            string currency,
+            [NotNull] string refundPaymentMethod,
+            [CanBeNull] string externalTradingCode,
+            [NotNull] string currency,
             decimal refundAmount,
-            string customerRemark,
-            string staffRemark
+            [CanBeNull] string customerRemark,
+            [CanBeNull] string staffRemark
         ) :base(id)
         {
             TenantId = tenantId;
@@ -56,6 +60,31 @@ namespace EasyAbp.PaymentService.Refunds
             RefundAmount = refundAmount;
             CustomerRemark = customerRemark;
             StaffRemark = staffRemark;
+        }
+
+        public void SetExternalTradingCode(string externalTradingCode)
+        {
+            ExternalTradingCode = externalTradingCode;
+        }
+
+        public void CompleteRefund(DateTime completedTime)
+        {
+            if (CompletedTime.HasValue || CancelledTime.HasValue)
+            {
+                throw new RefundIsInUnexpectedStageException(Id);
+            }
+            
+            CompletedTime = completedTime;
+        }
+
+        public void CancelRefund(DateTime cancelTime)
+        {
+            if (CompletedTime.HasValue || CancelledTime.HasValue)
+            {
+                throw new RefundIsInUnexpectedStageException(Id);
+            }
+
+            CancelledTime = cancelTime;
         }
     }
 }

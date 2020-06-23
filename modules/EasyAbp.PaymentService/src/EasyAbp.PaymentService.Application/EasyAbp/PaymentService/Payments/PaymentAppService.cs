@@ -18,15 +18,18 @@ namespace EasyAbp.PaymentService.Payments
         protected override string GetPolicyName { get; set; } = PaymentServicePermissions.Payments.Default;
         protected override string GetListPolicyName { get; set; } = PaymentServicePermissions.Payments.Default;
 
+        private readonly IPaymentManager _paymentManager;
         private readonly IStringLocalizer<PaymentServiceResource> _stringLocalizer;
         private readonly IPaymentServiceResolver _paymentServiceResolver;
         private readonly IPaymentRepository _repository;
 
         public PaymentAppService(
+            IPaymentManager paymentManager,
             IStringLocalizer<PaymentServiceResource> stringLocalizer,
             IPaymentServiceResolver paymentServiceResolver,
             IPaymentRepository repository) : base(repository)
         {
+            _paymentManager = paymentManager;
             _stringLocalizer = stringLocalizer;
             _paymentServiceResolver = paymentServiceResolver;
             _repository = repository;
@@ -79,22 +82,14 @@ namespace EasyAbp.PaymentService.Payments
         {
             var payment = await _repository.GetAsync(input.PaymentId);
             
-            var providerType = _paymentServiceResolver.GetProviderTypeOrDefault(payment.PaymentMethod) ??
-                               throw new UnknownPaymentMethodException(payment.PaymentMethod);
-
-            var provider = ServiceProvider.GetService(providerType) as IPaymentServiceProvider ??
-                           throw new UnknownPaymentMethodException(payment.PaymentMethod);
-            
             var configurations = await GetPayeeConfigurationsAsync(payment);
-
+            
             foreach (var property in input.ExtraProperties)
             {
                 configurations.AddIfNotContains(new KeyValuePair<string, object>(property.Key, property.Value));
             }
-            
-            // Todo: payment discount
 
-            await provider.PayAsync(payment, configurations);
+            await _paymentManager.PayAsync(payment, configurations);
 
             return MapToGetOutputDto(payment);
         }

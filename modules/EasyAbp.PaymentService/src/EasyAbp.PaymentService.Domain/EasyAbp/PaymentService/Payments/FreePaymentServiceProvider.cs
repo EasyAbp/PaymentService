@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EasyAbp.PaymentService.Refunds;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Timing;
 
@@ -34,6 +35,18 @@ namespace EasyAbp.PaymentService.Payments
             payment.CompletePayment(_clock.Now);
 
             return await _paymentRepository.UpdateAsync(payment, true);
+        }
+
+        public virtual Task<Payment> CancelAsync(Payment payment)
+        {
+            payment.CancelPayment(_clock.Now);
+            
+            return Task.FromResult(payment);
+        }
+
+        public virtual Task<Payment> RefundAsync(Payment payment, IEnumerable<RefundInfoModel> refundInfos, string displayReason = null)
+        {
+            throw new NotSupportedException();
         }
     }
 }
