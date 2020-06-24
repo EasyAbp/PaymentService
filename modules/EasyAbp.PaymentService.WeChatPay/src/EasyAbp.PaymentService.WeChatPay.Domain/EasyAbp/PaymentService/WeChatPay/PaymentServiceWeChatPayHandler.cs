@@ -54,7 +54,7 @@ namespace EasyAbp.PaymentService.WeChatPay
             payment.SetExternalTradingCode(reader["transaction_id"] ??
                                            throw new XmlDocumentMissingRequiredElementException("transaction_id"));
             
-            if (context.IsSuccess)
+            if (reader["return_code"] == "SUCCESS")
             {
                 payment.CompletePayment(_clock.Now);
             }
