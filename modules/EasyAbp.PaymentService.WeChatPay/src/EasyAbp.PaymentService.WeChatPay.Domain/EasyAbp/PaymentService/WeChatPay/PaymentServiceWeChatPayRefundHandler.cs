@@ -41,12 +41,12 @@ namespace EasyAbp.PaymentService.WeChatPay
 
             var dict = xmlDocument.SelectSingleNode("xml").ToDictionary() ?? throw new NullReferenceException();
 
-            if (dict["return_code"] != "SUCCESS")
+            if (dict.GetOrDefault("return_code") != "SUCCESS")
             {
                 return;
             }
 
-            var record = await _refundRecordRepository.FindAsync(x => x.Id == Guid.Parse(dict["out_refund_no"]));
+            var record = await _refundRecordRepository.FindAsync(x => x.Id == Guid.Parse(dict.GetOrDefault("out_refund_no")));
 
             if (record == null)
             {
@@ -61,7 +61,7 @@ namespace EasyAbp.PaymentService.WeChatPay
                 return;
             }
 
-            if (dict["refund_status"] != "SUCCESS")
+            if (dict.GetOrDefault("refund_status") != "SUCCESS")
             {
                 await HandleRefundFailureAsync(payment, refund);
 
@@ -93,12 +93,12 @@ namespace EasyAbp.PaymentService.WeChatPay
             await _paymentRepository.UpdateAsync(payment, true);
 
             record.SetInformationInNotify(
-                refundStatus: dict["refund_status"],
-                successTime: dict["success_time"],
-                refundRecvAccout: dict["refund_recv_accout"],
-                refundAccount: dict["refund_account"],
-                refundRequestSource: dict["refund_request_source"],
-                settlementRefundFee: Convert.ToInt32(dict["settlement_refund_fee"]));
+                refundStatus: dict.GetOrDefault("refund_status"),
+                successTime: dict.GetOrDefault("success_time"),
+                refundRecvAccout: dict.GetOrDefault("refund_recv_accout"),
+                refundAccount: dict.GetOrDefault("refund_account"),
+                refundRequestSource: dict.GetOrDefault("refund_request_source"),
+                settlementRefundFee: Convert.ToInt32(dict.GetOrDefault("settlement_refund_fee")));
 
             await _refundRecordRepository.UpdateAsync(record, true);
         }

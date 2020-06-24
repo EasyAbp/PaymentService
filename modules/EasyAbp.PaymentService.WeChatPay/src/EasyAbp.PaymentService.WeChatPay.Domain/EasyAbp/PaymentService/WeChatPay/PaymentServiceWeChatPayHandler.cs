@@ -38,22 +38,22 @@ namespace EasyAbp.PaymentService.WeChatPay
             var dict = context.WeChatRequestXmlData.SelectSingleNode("xml").ToDictionary() ??
                        throw new NullReferenceException();
 
-            if (dict["return_code"] != "SUCCESS" || dict["device_info"] != PaymentServiceWeChatPayConsts.DeviceInfo)
+            if (dict.GetOrDefault("return_code") != "SUCCESS" || dict.GetOrDefault("device_info") != PaymentServiceWeChatPayConsts.DeviceInfo)
             {
                 return;
             }
 
             using var disabledDataFilter = _dataFilter.Disable<IMultiTenant>();
 
-            var paymentId = Guid.Parse(dict["out_trade_no"] ??
+            var paymentId = Guid.Parse(dict.GetOrDefault("out_trade_no") ??
                                        throw new XmlDocumentMissingRequiredElementException("out_trade_no"));
             
             var payment = await _paymentRepository.GetAsync(paymentId);
 
-            payment.SetExternalTradingCode(dict["transaction_id"] ??
+            payment.SetExternalTradingCode(dict.GetOrDefault("transaction_id") ??
                                            throw new XmlDocumentMissingRequiredElementException("transaction_id"));
             
-            if (dict["result_code"] == "SUCCESS")
+            if (dict.GetOrDefault("result_code") == "SUCCESS")
             {
                 payment.CompletePayment(_clock.Now);
             }
@@ -70,37 +70,37 @@ namespace EasyAbp.PaymentService.WeChatPay
 
         protected virtual async Task<PaymentRecord> RecordPaymentResultAsync(Dictionary<string, string> dict, Guid paymentId)
         {
-            var couponCount = ConvertToNullableInt32(dict["coupon_count"]);
+            var couponCount = ConvertToNullableInt32(dict.GetOrDefault("coupon_count"));
             
             var record = await _paymentRecordRepository.GetAsync(x => x.PaymentId == paymentId);
             
             record.SetResult(
-                returnCode: dict["return_code"],
-                returnMsg: dict["return_msg"],
-                appId: dict["appid"],
-                mchId: dict["mch_id"],
-                deviceInfo: dict["device_info"],
-                resultCode: dict["result_code"],
-                errCode: dict["err_code"],
-                errCodeDes: dict["err_code_des"],
-                openid: dict["openid"],
-                isSubscribe: dict["is_subscribe"],
-                tradeType: dict["trade_type"],
-                bankType: dict["bank_type"],
-                totalFee: ConvertToInt32(dict["total_fee"]),
-                settlementTotalFee: ConvertToNullableInt32(dict["total_fee"]),
-                feeType: dict["fee_type"],
-                cashFee: ConvertToInt32(dict["cash_fee"]),
-                cashFeeType: dict["cash_fee_type"],
-                couponFee: ConvertToNullableInt32(dict["coupon_fee"]),
+                returnCode: dict.GetOrDefault("return_code"),
+                returnMsg: dict.GetOrDefault("return_msg"),
+                appId: dict.GetOrDefault("appid"),
+                mchId: dict.GetOrDefault("mch_id"),
+                deviceInfo: dict.GetOrDefault("device_info"),
+                resultCode: dict.GetOrDefault("result_code"),
+                errCode: dict.GetOrDefault("err_code"),
+                errCodeDes: dict.GetOrDefault("err_code_des"),
+                openid: dict.GetOrDefault("openid"),
+                isSubscribe: dict.GetOrDefault("is_subscribe"),
+                tradeType: dict.GetOrDefault("trade_type"),
+                bankType: dict.GetOrDefault("bank_type"),
+                totalFee: ConvertToInt32(dict.GetOrDefault("total_fee")),
+                settlementTotalFee: ConvertToNullableInt32(dict.GetOrDefault("total_fee")),
+                feeType: dict.GetOrDefault("fee_type"),
+                cashFee: ConvertToInt32(dict.GetOrDefault("cash_fee")),
+                cashFeeType: dict.GetOrDefault("cash_fee_type"),
+                couponFee: ConvertToNullableInt32(dict.GetOrDefault("coupon_fee")),
                 couponCount: couponCount,
                 couponTypes: couponCount != null ? dict.JoinNodesInnerTextAsString("coupon_type_", couponCount.Value) : null,
                 couponIds: couponCount != null ? dict.JoinNodesInnerTextAsString("coupon_id_", couponCount.Value) : null,
                 couponFees: couponCount != null ? dict.JoinNodesInnerTextAsString("coupon_fee_", couponCount.Value) : null,
-                transactionId: dict["transaction_id"],
-                outTradeNo: dict["out_trade_no"],
-                attach: dict["attach"],
-                timeEnd: dict["time_end"]
+                transactionId: dict.GetOrDefault("transaction_id"),
+                outTradeNo: dict.GetOrDefault("out_trade_no"),
+                attach: dict.GetOrDefault("attach"),
+                timeEnd: dict.GetOrDefault("time_end")
             );
 
             return await _paymentRecordRepository.UpdateAsync(record, true);

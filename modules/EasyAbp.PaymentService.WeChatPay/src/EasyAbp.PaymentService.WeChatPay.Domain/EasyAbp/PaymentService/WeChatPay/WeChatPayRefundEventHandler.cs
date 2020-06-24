@@ -70,7 +70,7 @@ namespace EasyAbp.PaymentService.WeChatPay
 
         protected virtual async Task RollbackIfFailedAsync(Payment payment, WeChatPayRefundEto eventData, Dictionary<string, string> dict)
         {
-            if (dict["result_code"] != "SUCCESS")
+            if (dict.GetOrDefault("result_code") != "SUCCESS")
             {
                 payment.RollbackOngoingRefund();
                 
@@ -88,14 +88,14 @@ namespace EasyAbp.PaymentService.WeChatPay
                     paymentId: payment.Id,
                     paymentItemId: info.PaymentItem.Id,
                     refundPaymentMethod: payment.PaymentMethod,
-                    externalTradingCode: dict["refund_id"],
+                    externalTradingCode: dict.GetOrDefault("refund_id"),
                     currency: payment.Currency,
                     refundAmount: info.RefundAmount,
                     customerRemark: info.CustomerRemark,
                     staffRemark: info.StaffRemark
                 );
 
-                if (dict["result_code"] != "SUCCESS")
+                if (dict.GetOrDefault("result_code") != "SUCCESS")
                 {
                     refund.CancelRefund(_clock.Now);
                 }
@@ -106,32 +106,32 @@ namespace EasyAbp.PaymentService.WeChatPay
         
         protected virtual async Task CreateWeChatPayRefundRecordEntitiesAsync(Payment payment, WeChatPayRefundEto eventData, Dictionary<string, string> dict)
         {
-            var settlementTotalFeeString = dict["settlement_total_fee"];
-            var settlementRefundFeeString = dict["settlement_refund_fee"];
-            var cashRefundFeeString = dict["cash_refund_fee"];
-            var couponRefundFeeString = dict["coupon_refund_fee"];
-            var couponRefundCountString = dict["coupon_refund_count"];
+            var settlementTotalFeeString = dict.GetOrDefault("settlement_total_fee");
+            var settlementRefundFeeString = dict.GetOrDefault("settlement_refund_fee");
+            var cashRefundFeeString = dict.GetOrDefault("cash_refund_fee");
+            var couponRefundFeeString = dict.GetOrDefault("coupon_refund_fee");
+            var couponRefundCountString = dict.GetOrDefault("coupon_refund_count");
             var couponRefundCount = couponRefundCountString.IsNullOrEmpty() ? (int?) null : Convert.ToInt32(couponRefundCountString);
 
             await _refundRecordRepository.InsertAsync(new RefundRecord(
                 id: _guidGenerator.Create(),
                 tenantId: _currentTenant.Id,
                 paymentId: payment.Id,
-                returnCode: dict["return_code"],
-                returnMsg: dict["return_msg"],
-                appId: dict["appid"],
-                mchId: dict["mch_id"],
-                transactionId: dict["transaction_id"],
-                outTradeNo: dict["out_trade_no"],
-                refundId: dict["refund_id"],
-                outRefundNo: dict["out_refund_no"],
-                totalFee: Convert.ToInt32(dict["total_fee"]),
+                returnCode: dict.GetOrDefault("return_code"),
+                returnMsg: dict.GetOrDefault("return_msg"),
+                appId: dict.GetOrDefault("appid"),
+                mchId: dict.GetOrDefault("mch_id"),
+                transactionId: dict.GetOrDefault("transaction_id"),
+                outTradeNo: dict.GetOrDefault("out_trade_no"),
+                refundId: dict.GetOrDefault("refund_id"),
+                outRefundNo: dict.GetOrDefault("out_refund_no"),
+                totalFee: Convert.ToInt32(dict.GetOrDefault("total_fee")),
                 settlementTotalFee: settlementTotalFeeString.IsNullOrEmpty() ? (int?) null : Convert.ToInt32(settlementTotalFeeString),
-                refundFee: Convert.ToInt32(dict["refund_fee"]),
+                refundFee: Convert.ToInt32(dict.GetOrDefault("refund_fee")),
                 settlementRefundFee: settlementRefundFeeString.IsNullOrEmpty() ? (int?) null : Convert.ToInt32(settlementRefundFeeString),
-                feeType: dict["fee_type"],
-                cashFee: Convert.ToInt32(dict["cash_fee"]),
-                cashFeeType: dict["cash_fee_type"],
+                feeType: dict.GetOrDefault("fee_type"),
+                cashFee: Convert.ToInt32(dict.GetOrDefault("cash_fee")),
+                cashFeeType: dict.GetOrDefault("cash_fee_type"),
                 cashRefundFee: cashRefundFeeString.IsNullOrEmpty() ? (int?) null : Convert.ToInt32(cashRefundFeeString),
                 couponRefundFee: couponRefundFeeString.IsNullOrEmpty() ? (int?) null : Convert.ToInt32(couponRefundFeeString),
                 couponRefundCount: couponRefundCount,
@@ -163,9 +163,9 @@ namespace EasyAbp.PaymentService.WeChatPay
             
             var dict = new Dictionary<string, string>(result.SelectSingleNode("xml").ToDictionary() ?? throw new NullReferenceException());
 
-            if (dict["return_code"] != "SUCCESS")
+            if (dict.GetOrDefault("return_code") != "SUCCESS")
             {
-                throw new RefundFailedException(dict["return_code"], dict["return_msg"]);
+                throw new RefundFailedException(dict.GetOrDefault("return_code"), dict.GetOrDefault("return_msg"));
             }
 
             await CreateWeChatPayRefundRecordEntitiesAsync(payment, eventData, dict);

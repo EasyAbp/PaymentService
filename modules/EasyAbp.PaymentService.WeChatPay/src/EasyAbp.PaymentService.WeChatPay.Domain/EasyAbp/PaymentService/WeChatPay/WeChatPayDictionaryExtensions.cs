@@ -14,7 +14,7 @@ namespace EasyAbp.PaymentService.WeChatPay
             {
                 var nodeName = prefix + i;
 
-                var innerText = dict[nodeName];
+                var innerText = dict.GetOrDefault(nodeName);
 
                 if (innerText != null)
                 {
