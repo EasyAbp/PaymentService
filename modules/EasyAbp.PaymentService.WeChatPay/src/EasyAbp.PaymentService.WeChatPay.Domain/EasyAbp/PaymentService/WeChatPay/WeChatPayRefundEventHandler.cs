@@ -68,7 +68,7 @@ namespace EasyAbp.PaymentService.WeChatPay
                 {
                     refund.SetExternalTradingCode(externalTradingCode);
 
-                    await _refundRepository.InsertAsync(refund, true);
+                    await _refundRepository.UpdateAsync(refund, true);
                 }
                 
                 if (dict.GetOrDefault("result_code") != "SUCCESS")
