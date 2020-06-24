@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Xml;
 using EasyAbp.Abp.WeChat.Pay.Infrastructure;
+using EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve;
 using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.WeChatPay.PaymentRecords;
 using Volo.Abp.Data;
@@ -32,16 +33,19 @@ namespace EasyAbp.PaymentService.WeChatPay
             _paymentRepository = paymentRepository;
         }
         
-        public virtual async Task HandleAsync(XmlDocument xmlDocument)
+        public virtual async Task HandleAsync(WeChatPayHandlerContext context)
         {
-            using var disabledDataFilter = _dataFilter.Disable<IMultiTenant>();
+            var xmlDocument = context.WeChatRequestXmlData;
             
             var reader = new XmlNodeReader(xmlDocument.SelectSingleNode("xml") ?? throw new NullReferenceException());
 
-            if (reader["return_code"] != "SUCCESS" || reader["device_info"] != PaymentServiceWeChatPayConsts.DeviceInfo)
+            if (reader["device_info"] != PaymentServiceWeChatPayConsts.DeviceInfo)
             {
+                //TODO:maybe throw exception of Device info mismatch?
                 return;
             }
+
+            using var disabledDataFilter = _dataFilter.Disable<IMultiTenant>();
 
             var paymentId = Guid.Parse(reader["out_trade_no"] ??
                                        throw new XmlDocumentMissingRequiredElementException("out_trade_no"));
@@ -51,12 +55,13 @@ namespace EasyAbp.PaymentService.WeChatPay
             payment.SetExternalTradingCode(reader["transaction_id"] ??
                                            throw new XmlDocumentMissingRequiredElementException("transaction_id"));
             
-            if (reader["result_code"] == "SUCCESS")
+            if (context.IsSuccess)
             {
                 payment.CompletePayment(_clock.Now);
             }
             else
             {
+                //TODO:Should log or return failed response?
                 payment.CancelPayment(_clock.Now);
             }
 
