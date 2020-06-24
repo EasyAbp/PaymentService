@@ -40,18 +40,16 @@ namespace EasyAbp.PaymentService.Payments
             ItemKey = itemKey;
             Currency = currency;
             OriginalPaymentAmount = originalPaymentAmount;
-        }
-
-        public void CompletePayment(
-            decimal paymentDiscount,
-            decimal actualPaymentAmount,
-            decimal refundAmount)
-        {
-            PaymentDiscount = paymentDiscount;
-            ActualPaymentAmount = actualPaymentAmount;
-            RefundAmount = refundAmount;
+            ActualPaymentAmount = originalPaymentAmount;
         }
         
+        internal void SetPaymentDiscount(decimal paymentDiscount)
+        {
+            // Todo: ActualPaymentAmount should greater than 0
+            PaymentDiscount = paymentDiscount;
+            ActualPaymentAmount = OriginalPaymentAmount - paymentDiscount;
+        }
+
         internal bool TryStartRefund(decimal refundAmount)
         {
             if (refundAmount <= decimal.Zero || ActualPaymentAmount < RefundAmount + refundAmount)

@@ -79,12 +79,15 @@ namespace EasyAbp.PaymentService.Payments
             ExternalTradingCode = externalTradingCode;
         }
 
-        public void SetPaymentDiscount(decimal paymentDiscount)
+        public void SetPaymentDiscount(PaymentItem paymentItem, decimal paymentDiscount)
         {
             CheckIsInProgress();
 
-            PaymentDiscount = paymentDiscount;
-            ActualPaymentAmount -= paymentDiscount;
+            paymentItem.SetPaymentDiscount(paymentDiscount);
+            
+            // Todo: ActualPaymentAmount should greater than 0
+            PaymentDiscount = PaymentItems.Sum(item => item.PaymentDiscount);
+            ActualPaymentAmount = OriginalPaymentAmount - paymentDiscount;
         }
 
         public void CompletePayment(DateTime completionTime)
