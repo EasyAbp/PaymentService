@@ -41,7 +41,6 @@ namespace EasyAbp.PaymentService.WeChatPay
 
             if (reader["device_info"] != PaymentServiceWeChatPayConsts.DeviceInfo)
             {
-                //TODO:maybe throw exception of Device info mismatch?
                 return;
             }
 
@@ -61,7 +60,6 @@ namespace EasyAbp.PaymentService.WeChatPay
             }
             else
             {
-                //TODO:Should log or return failed response?
                 payment.CancelPayment(_clock.Now);
             }
 
