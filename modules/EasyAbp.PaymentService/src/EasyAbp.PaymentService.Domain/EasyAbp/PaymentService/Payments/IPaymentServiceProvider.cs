@@ -6,10 +6,10 @@ namespace EasyAbp.PaymentService.Payments
 {
     public interface IPaymentServiceProvider
     {
-        Task<Payment> PayAsync(Payment payment, Dictionary<string, object> configurations);
+        Task OnStartPaymentAsync(Payment payment, Dictionary<string, object> configurations);
         
-        Task<Payment> CancelAsync(Payment payment);
+        Task OnStartCancelAsync(Payment payment);
 
-        Task<Payment> RefundAsync(Payment payment, IEnumerable<RefundInfoModel> refundInfos, string displayReason = null);
+        Task OnStartRefundAsync(Payment payment, IEnumerable<Refund> refunds, string displayReason = null);
     }
 }

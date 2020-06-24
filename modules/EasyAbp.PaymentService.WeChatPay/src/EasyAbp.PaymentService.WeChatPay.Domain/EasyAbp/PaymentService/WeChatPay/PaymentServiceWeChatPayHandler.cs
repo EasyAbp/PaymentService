@@ -16,19 +16,19 @@ namespace EasyAbp.PaymentService.WeChatPay
 {
     public class PaymentServiceWeChatPayHandler : IWeChatPayHandler, ITransientDependency
     {
-        private readonly IClock _clock;
         private readonly IDataFilter _dataFilter;
+        private readonly IPaymentManager _paymentManager;
         private readonly IPaymentRecordRepository _paymentRecordRepository;
         private readonly IPaymentRepository _paymentRepository;
 
         public PaymentServiceWeChatPayHandler(
-            IClock clock,
             IDataFilter dataFilter,
+            IPaymentManager paymentManager,
             IPaymentRecordRepository paymentRecordRepository,
             IPaymentRepository paymentRepository)
         {
-            _clock = clock;
             _dataFilter = dataFilter;
+            _paymentManager = paymentManager;
             _paymentRecordRepository = paymentRecordRepository;
             _paymentRepository = paymentRepository;
         }
@@ -53,19 +53,18 @@ namespace EasyAbp.PaymentService.WeChatPay
             payment.SetExternalTradingCode(dict.GetOrDefault("transaction_id") ??
                                            throw new XmlDocumentMissingRequiredElementException("transaction_id"));
             
+            await _paymentRepository.UpdateAsync(payment, true);
+
+            await RecordPaymentResultAsync(dict, payment.Id);
+
             if (dict.GetOrDefault("result_code") == "SUCCESS")
             {
-                payment.CompletePayment(_clock.Now);
+                await _paymentManager.CompletePaymentAsync(payment);
             }
             else
             {
-                payment.CancelPayment(_clock.Now);
+                await _paymentManager.StartCancelAsync(payment);
             }
-
-            await _paymentRepository.UpdateAsync(payment, true);
-
-            // Todo: Failure also needs to be recorded.
-            await RecordPaymentResultAsync(dict, payment.Id);
         }
 
         protected virtual async Task<PaymentRecord> RecordPaymentResultAsync(Dictionary<string, string> dict, Guid paymentId)

@@ -24,7 +24,7 @@ namespace EasyAbp.PaymentService.Payments
         {
             var payment = await _paymentRepository.GetAsync(eventData.PaymentId);
 
-            await _paymentManager.RefundAsync(payment, eventData.Items.Select(etoItem => new RefundInfoModel
+            await _paymentManager.StartRefundAsync(payment, eventData.Items.Select(etoItem => new RefundInfoModel
             {
                 RefundAmount = etoItem.RefundAmount,
                 PaymentItem = payment.PaymentItems.Single(paymentItem => etoItem.PaymentItemId == paymentItem.Id),

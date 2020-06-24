@@ -10,7 +10,7 @@ namespace EasyAbp.PaymentService.WeChatPay
         
         public Guid PaymentId { get; set; }
         
-        public IEnumerable<RefundInfoModel> RefundInfos { get; set; }
+        public IEnumerable<Refund> Refunds { get; set; }
         
         public string DisplayReason { get; set; }
     }

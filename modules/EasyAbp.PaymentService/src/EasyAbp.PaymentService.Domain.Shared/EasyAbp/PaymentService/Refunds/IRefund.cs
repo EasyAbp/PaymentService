@@ -19,5 +19,9 @@ namespace EasyAbp.PaymentService.Refunds
         string CustomerRemark { get; }
         
         string StaffRemark { get; }
+        
+        public DateTime? CompletedTime { get; }
+        
+        public DateTime? CancelledTime { get; }
     }
 }

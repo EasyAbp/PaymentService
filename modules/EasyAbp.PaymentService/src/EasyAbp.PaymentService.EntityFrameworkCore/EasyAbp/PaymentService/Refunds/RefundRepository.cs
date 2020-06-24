@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,12 +16,11 @@ namespace EasyAbp.PaymentService.Refunds
         {
         }
 
-        public virtual async Task<Refund> GetOngoingRefundOrNullAsync(Guid paymentId, CancellationToken cancellationToken = default)
+        public virtual async Task<List<Refund>> GetOngoingRefundListAsync(Guid paymentId, CancellationToken cancellationToken = default)
         {
             return await WithDetails()
-                .FirstOrDefaultAsync(
-                    x => x.PaymentId == paymentId && !x.CancelledTime.HasValue && !x.CompletedTime.HasValue,
-                    cancellationToken);
+                .Where(x => x.PaymentId == paymentId && !x.CancelledTime.HasValue && !x.CompletedTime.HasValue)
+                .ToListAsync(cancellationToken);
         }
     }
 }

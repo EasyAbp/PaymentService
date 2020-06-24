@@ -4,6 +4,7 @@ using Volo.Abp.Data;
 
 namespace EasyAbp.PaymentService.Payments
 {
+    [Serializable]
     public class RefundPaymentEto : IHasExtraProperties
     {
         public Guid? TenantId { get; set; }

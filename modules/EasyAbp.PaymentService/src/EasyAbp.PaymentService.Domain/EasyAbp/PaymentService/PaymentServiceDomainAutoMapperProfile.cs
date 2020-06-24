@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EasyAbp.PaymentService.Payments;
+using EasyAbp.PaymentService.Refunds;
 
 namespace EasyAbp.PaymentService
 {
@@ -12,6 +13,7 @@ namespace EasyAbp.PaymentService
              * into multiple profile classes for a better organization. */
             CreateMap<Payment, PaymentEto>();
             CreateMap<PaymentItem, PaymentItemEto>();
+            CreateMap<Refund, RefundEto>();
         }
     }
 }

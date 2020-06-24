@@ -15,21 +15,21 @@ namespace EasyAbp.PaymentService.WeChatPay
 {
     public class PaymentServiceWeChatPayRefundHandler : IWeChatPayRefundHandler, ITransientDependency
     {
-        private readonly IClock _clock;
         private readonly IDataFilter _dataFilter;
+        private readonly IPaymentManager _paymentManager;
         private readonly IRefundRecordRepository _refundRecordRepository;
         private readonly IRefundRepository _refundRepository;
         private readonly IPaymentRepository _paymentRepository;
 
         public PaymentServiceWeChatPayRefundHandler(
-            IClock clock,
             IDataFilter dataFilter,
+            IPaymentManager paymentManager,
             IRefundRecordRepository refundRecordRepository,
             IRefundRepository refundRepository,
             IPaymentRepository paymentRepository)
         {
-            _clock = clock;
             _dataFilter = dataFilter;
+            _paymentManager = paymentManager;
             _refundRecordRepository = refundRecordRepository;
             _refundRepository = refundRepository;
             _paymentRepository = paymentRepository;
@@ -37,14 +37,14 @@ namespace EasyAbp.PaymentService.WeChatPay
         
         public virtual async Task HandleAsync(XmlDocument xmlDocument)
         {
-            using var disabledDataFilter = _dataFilter.Disable<IMultiTenant>();
-
             var dict = xmlDocument.SelectSingleNode("xml").ToDictionary() ?? throw new NullReferenceException();
 
             if (dict.GetOrDefault("return_code") != "SUCCESS")
             {
                 return;
             }
+            
+            using var disabledDataFilter = _dataFilter.Disable<IMultiTenant>();
 
             var record = await _refundRecordRepository.FindAsync(x => x.Id == Guid.Parse(dict.GetOrDefault("out_refund_no")));
 
@@ -54,44 +54,13 @@ namespace EasyAbp.PaymentService.WeChatPay
             }
             
             var payment = await _paymentRepository.FindAsync(record.PaymentId);
-            var refund = await _refundRepository.GetOngoingRefundOrNullAsync(record.PaymentId);
+            var refunds = await _refundRepository.GetOngoingRefundListAsync(record.PaymentId);
 
-            if (payment == null || refund == null)
+            if (payment == null || refunds.IsNullOrEmpty())
             {
                 return;
             }
-
-            if (dict.GetOrDefault("refund_status") != "SUCCESS")
-            {
-                await HandleRefundFailureAsync(payment, refund);
-
-                return;
-            }
             
-            await HandleRefundSuccessAsync(payment, refund, record, dict);
-        }
-
-        protected virtual async Task HandleRefundFailureAsync(Payment payment, Refund refund)
-        {
-            payment.RollbackOngoingRefund();
-                
-            await _paymentRepository.UpdateAsync(payment, true);
-                
-            refund.CancelRefund(_clock.Now);
-
-            await _refundRepository.UpdateAsync(refund, true);
-        }
-        
-        protected virtual async Task HandleRefundSuccessAsync(Payment payment, Refund refund, RefundRecord record, Dictionary<string, string> dict)
-        {
-            payment.CompleteOngoingRefund();
-                
-            await _paymentRepository.UpdateAsync(payment, true);
-            
-            refund.CompleteRefund(_clock.Now);
-
-            await _paymentRepository.UpdateAsync(payment, true);
-
             record.SetInformationInNotify(
                 refundStatus: dict.GetOrDefault("refund_status"),
                 successTime: dict.GetOrDefault("success_time"),
@@ -101,6 +70,15 @@ namespace EasyAbp.PaymentService.WeChatPay
                 settlementRefundFee: Convert.ToInt32(dict.GetOrDefault("settlement_refund_fee")));
 
             await _refundRecordRepository.UpdateAsync(record, true);
+
+            if (dict.GetOrDefault("refund_status") == "SUCCESS")
+            {
+                await _paymentManager.CompleteRefundAsync(payment, refunds);
+            }
+            else
+            {
+                await _paymentManager.RollbackRefundAsync(payment, refunds);
+            }
         }
     }
 }

@@ -122,7 +122,7 @@ namespace EasyAbp.PaymentService.Payments
             
             if (exceptItems.Any())
             {
-                throw new EntityNotFoundException(typeof(PaymentItem), new []{exceptItems.Select(x => x.Id)});
+                throw new EntityNotFoundException(typeof(PaymentItem), new[] {exceptItems.Select(x => x.Id)});
             }
 
             var refundAmount = infoModels.Sum(model => model.RefundAmount);
@@ -136,7 +136,7 @@ namespace EasyAbp.PaymentService.Payments
             PendingRefundAmount = refundAmount;
         }
         
-        public void CompleteOngoingRefund()
+        public void CompleteRefund()
         {
             if (IsCancelled() || !IsCompleted() || PendingRefundAmount <= decimal.Zero)
             {
@@ -153,7 +153,7 @@ namespace EasyAbp.PaymentService.Payments
             PendingRefundAmount = decimal.Zero;
         }
         
-        public void RollbackOngoingRefund()
+        public void RollbackRefund()
         {
             if (IsCancelled() || !IsCompleted())
             {

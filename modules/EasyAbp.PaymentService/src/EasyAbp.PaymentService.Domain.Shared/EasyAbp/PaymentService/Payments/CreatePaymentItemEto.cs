@@ -2,6 +2,7 @@
 
 namespace EasyAbp.PaymentService.Payments
 {
+    [Serializable]
     public class CreatePaymentItemEto
     {
         public string ItemType { get; set; }

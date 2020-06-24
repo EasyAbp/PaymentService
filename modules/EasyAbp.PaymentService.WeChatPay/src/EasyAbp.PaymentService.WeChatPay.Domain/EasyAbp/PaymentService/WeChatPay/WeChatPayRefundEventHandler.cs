@@ -12,17 +12,16 @@ using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Guids;
 using Volo.Abp.MultiTenancy;
-using Volo.Abp.Timing;
 using Volo.Abp.Uow;
 
 namespace EasyAbp.PaymentService.WeChatPay
 {
     public class WeChatPayRefundEventHandler : IWeChatPayRefundEventHandler, ITransientDependency
     {
-        private readonly IClock _clock;
         private readonly IGuidGenerator _guidGenerator;
         private readonly ICurrentTenant _currentTenant;
         private readonly IRefundRepository _refundRepository;
+        private readonly IPaymentManager _paymentManager;
         private readonly IPaymentRepository _paymentRepository;
         private readonly IPaymentRecordRepository _paymentRecordRepository;
         private readonly IRefundRecordRepository _refundRecordRepository;
@@ -30,20 +29,20 @@ namespace EasyAbp.PaymentService.WeChatPay
         private readonly ServiceProviderPayService _serviceProviderPayService;
 
         public WeChatPayRefundEventHandler(
-            IClock clock,
             IGuidGenerator guidGenerator,
             ICurrentTenant currentTenant,
             IRefundRepository refundRepository,
+            IPaymentManager paymentManager,
             IPaymentRepository paymentRepository,
             IPaymentRecordRepository paymentRecordRepository,
             IRefundRecordRepository refundRecordRepository,
             IWeChatPayFeeConverter weChatPayFeeConverter,
             ServiceProviderPayService serviceProviderPayService)
         {
-            _clock = clock;
             _guidGenerator = guidGenerator;
             _currentTenant = currentTenant;
             _refundRepository = refundRepository;
+            _paymentManager = paymentManager;
             _paymentRepository = paymentRepository;
             _paymentRecordRepository = paymentRecordRepository;
             _refundRecordRepository = refundRecordRepository;
@@ -63,49 +62,23 @@ namespace EasyAbp.PaymentService.WeChatPay
 
                 var dict = await RequestWeChatPayRefundAsync(payment, paymentRecord, eventData, refundRecordId.ToString());
 
-                await CreateRefundEntitiesAsync(payment, eventData, dict);
-
-                await RollbackIfFailedAsync(payment, eventData, dict);
-            }
-        }
-
-        protected virtual async Task RollbackIfFailedAsync(Payment payment, WeChatPayRefundEto eventData, Dictionary<string, string> dict)
-        {
-            if (dict.GetOrDefault("result_code") != "SUCCESS")
-            {
-                payment.RollbackOngoingRefund();
+                var externalTradingCode = dict.GetOrDefault("refund_id");
                 
-                await _paymentRepository.UpdateAsync(payment, true);
-            }
-        }
-
-        protected virtual async Task CreateRefundEntitiesAsync(IPaymentEntity payment, WeChatPayRefundEto eventData, Dictionary<string, string> dict)
-        {
-            foreach (var info in eventData.RefundInfos)
-            {
-                var refund = new Refund(
-                    id: _guidGenerator.Create(),
-                    tenantId: _currentTenant.Id,
-                    paymentId: payment.Id,
-                    paymentItemId: info.PaymentItem.Id,
-                    refundPaymentMethod: payment.PaymentMethod,
-                    externalTradingCode: dict.GetOrDefault("refund_id"),
-                    currency: payment.Currency,
-                    refundAmount: info.RefundAmount,
-                    customerRemark: info.CustomerRemark,
-                    staffRemark: info.StaffRemark
-                );
-
-                if (dict.GetOrDefault("result_code") != "SUCCESS")
+                foreach (var refund in eventData.Refunds)
                 {
-                    refund.CancelRefund(_clock.Now);
+                    refund.SetExternalTradingCode(externalTradingCode);
+
+                    await _refundRepository.InsertAsync(refund, true);
                 }
                 
-                await _refundRepository.InsertAsync(refund, true);
+                if (dict.GetOrDefault("result_code") != "SUCCESS")
+                {
+                    await _paymentManager.RollbackRefundAsync(payment, eventData.Refunds);
+                }
             }
         }
-        
-        protected virtual async Task CreateWeChatPayRefundRecordEntitiesAsync(Payment payment, WeChatPayRefundEto eventData, Dictionary<string, string> dict)
+
+        protected virtual async Task CreateWeChatPayRefundRecordEntitiesAsync(Payment payment, Dictionary<string, string> dict)
         {
             var settlementTotalFeeString = dict.GetOrDefault("settlement_total_fee");
             var settlementRefundFeeString = dict.GetOrDefault("settlement_refund_fee");
@@ -144,7 +117,7 @@ namespace EasyAbp.PaymentService.WeChatPay
 
         private async Task<Dictionary<string, string>> RequestWeChatPayRefundAsync(Payment payment, PaymentRecord paymentRecord, WeChatPayRefundEto eventData, string outRefundNo)
         {
-            var refundAmount = eventData.RefundInfos.Sum(model => model.RefundAmount);
+            var refundAmount = eventData.Refunds.Sum(model => model.RefundAmount);
 
             var result = await _serviceProviderPayService.RefundAsync(
                 appId: payment.GetProperty<string>("appid"),
@@ -169,7 +142,7 @@ namespace EasyAbp.PaymentService.WeChatPay
                 throw new RefundFailedException(dict.GetOrDefault("return_code"), dict.GetOrDefault("return_msg"));
             }
 
-            await CreateWeChatPayRefundRecordEntitiesAsync(payment, eventData, dict);
+            await CreateWeChatPayRefundRecordEntitiesAsync(payment, dict);
 
             return dict;
         }

@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EventBus.Distributed;
+using Volo.Abp.EventBus.Local;
 using Volo.Abp.Guids;
 using Volo.Abp.MultiTenancy;
 using Volo.Abp.Settings;
@@ -29,8 +30,9 @@ namespace EasyAbp.PaymentService.WeChatPay
         private readonly IGuidGenerator _guidGenerator;
         private readonly ICurrentTenant _currentTenant;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
-        private readonly IDistributedEventBus _distributedEventBus;
+        private readonly ILocalEventBus _localEventBus;
         private readonly IWeChatPayFeeConverter _weChatPayFeeConverter;
+        private readonly IPaymentManager _paymentManager;
         private readonly IPaymentRecordRepository _paymentRecordRepository;
         private readonly IPaymentOpenIdProvider _paymentOpenIdProvider;
         private readonly IPaymentRepository _paymentRepository;
@@ -44,8 +46,9 @@ namespace EasyAbp.PaymentService.WeChatPay
             IGuidGenerator guidGenerator,
             ICurrentTenant currentTenant,
             IUnitOfWorkManager unitOfWorkManager,
-            IDistributedEventBus distributedEventBus,
+            ILocalEventBus localEventBus,
             IWeChatPayFeeConverter weChatPayFeeConverter,
+            IPaymentManager paymentManager,
             IPaymentRecordRepository paymentRecordRepository,
             IPaymentOpenIdProvider paymentOpenIdProvider,
             IPaymentRepository paymentRepository)
@@ -56,14 +59,15 @@ namespace EasyAbp.PaymentService.WeChatPay
             _guidGenerator = guidGenerator;
             _currentTenant = currentTenant;
             _unitOfWorkManager = unitOfWorkManager;
-            _distributedEventBus = distributedEventBus;
+            _localEventBus = localEventBus;
             _weChatPayFeeConverter = weChatPayFeeConverter;
+            _paymentManager = paymentManager;
             _paymentRecordRepository = paymentRecordRepository;
             _paymentOpenIdProvider = paymentOpenIdProvider;
             _paymentRepository = paymentRepository;
         }
 
-        public async Task<Payment> PayAsync(Payment payment, Dictionary<string, object> configurations)
+        public async Task OnStartPaymentAsync(Payment payment, Dictionary<string, object> configurations)
         {
             if (payment.Currency != "CNY")
             {
@@ -131,15 +135,13 @@ namespace EasyAbp.PaymentService.WeChatPay
             payment.SetProperty("code_url", dict.GetOrDefault("code_url"));
             
             await _paymentRecordRepository.InsertAsync(
-                new PaymentRecord(_guidGenerator.Create(), _currentTenant.Id, payment.Id));
+                new PaymentRecord(_guidGenerator.Create(), _currentTenant.Id, payment.Id), true);
             
-            return await _paymentRepository.UpdateAsync(payment, true);
+            await _paymentRepository.UpdateAsync(payment, true);
         }
 
-        public virtual async Task<Payment> CancelAsync(Payment payment)
+        public virtual async Task OnStartCancelAsync(Payment payment)
         {
-            payment.CancelPayment(_clock.Now);
-
             _unitOfWorkManager.Current.OnCompleted(async () =>
             {
                 // Just try to close it.
@@ -152,30 +154,22 @@ namespace EasyAbp.PaymentService.WeChatPay
                 );
             });
 
-            await _paymentRepository.UpdateAsync(payment, true);
-
-            return payment;
+            await _paymentManager.CompleteCancelAsync(payment);
         }
 
-        public virtual async Task<Payment> RefundAsync(Payment payment, IEnumerable<RefundInfoModel> refundInfos, string displayReason = null)
+        public virtual Task OnStartRefundAsync(Payment payment, IEnumerable<Refund> refunds, string displayReason = null)
         {
-            var refundInfoModels = refundInfos.ToList();
-            
-            payment.StartRefund(refundInfoModels);
-            
             _unitOfWorkManager.Current.OnCompleted(async () =>
             {
-                await _distributedEventBus.PublishAsync(new WeChatPayRefundEto
+                await _localEventBus.PublishAsync(new WeChatPayRefundEto
                 {
                     PaymentId = payment.Id,
-                    RefundInfos = refundInfoModels,
+                    Refunds = refunds,
                     DisplayReason = displayReason
                 });
             });
-
-            await _paymentRepository.UpdateAsync(payment, true);
-
-            return payment;
+            
+            return Task.CompletedTask;
         }
     }
 }

@@ -89,7 +89,7 @@ namespace EasyAbp.PaymentService.Payments
                 configurations.AddIfNotContains(new KeyValuePair<string, object>(property.Key, property.Value));
             }
 
-            await _paymentManager.PayAsync(payment, configurations);
+            await _paymentManager.StartPaymentAsync(payment, configurations);
 
             return MapToGetOutputDto(payment);
         }

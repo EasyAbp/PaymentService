@@ -9,19 +9,19 @@ namespace EasyAbp.PaymentService.Payments
 {
     public class FreePaymentServiceProvider : IPaymentServiceProvider, ITransientDependency
     {
-        private readonly IClock _clock;
+        private readonly IPaymentManager _paymentManager;
         private readonly IPaymentRepository _paymentRepository;
         public const string PaymentMethod = "Free";
         
         public FreePaymentServiceProvider(
-            IClock clock,
+            IPaymentManager paymentManager,
             IPaymentRepository paymentRepository)
         {
-            _clock = clock;
+            _paymentManager = paymentManager;
             _paymentRepository = paymentRepository;
         }
 
-        public async Task<Payment> PayAsync(Payment payment, Dictionary<string, object> configurations)
+        public async Task OnStartPaymentAsync(Payment payment, Dictionary<string, object> configurations)
         {
             if (payment.ActualPaymentAmount != decimal.Zero)
             {
@@ -32,19 +32,17 @@ namespace EasyAbp.PaymentService.Payments
             
             payment.SetExternalTradingCode(payment.Id.ToString());
 
-            payment.CompletePayment(_clock.Now);
+            await _paymentManager.CompletePaymentAsync(payment);
 
-            return await _paymentRepository.UpdateAsync(payment, true);
+            await _paymentRepository.UpdateAsync(payment, true);
         }
 
-        public virtual Task<Payment> CancelAsync(Payment payment)
+        public virtual async Task OnStartCancelAsync(Payment payment)
         {
-            payment.CancelPayment(_clock.Now);
-            
-            return Task.FromResult(payment);
+            await _paymentManager.CompleteCancelAsync(payment);
         }
 
-        public virtual Task<Payment> RefundAsync(Payment payment, IEnumerable<RefundInfoModel> refundInfos, string displayReason = null)
+        public virtual Task OnStartRefundAsync(Payment payment, IEnumerable<Refund> refunds, string displayReason = null)
         {
             throw new NotSupportedException();
         }
