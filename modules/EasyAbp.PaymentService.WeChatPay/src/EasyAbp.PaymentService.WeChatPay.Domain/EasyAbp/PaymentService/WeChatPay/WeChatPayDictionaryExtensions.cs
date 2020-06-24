@@ -4,9 +4,9 @@ using System.Xml.XPath;
 
 namespace EasyAbp.PaymentService.WeChatPay
 {
-    public static class WeChatPayXmlNodeReaderExtensions
+    public static class WeChatPayDictionaryExtensions
     {
-        public static string JoinNodesInnerTextAsString(this XmlNodeReader reader, string prefix, int count, string separator = ",")
+        public static string JoinNodesInnerTextAsString(this Dictionary<string, string> dict, string prefix, int count, string separator = ",")
         {
             var innerTexts = new List<string>();
             
@@ -14,7 +14,7 @@ namespace EasyAbp.PaymentService.WeChatPay
             {
                 var nodeName = prefix + i;
 
-                var innerText = reader[nodeName];
+                var innerText = dict[nodeName];
 
                 if (innerText != null)
                 {

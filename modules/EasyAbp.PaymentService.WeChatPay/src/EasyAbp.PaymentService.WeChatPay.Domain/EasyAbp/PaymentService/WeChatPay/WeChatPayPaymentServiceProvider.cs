@@ -107,28 +107,28 @@ namespace EasyAbp.PaymentService.WeChatPay
                 receipt: configurations.GetOrDefault("receipt") as string ?? "N",
                 sceneInfo: null);
 
-            var reader = new XmlNodeReader(result.SelectSingleNode("xml") ?? throw new NullReferenceException());
+            var dict = result.SelectSingleNode("xml").ToDictionary() ?? throw new NullReferenceException();
 
-            if (reader["return_code"] != "SUCCESS")
+            if (dict["return_code"] != "SUCCESS")
             {
-                throw new UnifiedOrderFailedException(reader["return_code"], reader["return_msg"]);
+                throw new UnifiedOrderFailedException(dict["return_code"], dict["return_msg"]);
             }
 
-            if (reader["result_code"] != "SUCCESS")
+            if (dict["result_code"] != "SUCCESS")
             {
                 throw new UnifiedOrderFailedException(
-                    reader["return_code"],
-                    reader["return_msg"],
-                    reader["err_code_des"],
-                    reader["err_code"]
+                    dict["return_code"],
+                    dict["return_msg"],
+                    dict["err_code_des"],
+                    dict["err_code"]
                 );
             }
 
             payment.SetProperty("appid", configurations.GetOrDefault("appid") as string);
             
-            payment.SetProperty("trade_type", reader["trade_type"]);
-            payment.SetProperty("prepay_id", reader["prepay_id"]);
-            payment.SetProperty("code_url", reader["code_url"]);
+            payment.SetProperty("trade_type", dict["trade_type"]);
+            payment.SetProperty("prepay_id", dict["prepay_id"]);
+            payment.SetProperty("code_url", dict["code_url"]);
             
             await _paymentRecordRepository.InsertAsync(
                 new PaymentRecord(_guidGenerator.Create(), _currentTenant.Id, payment.Id));

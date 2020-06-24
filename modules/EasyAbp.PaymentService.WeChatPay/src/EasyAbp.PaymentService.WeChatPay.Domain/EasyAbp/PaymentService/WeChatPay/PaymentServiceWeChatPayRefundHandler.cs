@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Xml;
 using EasyAbp.Abp.WeChat.Pay.Infrastructure;
@@ -38,14 +39,14 @@ namespace EasyAbp.PaymentService.WeChatPay
         {
             using var disabledDataFilter = _dataFilter.Disable<IMultiTenant>();
 
-            var reader = new XmlNodeReader(xmlDocument.SelectSingleNode("xml") ?? throw new NullReferenceException());
+            var dict = xmlDocument.SelectSingleNode("xml").ToDictionary() ?? throw new NullReferenceException();
 
-            if (reader["return_code"] != "SUCCESS")
+            if (dict["return_code"] != "SUCCESS")
             {
                 return;
             }
 
-            var record = await _refundRecordRepository.FindAsync(x => x.Id == Guid.Parse(reader["out_refund_no"]));
+            var record = await _refundRecordRepository.FindAsync(x => x.Id == Guid.Parse(dict["out_refund_no"]));
 
             if (record == null)
             {
@@ -60,14 +61,14 @@ namespace EasyAbp.PaymentService.WeChatPay
                 return;
             }
 
-            if (reader["refund_status"] != "SUCCESS")
+            if (dict["refund_status"] != "SUCCESS")
             {
                 await HandleRefundFailureAsync(payment, refund);
 
                 return;
             }
             
-            await HandleRefundSuccessAsync(payment, refund, record, reader);
+            await HandleRefundSuccessAsync(payment, refund, record, dict);
         }
 
         protected virtual async Task HandleRefundFailureAsync(Payment payment, Refund refund)
@@ -81,7 +82,7 @@ namespace EasyAbp.PaymentService.WeChatPay
             await _refundRepository.UpdateAsync(refund, true);
         }
         
-        protected virtual async Task HandleRefundSuccessAsync(Payment payment, Refund refund, RefundRecord record, XmlNodeReader reader)
+        protected virtual async Task HandleRefundSuccessAsync(Payment payment, Refund refund, RefundRecord record, Dictionary<string, string> dict)
         {
             payment.CompleteOngoingRefund();
                 
@@ -92,12 +93,12 @@ namespace EasyAbp.PaymentService.WeChatPay
             await _paymentRepository.UpdateAsync(payment, true);
 
             record.SetInformationInNotify(
-                refundStatus: reader["refund_status"],
-                successTime: reader["success_time"],
-                refundRecvAccout: reader["refund_recv_accout"],
-                refundAccount: reader["refund_account"],
-                refundRequestSource: reader["refund_request_source"],
-                settlementRefundFee: Convert.ToInt32(reader["settlement_refund_fee"]));
+                refundStatus: dict["refund_status"],
+                successTime: dict["success_time"],
+                refundRecvAccout: dict["refund_recv_accout"],
+                refundAccount: dict["refund_account"],
+                refundRequestSource: dict["refund_request_source"],
+                settlementRefundFee: Convert.ToInt32(dict["settlement_refund_fee"]));
 
             await _refundRecordRepository.UpdateAsync(record, true);
         }

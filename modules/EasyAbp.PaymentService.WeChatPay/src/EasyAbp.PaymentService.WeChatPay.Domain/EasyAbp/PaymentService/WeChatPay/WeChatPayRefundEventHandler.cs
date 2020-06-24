@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
@@ -59,17 +60,17 @@ namespace EasyAbp.PaymentService.WeChatPay
                 var paymentRecord = await _paymentRecordRepository.GetByPaymentId(eventData.PaymentId);
                 var refundRecordId = _guidGenerator.Create();
 
-                var reader = await RequestWeChatPayRefundAsync(payment, paymentRecord, eventData, refundRecordId.ToString());
+                var dict = await RequestWeChatPayRefundAsync(payment, paymentRecord, eventData, refundRecordId.ToString());
 
-                await CreateRefundEntitiesAsync(payment, eventData, reader);
+                await CreateRefundEntitiesAsync(payment, eventData, dict);
 
-                await RollbackIfFailedAsync(payment, eventData, reader);
+                await RollbackIfFailedAsync(payment, eventData, dict);
             }
         }
 
-        protected virtual async Task RollbackIfFailedAsync(Payment payment, WeChatPayRefundEto eventData, XmlNodeReader reader)
+        protected virtual async Task RollbackIfFailedAsync(Payment payment, WeChatPayRefundEto eventData, Dictionary<string, string> dict)
         {
-            if (reader["result_code"] != "SUCCESS")
+            if (dict["result_code"] != "SUCCESS")
             {
                 payment.RollbackOngoingRefund();
                 
@@ -77,7 +78,7 @@ namespace EasyAbp.PaymentService.WeChatPay
             }
         }
 
-        protected virtual async Task CreateRefundEntitiesAsync(IPaymentEntity payment, WeChatPayRefundEto eventData, XmlNodeReader reader)
+        protected virtual async Task CreateRefundEntitiesAsync(IPaymentEntity payment, WeChatPayRefundEto eventData, Dictionary<string, string> dict)
         {
             foreach (var info in eventData.RefundInfos)
             {
@@ -87,14 +88,14 @@ namespace EasyAbp.PaymentService.WeChatPay
                     paymentId: payment.Id,
                     paymentItemId: info.PaymentItem.Id,
                     refundPaymentMethod: payment.PaymentMethod,
-                    externalTradingCode: reader["refund_id"],
+                    externalTradingCode: dict["refund_id"],
                     currency: payment.Currency,
                     refundAmount: info.RefundAmount,
                     customerRemark: info.CustomerRemark,
                     staffRemark: info.StaffRemark
                 );
 
-                if (reader["result_code"] != "SUCCESS")
+                if (dict["result_code"] != "SUCCESS")
                 {
                     refund.CancelRefund(_clock.Now);
                 }
@@ -103,44 +104,44 @@ namespace EasyAbp.PaymentService.WeChatPay
             }
         }
         
-        protected virtual async Task CreateWeChatPayRefundRecordEntitiesAsync(Payment payment, WeChatPayRefundEto eventData, XmlNodeReader reader)
+        protected virtual async Task CreateWeChatPayRefundRecordEntitiesAsync(Payment payment, WeChatPayRefundEto eventData, Dictionary<string, string> dict)
         {
-            var settlementTotalFeeString = reader["settlement_total_fee"];
-            var settlementRefundFeeString = reader["settlement_refund_fee"];
-            var cashRefundFeeString = reader["cash_refund_fee"];
-            var couponRefundFeeString = reader["coupon_refund_fee"];
-            var couponRefundCountString = reader["coupon_refund_count"];
+            var settlementTotalFeeString = dict["settlement_total_fee"];
+            var settlementRefundFeeString = dict["settlement_refund_fee"];
+            var cashRefundFeeString = dict["cash_refund_fee"];
+            var couponRefundFeeString = dict["coupon_refund_fee"];
+            var couponRefundCountString = dict["coupon_refund_count"];
             var couponRefundCount = couponRefundCountString.IsNullOrEmpty() ? (int?) null : Convert.ToInt32(couponRefundCountString);
 
             await _refundRecordRepository.InsertAsync(new RefundRecord(
                 id: _guidGenerator.Create(),
                 tenantId: _currentTenant.Id,
                 paymentId: payment.Id,
-                returnCode: reader["return_code"],
-                returnMsg: reader["return_msg"],
-                appId: reader["appid"],
-                mchId: reader["mch_id"],
-                transactionId: reader["transaction_id"],
-                outTradeNo: reader["out_trade_no"],
-                refundId: reader["refund_id"],
-                outRefundNo: reader["out_refund_no"],
-                totalFee: Convert.ToInt32(reader["total_fee"]),
+                returnCode: dict["return_code"],
+                returnMsg: dict["return_msg"],
+                appId: dict["appid"],
+                mchId: dict["mch_id"],
+                transactionId: dict["transaction_id"],
+                outTradeNo: dict["out_trade_no"],
+                refundId: dict["refund_id"],
+                outRefundNo: dict["out_refund_no"],
+                totalFee: Convert.ToInt32(dict["total_fee"]),
                 settlementTotalFee: settlementTotalFeeString.IsNullOrEmpty() ? (int?) null : Convert.ToInt32(settlementTotalFeeString),
-                refundFee: Convert.ToInt32(reader["refund_fee"]),
+                refundFee: Convert.ToInt32(dict["refund_fee"]),
                 settlementRefundFee: settlementRefundFeeString.IsNullOrEmpty() ? (int?) null : Convert.ToInt32(settlementRefundFeeString),
-                feeType: reader["fee_type"],
-                cashFee: Convert.ToInt32(reader["cash_fee"]),
-                cashFeeType: reader["cash_fee_type"],
+                feeType: dict["fee_type"],
+                cashFee: Convert.ToInt32(dict["cash_fee"]),
+                cashFeeType: dict["cash_fee_type"],
                 cashRefundFee: cashRefundFeeString.IsNullOrEmpty() ? (int?) null : Convert.ToInt32(cashRefundFeeString),
                 couponRefundFee: couponRefundFeeString.IsNullOrEmpty() ? (int?) null : Convert.ToInt32(couponRefundFeeString),
                 couponRefundCount: couponRefundCount,
-                couponTypes: couponRefundCount != null ? reader.JoinNodesInnerTextAsString("coupon_type_", couponRefundCount.Value) : null,
-                couponIds: couponRefundCount != null ? reader.JoinNodesInnerTextAsString("coupon_id_", couponRefundCount.Value) : null,
-                couponRefundFees: couponRefundCount != null ? reader.JoinNodesInnerTextAsString("coupon_refund_fee_", couponRefundCount.Value) : null
+                couponTypes: couponRefundCount != null ? dict.JoinNodesInnerTextAsString("coupon_type_", couponRefundCount.Value) : null,
+                couponIds: couponRefundCount != null ? dict.JoinNodesInnerTextAsString("coupon_id_", couponRefundCount.Value) : null,
+                couponRefundFees: couponRefundCount != null ? dict.JoinNodesInnerTextAsString("coupon_refund_fee_", couponRefundCount.Value) : null
             ), true);
         }
 
-        private async Task<XmlNodeReader> RequestWeChatPayRefundAsync(Payment payment, PaymentRecord paymentRecord, WeChatPayRefundEto eventData, string outRefundNo)
+        private async Task<Dictionary<string, string>> RequestWeChatPayRefundAsync(Payment payment, PaymentRecord paymentRecord, WeChatPayRefundEto eventData, string outRefundNo)
         {
             var refundAmount = eventData.RefundInfos.Sum(model => model.RefundAmount);
 
@@ -160,16 +161,16 @@ namespace EasyAbp.PaymentService.WeChatPay
                 notifyUrl: null
             );
             
-            var reader = new XmlNodeReader(result.SelectSingleNode("xml") ?? throw new NullReferenceException());
+            var dict = new Dictionary<string, string>(result.SelectSingleNode("xml").ToDictionary() ?? throw new NullReferenceException());
 
-            if (reader["return_code"] != "SUCCESS")
+            if (dict["return_code"] != "SUCCESS")
             {
-                throw new RefundFailedException(reader["return_code"], reader["return_msg"]);
+                throw new RefundFailedException(dict["return_code"], dict["return_msg"]);
             }
 
-            await CreateWeChatPayRefundRecordEntitiesAsync(payment, eventData, reader);
+            await CreateWeChatPayRefundRecordEntitiesAsync(payment, eventData, dict);
 
-            return reader;
+            return dict;
         }
     }
 }
