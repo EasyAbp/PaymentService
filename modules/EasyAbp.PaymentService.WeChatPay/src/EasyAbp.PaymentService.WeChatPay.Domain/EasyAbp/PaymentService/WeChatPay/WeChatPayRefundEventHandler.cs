@@ -54,6 +54,7 @@ namespace EasyAbp.PaymentService.WeChatPay
         [UnitOfWork(true)]
         public virtual async Task HandleEventAsync(WeChatPayRefundEto eventData)
         {
+            // Todo: Handle errors and rollback
             using (_currentTenant.Change(eventData.TenantId))
             {
                 var payment = await _paymentRepository.GetAsync(eventData.PaymentId);
