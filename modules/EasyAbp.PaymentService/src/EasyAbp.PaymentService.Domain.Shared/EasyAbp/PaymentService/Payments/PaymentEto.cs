@@ -29,6 +29,8 @@ namespace EasyAbp.PaymentService.Payments
         
         public decimal RefundAmount { get; set; }
         
+        public decimal PendingRefundAmount { get; set; }
+        
         public DateTime? CompletionTime { get; set; }
         
         public DateTime? CancelledTime { get; set; }

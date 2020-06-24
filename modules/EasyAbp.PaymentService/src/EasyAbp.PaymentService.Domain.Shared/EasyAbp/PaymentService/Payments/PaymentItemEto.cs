@@ -20,5 +20,7 @@ namespace EasyAbp.PaymentService.Payments
         public decimal ActualPaymentAmount { get; set; }
 
         public decimal RefundAmount { get; set; }
+        
+        public decimal PendingRefundAmount { get; set; }
     }
 }
