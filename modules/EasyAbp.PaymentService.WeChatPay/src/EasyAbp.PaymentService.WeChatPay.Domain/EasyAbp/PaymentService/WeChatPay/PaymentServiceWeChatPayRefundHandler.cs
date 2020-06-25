@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Xml;
 using EasyAbp.Abp.WeChat.Pay.Infrastructure;
+using EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve;
 using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.Refunds;
 using EasyAbp.PaymentService.WeChatPay.RefundRecords;
@@ -35,9 +36,9 @@ namespace EasyAbp.PaymentService.WeChatPay
             _paymentRepository = paymentRepository;
         }
         
-        public virtual async Task HandleAsync(XmlDocument xmlDocument)
+        public virtual async Task HandleAsync(WeChatPayHandlerContext context)
         {
-            var dict = xmlDocument.SelectSingleNode("xml").ToDictionary() ?? throw new NullReferenceException();
+            var dict = context.WeChatRequestXmlData.SelectSingleNode("xml").ToDictionary() ?? throw new NullReferenceException();
 
             if (dict.GetOrDefault("return_code") != "SUCCESS")
             {
