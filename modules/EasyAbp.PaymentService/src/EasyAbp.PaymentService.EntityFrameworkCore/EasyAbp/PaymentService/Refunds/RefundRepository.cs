@@ -19,7 +19,7 @@ namespace EasyAbp.PaymentService.Refunds
         public virtual async Task<List<Refund>> GetOngoingRefundListAsync(Guid paymentId, CancellationToken cancellationToken = default)
         {
             return await WithDetails()
-                .Where(x => x.PaymentId == paymentId && !x.CancelledTime.HasValue && !x.CompletedTime.HasValue)
+                .Where(x => x.PaymentId == paymentId && !x.CanceledTime.HasValue && !x.CompletedTime.HasValue)
                 .ToListAsync(cancellationToken);
         }
     }

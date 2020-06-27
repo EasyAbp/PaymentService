@@ -28,6 +28,6 @@ namespace EasyAbp.PaymentService.Payments
 
         DateTime? CompletionTime { get; }
         
-        DateTime? CancelledTime { get; }
+        DateTime? CanceledTime { get; }
     }
 }

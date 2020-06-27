@@ -35,7 +35,7 @@ $(function () {
             { data: "refundAmount" },
             { data: "pendingRefundAmount" },
             { data: "completionTime" },
-            { data: "cancelledTime" },
+            { data: "canceledTime" },
         ]
     }));
 });

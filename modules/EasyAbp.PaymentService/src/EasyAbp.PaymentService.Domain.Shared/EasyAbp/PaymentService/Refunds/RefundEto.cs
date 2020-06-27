@@ -25,7 +25,7 @@ namespace EasyAbp.PaymentService.Refunds
         
         public DateTime? CompletedTime { get; set; }
         
-        public DateTime? CancelledTime { get; set; }
+        public DateTime? CanceledTime { get; set; }
 
         public Dictionary<string, object> ExtraProperties { get; set; }
     }

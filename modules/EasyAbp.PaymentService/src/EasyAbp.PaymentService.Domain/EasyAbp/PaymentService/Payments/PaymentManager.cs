@@ -65,6 +65,7 @@ namespace EasyAbp.PaymentService.Payments
 
         public virtual async Task StartCancelAsync(Payment payment)
         {
+            // Todo: Should ensure the payment is not canceled and not completed.
             var provider = GetProvider(payment);
             
             await provider.OnStartCancelAsync(payment);

@@ -35,7 +35,7 @@ $(function () {
             { data: "customerRemark" },
             { data: "staffRemark" },
             { data: "completedTime" },
-            { data: "cancelledTime" },
+            { data: "canceledTime" },
         ]
     }));
 });

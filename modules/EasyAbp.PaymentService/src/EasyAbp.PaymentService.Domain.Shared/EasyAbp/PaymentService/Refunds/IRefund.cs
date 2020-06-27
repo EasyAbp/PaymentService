@@ -22,6 +22,6 @@ namespace EasyAbp.PaymentService.Refunds
         
         public DateTime? CompletedTime { get; }
         
-        public DateTime? CancelledTime { get; }
+        public DateTime? CanceledTime { get; }
     }
 }

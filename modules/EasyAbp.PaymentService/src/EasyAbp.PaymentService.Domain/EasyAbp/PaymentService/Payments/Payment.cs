@@ -39,7 +39,7 @@ namespace EasyAbp.PaymentService.Payments
         
         public virtual DateTime? CompletionTime { get; protected set; }
         
-        public virtual DateTime? CancelledTime { get; protected set; }
+        public virtual DateTime? CanceledTime { get; protected set; }
         
         public virtual List<PaymentItem> PaymentItems { get; protected set; }
 
@@ -97,16 +97,16 @@ namespace EasyAbp.PaymentService.Payments
             CompletionTime = completionTime;
         }
         
-        public void CancelPayment(DateTime cancelledTime)
+        public void CancelPayment(DateTime canceledTime)
         {
             CheckIsInProgress();
 
-            CancelledTime = cancelledTime;
+            CanceledTime = canceledTime;
         }
         
         public void StartRefund(IEnumerable<RefundInfoModel> refundInfoModels)
         {
-            if (IsCancelled() || !IsCompleted())
+            if (IsCanceled() || !IsCompleted())
             {
                 throw new PaymentIsInUnexpectedStageException(Id);
             }
@@ -138,7 +138,7 @@ namespace EasyAbp.PaymentService.Payments
         
         public void CompleteRefund()
         {
-            if (IsCancelled() || !IsCompleted() || PendingRefundAmount <= decimal.Zero)
+            if (IsCanceled() || !IsCompleted() || PendingRefundAmount <= decimal.Zero)
             {
                 throw new PaymentIsInUnexpectedStageException(Id);
             }
@@ -155,7 +155,7 @@ namespace EasyAbp.PaymentService.Payments
         
         public void RollbackRefund()
         {
-            if (IsCancelled() || !IsCompleted())
+            if (IsCanceled() || !IsCompleted())
             {
                 throw new PaymentIsInUnexpectedStageException(Id);
             }
@@ -168,9 +168,9 @@ namespace EasyAbp.PaymentService.Payments
             PendingRefundAmount = decimal.Zero;
         }
 
-        public bool IsCancelled()
+        public bool IsCanceled()
         {
-            return CancelledTime.HasValue;
+            return CanceledTime.HasValue;
         }
         
         public bool IsCompleted()
@@ -180,7 +180,7 @@ namespace EasyAbp.PaymentService.Payments
         
         public bool IsInProgress()
         {
-            return !IsCancelled() && !IsCompleted();
+            return !IsCanceled() && !IsCompleted();
         }
 
         private void CheckIsInProgress()

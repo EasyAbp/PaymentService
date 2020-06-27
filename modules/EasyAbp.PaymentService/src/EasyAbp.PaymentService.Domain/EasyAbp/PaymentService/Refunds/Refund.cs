@@ -32,7 +32,7 @@ namespace EasyAbp.PaymentService.Refunds
         
         public virtual DateTime? CompletedTime { get; protected set; }
         
-        public virtual DateTime? CancelledTime { get; protected set; }
+        public virtual DateTime? CanceledTime { get; protected set; }
 
         protected Refund()
         {
@@ -69,7 +69,7 @@ namespace EasyAbp.PaymentService.Refunds
 
         public void CompleteRefund(DateTime completedTime)
         {
-            if (CompletedTime.HasValue || CancelledTime.HasValue)
+            if (CompletedTime.HasValue || CanceledTime.HasValue)
             {
                 throw new RefundIsInUnexpectedStageException(Id);
             }
@@ -79,12 +79,12 @@ namespace EasyAbp.PaymentService.Refunds
 
         public void CancelRefund(DateTime cancelTime)
         {
-            if (CompletedTime.HasValue || CancelledTime.HasValue)
+            if (CompletedTime.HasValue || CanceledTime.HasValue)
             {
                 throw new RefundIsInUnexpectedStageException(Id);
             }
 
-            CancelledTime = cancelTime;
+            CanceledTime = cancelTime;
         }
     }
 }
