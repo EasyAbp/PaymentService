@@ -21,7 +21,7 @@ namespace EasyAbp.PaymentService.Payments
             _paymentRepository = paymentRepository;
         }
 
-        public async Task OnStartPaymentAsync(Payment payment, Dictionary<string, object> configurations)
+        public async Task OnPaymentStartedAsync(Payment payment, Dictionary<string, object> configurations)
         {
             if (payment.ActualPaymentAmount != decimal.Zero)
             {
@@ -37,12 +37,12 @@ namespace EasyAbp.PaymentService.Payments
             await _paymentRepository.UpdateAsync(payment, true);
         }
 
-        public virtual async Task OnStartCancelAsync(Payment payment)
+        public virtual async Task OnCancelStartedAsync(Payment payment)
         {
             await _paymentManager.CompleteCancelAsync(payment);
         }
 
-        public virtual Task OnStartRefundAsync(Payment payment, IEnumerable<Refund> refunds, string displayReason = null)
+        public virtual Task OnRefundStartedAsync(Payment payment, IEnumerable<Refund> refunds, string displayReason = null)
         {
             throw new NotSupportedException();
         }

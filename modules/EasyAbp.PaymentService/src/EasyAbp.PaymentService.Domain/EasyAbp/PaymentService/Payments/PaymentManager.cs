@@ -45,7 +45,7 @@ namespace EasyAbp.PaymentService.Payments
 
             // Todo: payment discount
 
-            await provider.OnStartPaymentAsync(payment, configurations);
+            await provider.OnPaymentStartedAsync(payment, configurations);
         }
 
         public virtual async Task CompletePaymentAsync(Payment payment)
@@ -72,7 +72,7 @@ namespace EasyAbp.PaymentService.Payments
             
             var provider = GetProvider(payment);
             
-            await provider.OnStartCancelAsync(payment);
+            await provider.OnCancelStartedAsync(payment);
         }
 
         public virtual async Task CompleteCancelAsync(Payment payment)
@@ -118,7 +118,7 @@ namespace EasyAbp.PaymentService.Payments
                 refunds.Add(await _refundRepository.InsertAsync(refund, true));
             }
 
-            await provider.OnStartRefundAsync(payment, refunds, displayReason);
+            await provider.OnRefundStartedAsync(payment, refunds, displayReason);
         }
 
         public virtual async Task CompleteRefundAsync(Payment payment, IEnumerable<Refund> refunds)

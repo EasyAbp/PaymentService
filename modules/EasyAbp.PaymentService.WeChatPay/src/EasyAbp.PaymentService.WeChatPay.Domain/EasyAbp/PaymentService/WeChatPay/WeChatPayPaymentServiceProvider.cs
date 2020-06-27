@@ -67,7 +67,7 @@ namespace EasyAbp.PaymentService.WeChatPay
             _paymentRepository = paymentRepository;
         }
 
-        public async Task OnStartPaymentAsync(Payment payment, Dictionary<string, object> configurations)
+        public async Task OnPaymentStartedAsync(Payment payment, Dictionary<string, object> configurations)
         {
             if (payment.Currency != "CNY")
             {
@@ -140,7 +140,7 @@ namespace EasyAbp.PaymentService.WeChatPay
             await _paymentRepository.UpdateAsync(payment, true);
         }
 
-        public virtual async Task OnStartCancelAsync(Payment payment)
+        public virtual async Task OnCancelStartedAsync(Payment payment)
         {
             _unitOfWorkManager.Current.OnCompleted(async () =>
             {
@@ -157,7 +157,7 @@ namespace EasyAbp.PaymentService.WeChatPay
             await _paymentManager.CompleteCancelAsync(payment);
         }
 
-        public virtual Task OnStartRefundAsync(Payment payment, IEnumerable<Refund> refunds, string displayReason = null)
+        public virtual Task OnRefundStartedAsync(Payment payment, IEnumerable<Refund> refunds, string displayReason = null)
         {
             _unitOfWorkManager.Current.OnCompleted(async () =>
             {
