@@ -6,12 +6,10 @@ using Volo.Abp.Application.Services;
 namespace EasyAbp.PaymentService.WeChatPay.PaymentRecords
 {
     public interface IPaymentRecordAppService :
-        ICrudAppService< 
+        IReadOnlyAppService< 
             PaymentRecordDto, 
             Guid, 
-            PagedAndSortedResultRequestDto,
-            object,
-            object>
+            PagedAndSortedResultRequestDto>
     {
 
     }

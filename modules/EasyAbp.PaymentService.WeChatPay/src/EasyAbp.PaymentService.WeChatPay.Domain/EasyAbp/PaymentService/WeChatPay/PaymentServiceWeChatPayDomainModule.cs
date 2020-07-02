@@ -14,8 +14,6 @@ namespace EasyAbp.PaymentService.WeChatPay
     {
         public override void PostConfigureServices(ServiceConfigurationContext context)
         {
-            var configuration = context.Services.GetConfiguration();
-
             Configure<AbpWeChatPayResolveOptions>(options =>
             {
                 options.ResolveContributors.AddFirst(new SettingOptionResolveContributor());

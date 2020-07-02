@@ -6,12 +6,10 @@ using Volo.Abp.Application.Services;
 namespace EasyAbp.PaymentService.WeChatPay.RefundRecords
 {
     public interface IRefundRecordAppService :
-        ICrudAppService< 
+        IReadOnlyAppService< 
             RefundRecordDto, 
             Guid, 
-            PagedAndSortedResultRequestDto,
-            object,
-            object>
+            PagedAndSortedResultRequestDto>
     {
 
     }

@@ -8,12 +8,10 @@ using Volo.Abp.Application.Services;
 namespace EasyAbp.PaymentService.Payments
 {
     public interface IPaymentAppService :
-        ICrudAppService< 
+        IReadOnlyAppService< 
             PaymentDto, 
             Guid, 
-            PagedAndSortedResultRequestDto,
-            object,
-            object>
+            PagedAndSortedResultRequestDto>
     {
         Task<ListResultDto<PaymentMethodDto>> GetListPaymentMethod();
         

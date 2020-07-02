@@ -12,7 +12,7 @@ using Volo.Abp.Application.Services;
 
 namespace EasyAbp.PaymentService.Payments
 {
-    public class PaymentAppService : CrudAppService<Payment, PaymentDto, Guid, PagedAndSortedResultRequestDto, object, object>,
+    public class PaymentAppService : ReadOnlyAppService<Payment, PaymentDto, Guid, PagedAndSortedResultRequestDto>,
         IPaymentAppService
     {
         protected override string GetPolicyName { get; set; } = PaymentServicePermissions.Payments.Default;
@@ -45,24 +45,6 @@ namespace EasyAbp.PaymentService.Payments
         {
             // Todo: Check permission.
             return base.GetListAsync(input);
-        }
-
-        [RemoteService(false)]
-        public override Task<PaymentDto> CreateAsync(object input)
-        {
-            throw new NotSupportedException();
-        }
-
-        [RemoteService(false)]
-        public override Task<PaymentDto> UpdateAsync(Guid id, object input)
-        {
-            throw new NotSupportedException();
-        }
-
-        [RemoteService(false)]
-        public override Task DeleteAsync(Guid id)
-        {
-            throw new NotSupportedException();
         }
 
         public virtual Task<ListResultDto<PaymentMethodDto>> GetListPaymentMethod()

@@ -8,7 +8,7 @@ using Volo.Abp.Application.Services;
 
 namespace EasyAbp.PaymentService.WeChatPay.RefundRecords
 {
-    public class RefundRecordAppService : CrudAppService<RefundRecord, RefundRecordDto, Guid, PagedAndSortedResultRequestDto, object, object>,
+    public class RefundRecordAppService : ReadOnlyAppService<RefundRecord, RefundRecordDto, Guid, PagedAndSortedResultRequestDto>,
         IRefundRecordAppService
     {
         protected override string GetPolicyName { get; set; } = WeChatPayPermissions.RefundRecords.Default;
@@ -19,24 +19,6 @@ namespace EasyAbp.PaymentService.WeChatPay.RefundRecords
         public RefundRecordAppService(IRefundRecordRepository repository) : base(repository)
         {
             _repository = repository;
-        }
-        
-        [RemoteService(false)]
-        public override Task<RefundRecordDto> CreateAsync(object input)
-        {
-            throw new NotSupportedException();
-        }
-
-        [RemoteService(false)]
-        public override Task<RefundRecordDto> UpdateAsync(Guid id, object input)
-        {
-            throw new NotSupportedException();
-        }
-
-        [RemoteService(false)]
-        public override Task DeleteAsync(Guid id)
-        {
-            throw new NotSupportedException();
         }
     }
 }

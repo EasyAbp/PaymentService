@@ -6,12 +6,10 @@ using Volo.Abp.Application.Services;
 namespace EasyAbp.PaymentService.Refunds
 {
     public interface IRefundAppService :
-        ICrudAppService< 
+        IReadOnlyAppService< 
             RefundDto, 
             Guid, 
-            PagedAndSortedResultRequestDto,
-            object,
-            object>
+            PagedAndSortedResultRequestDto>
     {
 
     }

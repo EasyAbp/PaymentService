@@ -12,7 +12,7 @@ namespace EasyAbp.PaymentService.EntityFrameworkCore
         /* Add DbSet for each Aggregate Root here. Example:
          * public DbSet<Question> Questions { get; set; }
          */
-        public DbSet<Payment> PaymentService { get; set; }
+        public DbSet<Payment> Payments { get; set; }
         public DbSet<Refund> Refunds { get; set; }
         public DbSet<PaymentItem> PaymentItems { get; set; }
 

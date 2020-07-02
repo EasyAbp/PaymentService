@@ -6,7 +6,7 @@ using Volo.Abp.Application.Services;
 
 namespace EasyAbp.PaymentService.Refunds
 {
-    public class RefundAppService : CrudAppService<Refund, RefundDto, Guid, PagedAndSortedResultRequestDto, object, object>,
+    public class RefundAppService : ReadOnlyAppService<Refund, RefundDto, Guid, PagedAndSortedResultRequestDto>,
         IRefundAppService
     {
         protected override string GetPolicyName { get; set; } = PaymentServicePermissions.Refunds.Default;
