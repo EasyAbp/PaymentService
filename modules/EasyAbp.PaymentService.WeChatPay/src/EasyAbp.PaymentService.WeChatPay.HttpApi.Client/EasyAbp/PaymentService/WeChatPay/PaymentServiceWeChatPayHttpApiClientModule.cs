@@ -9,7 +9,7 @@ namespace EasyAbp.PaymentService.WeChatPay
         typeof(AbpHttpClientModule))]
     public class PaymentServiceWeChatPayHttpApiClientModule : AbpModule
     {
-        public const string RemoteServiceName = "WeChatPay";
+        public const string RemoteServiceName = "PaymentServiceWeChatPay";
 
         public override void ConfigureServices(ServiceConfigurationContext context)
         {

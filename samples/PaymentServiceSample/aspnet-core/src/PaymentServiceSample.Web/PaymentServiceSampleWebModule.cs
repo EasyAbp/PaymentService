@@ -165,8 +165,6 @@ namespace PaymentServiceSample.Web
             Configure<AbpAspNetCoreMvcOptions>(options =>
             {
                 options.ConventionalControllers.Create(typeof(PaymentServiceSampleApplicationModule).Assembly);
-                options.ConventionalControllers.Create(typeof(PaymentServiceApplicationModule).Assembly);
-                options.ConventionalControllers.Create(typeof(PaymentServiceWeChatPayApplicationModule).Assembly);
             });
         }
 
