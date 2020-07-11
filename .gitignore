@@ -251,8 +251,10 @@ paket-files/
 .idea/
 *.sln.iml
 
-# PaymentService
-host/EasyAbp.PaymentService.IdentityServer/Logs/logs.txt
-host/EasyAbp.PaymentService.HttpApi.Host/Logs/logs.txt
-host/EasyAbp.PaymentService.Web.Host/Logs/logs.txt
-host/EasyAbp.PaymentService.Web.Unified/Logs/logs.txt
+# PaymentServiceSample
+src/PaymentServiceSample.Web/Logs/*
+src/PaymentServiceSample.Web.Host/Logs/*
+src/PaymentServiceSample.IdentityServer/Logs/*
+src/PaymentServiceSample.HttpApi.Host/Logs/*
+src/PaymentServiceSample.HttpApi.HostWithIds/Logs/*
+src/PaymentServiceSample.DbMigrator/Logs/*
