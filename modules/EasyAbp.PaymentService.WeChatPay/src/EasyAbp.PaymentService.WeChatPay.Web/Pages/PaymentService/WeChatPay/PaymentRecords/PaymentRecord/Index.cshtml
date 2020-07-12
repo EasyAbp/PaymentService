@@ -1,9 +1,11 @@
 @page
+@using EasyAbp.PaymentService.WeChatPay.Localization
 @using EasyAbp.PaymentService.WeChatPay.Web.Pages.PaymentService.WeChatPay.PaymentRecords.PaymentRecord
+@using Microsoft.AspNetCore.Mvc.Localization
 @using Volo.Abp.AspNetCore.Mvc.UI.Layout
-@inherits EasyAbp.PaymentService.WeChatPay.Web.Pages.WeChatPayPage
 @model IndexModel
 @inject IPageLayout PageLayout
+@inject IHtmlLocalizer<WeChatPayResource> L
 @{
     PageLayout.Content.Title = L["PaymentRecord"].Value;
     PageLayout.Content.BreadCrumb.Add(L["Menu:PaymentRecord"].Value);

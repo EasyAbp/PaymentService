@@ -1,8 +1,10 @@
 @page
+@using EasyAbp.PaymentService.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
 @using Volo.Abp.AspNetCore.Mvc.UI.Layout
-@inherits EasyAbp.PaymentService.Web.Pages.PaymentServicePage
 @model EasyAbp.PaymentService.Web.Pages.PaymentService.Payments.Payment.IndexModel
 @inject IPageLayout PageLayout
+@inject IHtmlLocalizer<PaymentServiceResource> L
 @{
     PageLayout.Content.Title = L["Payment"].Value;
     PageLayout.Content.BreadCrumb.Add(L["Menu:Payment"].Value);
