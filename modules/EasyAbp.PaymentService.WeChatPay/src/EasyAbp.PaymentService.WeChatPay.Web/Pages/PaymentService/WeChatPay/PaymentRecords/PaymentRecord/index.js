@@ -1,6 +1,6 @@
 $(function () {
 
-    var l = abp.localization.getResource('WeChatPay');
+    var l = abp.localization.getResource('EasyAbpPaymentServiceWeChatPay');
 
     var service = easyAbp.paymentService.weChatPay.paymentRecords.paymentRecord;
 
