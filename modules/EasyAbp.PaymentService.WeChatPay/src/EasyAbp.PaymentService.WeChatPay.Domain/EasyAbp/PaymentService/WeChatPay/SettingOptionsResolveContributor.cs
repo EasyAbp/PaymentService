@@ -8,7 +8,7 @@ using Volo.Abp.Settings;
 
 namespace EasyAbp.PaymentService.WeChatPay
 {
-    public class SettingOptionResolveContributor : IWeChatPayOptionResolveContributor
+    public class SettingOptionsResolveContributor : IWeChatPayOptionsResolveContributor
     {
         public const string ContributorName = "Setting";
 
@@ -17,6 +17,7 @@ namespace EasyAbp.PaymentService.WeChatPay
         public virtual async Task ResolveAsync(WeChatPayOptionsResolverContext context)
         {
             var settingProvider = context.ServiceProvider.GetRequiredService<ISettingProvider>();
+            
             context.Options = new AbpWeChatPayOptions
             {
                 ApiKey = await settingProvider.GetOrNullAsync(WeChatPaySettings.ApiKey),

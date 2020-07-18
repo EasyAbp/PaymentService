@@ -16,6 +16,8 @@ namespace EasyAbp.PaymentService.WeChatPay
 {
     public class PaymentServiceWeChatPayHandler : IWeChatPayHandler, ITransientDependency
     {
+        public WeChatHandlerType Type { get; } = WeChatHandlerType.Normal;
+
         private readonly IDataFilter _dataFilter;
         private readonly IPaymentManager _paymentManager;
         private readonly IPaymentRecordRepository _paymentRecordRepository;
@@ -66,7 +68,7 @@ namespace EasyAbp.PaymentService.WeChatPay
                 await _paymentManager.StartCancelAsync(payment);
             }
         }
-
+        
         protected virtual async Task<PaymentRecord> RecordPaymentResultAsync(Dictionary<string, string> dict, Guid paymentId)
         {
             var couponCount = ConvertToNullableInt32(dict.GetOrDefault("coupon_count"));

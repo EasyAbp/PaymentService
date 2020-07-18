@@ -12,11 +12,11 @@ namespace EasyAbp.PaymentService.WeChatPay
     )]
     public class PaymentServiceWeChatPayDomainModule : AbpModule
     {
-        public override void PostConfigureServices(ServiceConfigurationContext context)
+        public override void ConfigureServices(ServiceConfigurationContext context)
         {
             Configure<AbpWeChatPayResolveOptions>(options =>
             {
-                options.ResolveContributors.AddFirst(new SettingOptionResolveContributor());
+                options.Contributors.AddFirst(new SettingOptionsResolveContributor());
             });
         }
     }

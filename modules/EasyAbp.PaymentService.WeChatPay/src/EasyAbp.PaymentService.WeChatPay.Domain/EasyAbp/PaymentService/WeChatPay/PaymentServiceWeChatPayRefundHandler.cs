@@ -14,8 +14,10 @@ using Volo.Abp.Timing;
 
 namespace EasyAbp.PaymentService.WeChatPay
 {
-    public class PaymentServiceWeChatPayRefundHandler : IWeChatPayRefundHandler, ITransientDependency
+    public class PaymentServiceWeChatPayRefundHandler : IWeChatPayHandler, ITransientDependency
     {
+        public WeChatHandlerType Type { get; } = WeChatHandlerType.Refund;
+
         private readonly IDataFilter _dataFilter;
         private readonly IPaymentManager _paymentManager;
         private readonly IRefundRecordRepository _refundRecordRepository;
