@@ -12,12 +12,6 @@ namespace EasyAbp.PaymentService.WeChatPay
         )]
     public class PaymentServiceWeChatPayApplicationContractsModule : AbpModule
     {
-        public override void ConfigureServices(ServiceConfigurationContext context)
-        {
-            Configure<AbpVirtualFileSystemOptions>(options =>
-            {
-                options.FileSets.AddEmbedded<PaymentServiceWeChatPayApplicationContractsModule>("EasyAbp.PaymentService.WeChatPay");
-            });
-        }
+
     }
 }

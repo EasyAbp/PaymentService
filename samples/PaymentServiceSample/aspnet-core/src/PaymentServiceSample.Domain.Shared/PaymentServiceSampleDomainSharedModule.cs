@@ -34,7 +34,7 @@ namespace PaymentServiceSample
         {
             Configure<AbpVirtualFileSystemOptions>(options =>
             {
-                options.FileSets.AddEmbedded<PaymentServiceSampleDomainSharedModule>("PaymentServiceSample");
+                options.FileSets.AddEmbedded<PaymentServiceSampleDomainSharedModule>();
             });
 
             Configure<AbpLocalizationOptions>(options =>

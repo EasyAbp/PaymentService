@@ -39,7 +39,7 @@ namespace EasyAbp.PaymentService.Web
 
             Configure<AbpVirtualFileSystemOptions>(options =>
             {
-                options.FileSets.AddEmbedded<PaymentServiceWebModule>("EasyAbp.PaymentService.Web");
+                options.FileSets.AddEmbedded<PaymentServiceWebModule>();
             });
 
             context.Services.AddAutoMapperObjectMapper<PaymentServiceWebModule>();

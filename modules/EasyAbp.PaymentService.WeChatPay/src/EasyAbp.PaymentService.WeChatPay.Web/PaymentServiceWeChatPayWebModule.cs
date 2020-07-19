@@ -39,7 +39,7 @@ namespace EasyAbp.PaymentService.WeChatPay.Web
 
             Configure<AbpVirtualFileSystemOptions>(options =>
             {
-                options.FileSets.AddEmbedded<PaymentServiceWeChatPayWebModule>("EasyAbp.PaymentService.WeChatPay.Web");
+                options.FileSets.AddEmbedded<PaymentServiceWeChatPayWebModule>();
             });
 
             context.Services.AddAutoMapperObjectMapper<PaymentServiceWeChatPayWebModule>();
