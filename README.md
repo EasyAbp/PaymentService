@@ -37,15 +37,15 @@ An abp application module that provides payment service.
 
 ## Usage
 
-    1. Register the Free payment method, it is used to pay with 0.00 amount:
-	```
-        public override void OnApplicationInitialization(ApplicationInitializationContext context)
-        {
-            var resolver = context.ServiceProvider.GetRequiredService<IPaymentServiceResolver>();
+1. Register the Free payment method, it is used to pay with 0.00 amount:
+```
+public override void OnApplicationInitialization(ApplicationInitializationContext context)
+{
+    var resolver = context.ServiceProvider.GetRequiredService<IPaymentServiceResolver>();
 
-            resolver.TryRegisterProvider(FreePaymentServiceProvider.PaymentMethod, typeof(FreePaymentServiceProvider));
-        }
-	```
+    resolver.TryRegisterProvider(FreePaymentServiceProvider.PaymentMethod, typeof(FreePaymentServiceProvider));
+}
+```
 
 Please refer to [EasyAbp.EShop.Payments](https://github.com/EasyAbp/EShop/tree/dev/modules/EasyAbp.EShop.Payments) for more information.
 
