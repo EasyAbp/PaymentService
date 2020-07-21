@@ -1,7 +1,7 @@
 # PaymentService.WeChatPay.WeChatPay
 
-[![NuGet](https://img.shields.io/nuget/v/EasyAbp.PaymentService.WeChatPay.WeChatPay.Domain.Shared.svg?style=flat-square)](https://www.nuget.org/packages/EasyAbp.PaymentService.WeChatPay.WeChatPay.Domain.Shared)
-[![NuGet Download](https://img.shields.io/nuget/dt/EasyAbp.PaymentService.WeChatPay.WeChatPay.Domain.Shared.svg?style=flat-square)](https://www.nuget.org/packages/EasyAbp.PaymentService.WeChatPay.WeChatPay.Domain.Shared)
+[![NuGet](https://img.shields.io/nuget/v/EasyAbp.PaymentService.WeChatPay.Domain.Shared.svg?style=flat-square)](https://www.nuget.org/packages/EasyAbp.PaymentService.WeChatPay.Domain.Shared)
+[![NuGet Download](https://img.shields.io/nuget/dt/EasyAbp.PaymentService.WeChatPay.Domain.Shared.svg?style=flat-square)](https://www.nuget.org/packages/EasyAbp.PaymentService.WeChatPay.Domain.Shared)
 
 WeChatPay provider for the EasyAbp.PaymentService module.
 
@@ -37,15 +37,15 @@ WeChatPay provider for the EasyAbp.PaymentService module.
 
 ## Usage
 
-    1. Register the WeChatPay payment method:
-	```
-        public override void OnApplicationInitialization(ApplicationInitializationContext context)
-        {
-            var resolver = context.ServiceProvider.GetRequiredService<IPaymentServiceResolver>();
+1. Register the WeChatPay payment method:
+    ```csharp
+    public override void OnApplicationInitialization(ApplicationInitializationContext context)
+    {
+        var resolver = context.ServiceProvider.GetRequiredService<IPaymentServiceResolver>();
 
-            resolver.TryRegisterProvider(WeChatPayPaymentServiceProvider.PaymentMethod, typeof(WeChatPayPaymentServiceProvider));
-        }
-	```
+        resolver.TryRegisterProvider(WeChatPayPaymentServiceProvider.PaymentMethod, typeof(WeChatPayPaymentServiceProvider));
+    }
+    ```
 
 ## Roadmap
 
