@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Volo.Abp.EntityFrameworkCore" Version="3.0.4" />
-    <ProjectReference Include="..\EasyAbp.PaymentService.Domain\EasyAbp.PaymentService.Domain.csproj" />
+    <PackageReference Include="Volo.Abp.Http.Client" Version="3.0.4" />
+    <ProjectReference Include="..\EasyAbp.PaymentService.Prepayment.Application.Contracts\EasyAbp.PaymentService.Prepayment.Application.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

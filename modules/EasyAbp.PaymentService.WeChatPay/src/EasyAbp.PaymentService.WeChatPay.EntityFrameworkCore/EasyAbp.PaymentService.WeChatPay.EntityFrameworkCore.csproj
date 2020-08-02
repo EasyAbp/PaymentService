@@ -12,8 +12,4 @@
     <ProjectReference Include="..\EasyAbp.PaymentService.WeChatPay.Domain\EasyAbp.PaymentService.WeChatPay.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="EasyAbp\PaymentService\WeChatPay" />
-  </ItemGroup>
-
 </Project>

@@ -9,7 +9,11 @@
 
   <ItemGroup>
     <PackageReference Include="Volo.Abp.EntityFrameworkCore" Version="3.0.4" />
-    <ProjectReference Include="..\EasyAbp.PaymentService.Domain\EasyAbp.PaymentService.Domain.csproj" />
+    <ProjectReference Include="..\EasyAbp.PaymentService.Prepayment.Domain\EasyAbp.PaymentService.Prepayment.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="EasyAbp\PaymentService\Prepayment" />
   </ItemGroup>
 
 </Project>
