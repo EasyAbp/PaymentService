@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using Volo.Abp.Domain.Entities.Auditing;
 
@@ -24,8 +25,11 @@ namespace EasyAbp.PaymentService.Payments
         
         public virtual decimal PendingRefundAmount { get; protected set; }
 
+        public virtual Dictionary<string, object> ExtraProperties { get; protected set; }
+
         protected PaymentItem()
         {
+            ExtraProperties = new Dictionary<string, object>();
         }
 
         public PaymentItem(
@@ -41,6 +45,8 @@ namespace EasyAbp.PaymentService.Payments
             Currency = currency;
             OriginalPaymentAmount = originalPaymentAmount;
             ActualPaymentAmount = originalPaymentAmount;
+
+            ExtraProperties = new Dictionary<string, object>();
         }
         
         internal void SetPaymentDiscount(decimal paymentDiscount)
