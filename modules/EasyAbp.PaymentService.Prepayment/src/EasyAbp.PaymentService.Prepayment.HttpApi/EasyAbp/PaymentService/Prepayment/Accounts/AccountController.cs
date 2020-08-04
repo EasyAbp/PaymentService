@@ -19,14 +19,14 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
         }
 
         [HttpPost]
-        [Route("changeBalance")]
+        [Route("change/balance")]
         public Task<AccountDto> ChangeBalanceAsync(ChangeBalanceInput input)
         {
             return _service.ChangeBalanceAsync(input);
         }
 
         [HttpPost]
-        [Route("changeLockedBalance")]
+        [Route("change/lockedBalance")]
         public Task<AccountDto> ChangeLockedBalanceAsync(ChangeLockedBalanceInput input)
         {
             return _service.ChangeLockedBalanceAsync(input);
