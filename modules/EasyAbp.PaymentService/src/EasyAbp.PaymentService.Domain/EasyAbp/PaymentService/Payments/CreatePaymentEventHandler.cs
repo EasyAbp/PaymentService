@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Guids;
+using Volo.Abp.ObjectExtending;
 using Volo.Abp.Uow;
 
 namespace EasyAbp.PaymentService.Payments
@@ -37,9 +38,16 @@ namespace EasyAbp.PaymentService.Payments
             var provider = _serviceProvider.GetService(providerType) as IPaymentServiceProvider ??
                            throw new UnknownPaymentMethodException(eventData.PaymentMethod);
 
-            var paymentItems = eventData.PaymentItems.Select(inputPaymentItem =>
-                new PaymentItem(_guidGenerator.Create(), inputPaymentItem.ItemType, inputPaymentItem.ItemKey,
-                    inputPaymentItem.Currency, inputPaymentItem.OriginalPaymentAmount)).ToList();
+            var paymentItems = eventData.PaymentItems.Select(itemEto =>
+                {
+                    var item = new PaymentItem(_guidGenerator.Create(), itemEto.ItemType, itemEto.ItemKey,
+                        itemEto.Currency, itemEto.OriginalPaymentAmount);
+
+                    itemEto.MapExtraPropertiesTo(item, MappingPropertyDefinitionChecks.None);
+
+                    return item;
+                }
+            ).ToList();
 
             if (paymentItems.Select(item => item.Currency).Any(c => c != eventData.Currency))
             {
@@ -54,12 +62,9 @@ namespace EasyAbp.PaymentService.Payments
             var payment = new Payment(_guidGenerator.Create(), eventData.TenantId, eventData.UserId,
                 eventData.PaymentMethod, eventData.Currency, paymentItems.Select(item => item.OriginalPaymentAmount).Sum(),
                 paymentItems);
-            
-            foreach (var property in eventData.ExtraProperties)
-            {
-                payment.SetProperty(property.Key, property.Value);
-            }
-            
+
+            eventData.MapExtraPropertiesTo(payment, MappingPropertyDefinitionChecks.None);
+
             await _paymentRepository.InsertAsync(payment, autoSave: true);
         }
         

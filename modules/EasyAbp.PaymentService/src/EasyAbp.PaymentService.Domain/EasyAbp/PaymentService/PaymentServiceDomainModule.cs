@@ -3,13 +3,14 @@ using EasyAbp.PaymentService.Refunds;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.AutoMapper;
 using Volo.Abp.Domain.Entities.Events.Distributed;
-using Volo.Abp.EventBus.Distributed;
 using Volo.Abp.Modularity;
+using Volo.Abp.ObjectExtending;
 
 namespace EasyAbp.PaymentService
 {
     [DependsOn(
         typeof(AbpAutoMapperModule),
+        typeof(AbpObjectExtendingModule),
         typeof(PaymentServiceDomainSharedModule)
         )]
     public class PaymentServiceDomainModule : AbpModule

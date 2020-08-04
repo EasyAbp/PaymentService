@@ -15,7 +15,7 @@ namespace EasyAbp.PaymentService.Payments
 
         public string Currency { get; set; }
         
-        public Dictionary<string, object> ExtraProperties { get; set; }
+        public Dictionary<string, object> ExtraProperties { get; set; } = new Dictionary<string, object>();
 
         public List<CreatePaymentItemEto> PaymentItems { get; set; }
     }
