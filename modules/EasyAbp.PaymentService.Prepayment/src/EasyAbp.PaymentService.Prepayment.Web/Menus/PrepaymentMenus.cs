@@ -2,10 +2,16 @@
 {
     public class PrepaymentMenus
     {
-        private const string Prefix = "EasyAbp.PaymentService.Prepayment";
+        public const string ModuleGroupPrefix = "EasyAbp.PaymentService";
+        
+        public const string Prefix = ModuleGroupPrefix + ".Prepayment";
 
         //Add your menu items here...
         //public const string Home = Prefix + ".MyNewMenuItem";
+
+        public const string Account = Prefix + ".Account";
+        
+        public const string Transaction = Prefix + ".Transaction";
 
     }
 }

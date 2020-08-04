@@ -1,12 +1,15 @@
-﻿using System;
+using EasyAbp.PaymentService.Prepayment.Transactions;
+using EasyAbp.PaymentService.Prepayment.Accounts;
+using System;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp;
+using Volo.Abp.EntityFrameworkCore.Modeling;
 
 namespace EasyAbp.PaymentService.Prepayment.EntityFrameworkCore
 {
     public static class PrepaymentDbContextModelCreatingExtensions
     {
-        public static void ConfigurePrepayment(
+        public static void ConfigurePaymentServicePrepayment(
             this ModelBuilder builder,
             Action<PrepaymentModelBuilderConfigurationOptions> optionsAction = null)
         {
@@ -38,6 +41,26 @@ namespace EasyAbp.PaymentService.Prepayment.EntityFrameworkCore
                 b.HasIndex(q => q.CreationTime);
             });
             */
+
+            builder.Entity<Account>(b =>
+            {
+                b.ToTable(options.TablePrefix + "Accounts", options.Schema);
+                b.ConfigureByConvention(); 
+                
+                /* Configure more properties here */
+                b.Property(x => x.Balance).HasColumnType("decimal(20,8)");
+                b.Property(x => x.LockedBalance).HasColumnType("decimal(20,8)");
+            });
+
+            builder.Entity<Transaction>(b =>
+            {
+                b.ToTable(options.TablePrefix + "Transactions", options.Schema);
+                b.ConfigureByConvention();
+
+                /* Configure more properties here */
+                b.Property(x => x.ChangedBalance).HasColumnType("decimal(20,8)");
+                b.Property(x => x.OriginalBalance).HasColumnType("decimal(20,8)");
+            });
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using EasyAbp.PaymentService;
 using EasyAbp.PaymentService.Payments;
+using EasyAbp.PaymentService.Prepayment;
 using EasyAbp.PaymentService.WeChatPay;
 using Microsoft.Extensions.DependencyInjection;
 using PaymentServiceSample.MultiTenancy;
@@ -31,6 +32,7 @@ namespace PaymentServiceSample
         typeof(AbpSettingManagementDomainModule),
         typeof(AbpTenantManagementDomainModule),
         typeof(PaymentServiceDomainModule),
+        typeof(PaymentServicePrepaymentDomainModule),
         typeof(PaymentServiceWeChatPayDomainModule)
         )]
     public class PaymentServiceSampleDomainModule : AbpModule

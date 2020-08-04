@@ -1,6 +1,36 @@
 {
   "culture": "cs",
   "texts": {
-    "ManageYourProfile": "Spravovat profil"
+    "ManageYourProfile": "Spravovat profil",
+    "Permission:Account": "Account",
+    "Permission:Create": "Create",
+    "Permission:Update": "Update",
+    "Permission:Delete": "Delete",
+    "Menu:Account": "MenuAccount",
+    "Account": "Account",
+    "AccountAccountGroupName": "AccountAccountGroupName",
+    "AccountUserId": "AccountUserId",
+    "AccountBalance": "AccountBalance",
+    "AccountLockedBalance": "AccountLockedBalance",
+    "CreateAccount": "CreateAccount",
+    "EditAccount": "EditAccount",
+    "AccountDeletionConfirmationMessage": "Are you sure to delete the account {0}?",
+    "SuccessfullyDeleted": "Successfully deleted",
+    "Permission:Transaction": "Transaction",
+    "Menu:Transaction": "MenuTransaction",
+    "Transaction": "Transaction",
+    "TransactionAccountId": "TransactionAccountId",
+    "TransactionAccountUserId": "TransactionAccountUserId",
+    "TransactionPaymentId": "TransactionPaymentId",
+    "TransactionTransactionType": "TransactionTransactionType",
+    "TransactionActionName": "TransactionActionName",
+    "TransactionPaymentMethod": "TransactionPaymentMethod",
+    "TransactionOppositePartAccount": "TransactionOppositePartAccount",
+    "TransactionExternalTradingCode": "TransactionExternalTradingCode",
+    "TransactionChangedBalance": "TransactionChangedBalance",
+    "TransactionOriginalBalance": "TransactionOriginalBalance",
+    "CreateTransaction": "CreateTransaction",
+    "EditTransaction": "EditTransaction",
+    "TransactionDeletionConfirmationMessage": "Are you sure to delete the transaction {0}?"
   }
 }

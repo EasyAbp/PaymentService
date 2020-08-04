@@ -3,8 +3,9 @@
 namespace EasyAbp.PaymentService.Prepayment
 {
     [DependsOn(
-        typeof(PaymentServicePrepaymentDomainSharedModule)
-        )]
+        typeof(PaymentServicePrepaymentDomainSharedModule),
+        typeof(PaymentServiceDomainModule)
+    )]
     public class PaymentServicePrepaymentDomainModule : AbpModule
     {
 

@@ -28,7 +28,7 @@ namespace PaymentServiceSample.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("ActualPaymentAmount")
-                        .HasColumnType("decimal(18,6)");
+                        .HasColumnType("decimal(20,8)");
 
                     b.Property<DateTime?>("CanceledTime")
                         .HasColumnType("datetime2");
@@ -83,22 +83,22 @@ namespace PaymentServiceSample.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("OriginalPaymentAmount")
-                        .HasColumnType("decimal(18,6)");
+                        .HasColumnType("decimal(20,8)");
 
                     b.Property<string>("PayeeAccount")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("PaymentDiscount")
-                        .HasColumnType("decimal(18,6)");
+                        .HasColumnType("decimal(20,8)");
 
                     b.Property<string>("PaymentMethod")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("PendingRefundAmount")
-                        .HasColumnType("decimal(18,6)");
+                        .HasColumnType("decimal(20,8)");
 
                     b.Property<decimal>("RefundAmount")
-                        .HasColumnType("decimal(18,6)");
+                        .HasColumnType("decimal(20,8)");
 
                     b.Property<Guid?>("TenantId")
                         .HasColumnName("TenantId")
@@ -119,7 +119,7 @@ namespace PaymentServiceSample.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("ActualPaymentAmount")
-                        .HasColumnType("decimal(18,6)");
+                        .HasColumnType("decimal(20,8)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnName("CreationTime")
@@ -161,25 +161,155 @@ namespace PaymentServiceSample.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("OriginalPaymentAmount")
-                        .HasColumnType("decimal(18,6)");
+                        .HasColumnType("decimal(20,8)");
 
                     b.Property<decimal>("PaymentDiscount")
-                        .HasColumnType("decimal(18,6)");
+                        .HasColumnType("decimal(20,8)");
 
                     b.Property<Guid?>("PaymentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("PendingRefundAmount")
-                        .HasColumnType("decimal(18,6)");
+                        .HasColumnType("decimal(20,8)");
 
                     b.Property<decimal>("RefundAmount")
-                        .HasColumnType("decimal(18,6)");
+                        .HasColumnType("decimal(20,8)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PaymentId");
 
                     b.ToTable("PaymentServicePaymentItems");
+                });
+
+            modelBuilder.Entity("EasyAbp.PaymentService.Prepayment.Accounts.Account", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AccountGroupName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Balance")
+                        .HasColumnType("decimal(20,8)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnName("ConcurrencyStamp")
+                        .HasColumnType("nvarchar(40)")
+                        .HasMaxLength(40);
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnName("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnName("CreatorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("DeleterId")
+                        .HasColumnName("DeleterId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnName("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ExtraProperties")
+                        .HasColumnName("ExtraProperties")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("IsDeleted")
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnName("LastModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnName("LastModifierId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("LockedBalance")
+                        .HasColumnType("decimal(20,8)");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnName("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EasyAbpPaymentServicePrepaymentAccounts");
+                });
+
+            modelBuilder.Entity("EasyAbp.PaymentService.Prepayment.Transactions.Transaction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AccountUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ActionName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("ChangedBalance")
+                        .HasColumnType("decimal(20,8)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnName("ConcurrencyStamp")
+                        .HasColumnType("nvarchar(40)")
+                        .HasMaxLength(40);
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnName("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnName("CreatorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ExternalTradingCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ExtraProperties")
+                        .HasColumnName("ExtraProperties")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OppositePartAccount")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("OriginalBalance")
+                        .HasColumnType("decimal(20,8)");
+
+                    b.Property<Guid?>("PaymentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PaymentMethod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnName("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("TransactionType")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EasyAbpPaymentServicePrepaymentTransactions");
                 });
 
             modelBuilder.Entity("EasyAbp.PaymentService.Refunds.Refund", b =>
@@ -250,7 +380,7 @@ namespace PaymentServiceSample.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("RefundAmount")
-                        .HasColumnType("decimal(18,6)");
+                        .HasColumnType("decimal(20,8)");
 
                     b.Property<string>("RefundPaymentMethod")
                         .HasColumnType("nvarchar(max)");

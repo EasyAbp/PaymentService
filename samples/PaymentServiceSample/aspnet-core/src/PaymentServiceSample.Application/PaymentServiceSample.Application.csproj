@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\modules\EasyAbp.PaymentService.Prepayment\src\EasyAbp.PaymentService.Prepayment.Application\EasyAbp.PaymentService.Prepayment.Application.csproj" />
     <ProjectReference Include="..\..\..\..\..\modules\EasyAbp.PaymentService\src\EasyAbp.PaymentService.Application\EasyAbp.PaymentService.Application.csproj" />
     <ProjectReference Include="..\..\..\..\..\modules\EasyAbp.PaymentService.WeChatPay\src\EasyAbp.PaymentService.WeChatPay.Application\EasyAbp.PaymentService.WeChatPay.Application.csproj" />
     <ProjectReference Include="..\PaymentServiceSample.Domain\PaymentServiceSample.Domain.csproj" />

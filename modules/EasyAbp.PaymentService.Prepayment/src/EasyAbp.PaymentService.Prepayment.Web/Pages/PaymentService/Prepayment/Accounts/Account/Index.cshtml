@@ -1,0 +1,49 @@
+@page
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Layout
+@using EasyAbp.PaymentService.Prepayment.Web.Pages.PaymentService.Prepayment.Accounts.Account
+@using EasyAbp.PaymentService.Prepayment.Localization
+@model IndexModel
+@inject IPageLayout PageLayout
+@inject IHtmlLocalizer<PrepaymentResource> L
+@inject IAuthorizationService Authorization
+@{
+    PageLayout.Content.Title = L["Account"].Value;
+    PageLayout.Content.BreadCrumb.Add(L["Menu:Account"].Value);
+    PageLayout.Content.MenuItemName = "Account";
+}
+
+@section scripts
+{
+    <abp-script src="/Pages/PaymentService/Prepayment/Accounts/Account/index.js" />
+}
+@section styles
+{
+    <abp-style src="/Pages/PaymentService/Prepayment/Accounts/Account/index.css"/>
+}
+
+<abp-card>
+    <abp-card-header>
+        <abp-row>
+            <abp-column size-md="_6">
+                <abp-card-title>@L["Account"]</abp-card-title>
+            </abp-column>
+            <abp-column size-md="_6" class="text-right">
+            </abp-column>
+        </abp-row>
+    </abp-card-header>
+    <abp-card-body>
+        <abp-table striped-rows="true" id="AccountTable" class="nowrap">
+            <thead>
+            <tr>
+                <th>@L["Actions"]</th>
+                <th>@L["AccountAccountGroupName"]</th>
+                <th>@L["AccountUserId"]</th>
+                <th>@L["AccountBalance"]</th>
+                <th>@L["AccountLockedBalance"]</th>
+            </tr>
+            </thead>
+        </abp-table>
+    </abp-card-body>
+</abp-card>

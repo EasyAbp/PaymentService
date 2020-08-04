@@ -1,8 +1,11 @@
-﻿namespace EasyAbp.PaymentService.Prepayment.Transactions
+﻿using System;
+
+namespace EasyAbp.PaymentService.Prepayment.Transactions
 {
+    [Flags]
     public enum TransactionType
     {
-        Debit,
-        Credit
+        Debit = 1,
+        Credit = 2
     }
 }

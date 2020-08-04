@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using EasyAbp.PaymentService.Prepayment.Transactions;
+using EasyAbp.PaymentService.Prepayment.Accounts;
+using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.Modularity;
 
@@ -17,6 +19,8 @@ namespace EasyAbp.PaymentService.Prepayment.EntityFrameworkCore
                 /* Add custom repositories here. Example:
                  * options.AddRepository<Question, EfCoreQuestionRepository>();
                  */
+                options.AddRepository<Account, AccountRepository>();
+                options.AddRepository<Transaction, TransactionRepository>();
             });
         }
     }

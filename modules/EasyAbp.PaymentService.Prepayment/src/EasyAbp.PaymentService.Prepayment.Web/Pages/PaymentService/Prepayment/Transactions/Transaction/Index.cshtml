@@ -1,0 +1,55 @@
+@page
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Layout
+@using EasyAbp.PaymentService.Prepayment.Web.Pages.PaymentService.Prepayment.Transactions.Transaction
+@using EasyAbp.PaymentService.Prepayment.Localization
+@model IndexModel
+@inject IPageLayout PageLayout
+@inject IHtmlLocalizer<PrepaymentResource> L
+@inject IAuthorizationService Authorization
+@{
+    PageLayout.Content.Title = L["Transaction"].Value;
+    PageLayout.Content.BreadCrumb.Add(L["Menu:Transaction"].Value);
+    PageLayout.Content.MenuItemName = "Transaction";
+}
+
+@section scripts
+{
+    <abp-script src="/Pages/PaymentService/Prepayment/Transactions/Transaction/index.js" />
+}
+@section styles
+{
+    <abp-style src="/Pages/PaymentService/Prepayment/Transactions/Transaction/index.css"/>
+}
+
+<abp-card>
+    <abp-card-header>
+        <abp-row>
+            <abp-column size-md="_6">
+                <abp-card-title>@L["Transaction"]</abp-card-title>
+            </abp-column>
+            <abp-column size-md="_6" class="text-right">
+            </abp-column>
+        </abp-row>
+    </abp-card-header>
+    <abp-card-body>
+        <abp-table striped-rows="true" id="TransactionTable" class="nowrap">
+            <thead>
+            <tr>
+                <th>@L["Actions"]</th>
+                <th>@L["TransactionAccountId"]</th>
+                <th>@L["TransactionAccountUserId"]</th>
+                <th>@L["TransactionPaymentId"]</th>
+                <th>@L["TransactionTransactionType"]</th>
+                <th>@L["TransactionActionName"]</th>
+                <th>@L["TransactionPaymentMethod"]</th>
+                <th>@L["TransactionOppositePartAccount"]</th>
+                <th>@L["TransactionExternalTradingCode"]</th>
+                <th>@L["TransactionChangedBalance"]</th>
+                <th>@L["TransactionOriginalBalance"]</th>
+            </tr>
+            </thead>
+        </abp-table>
+    </abp-card-body>
+</abp-card>

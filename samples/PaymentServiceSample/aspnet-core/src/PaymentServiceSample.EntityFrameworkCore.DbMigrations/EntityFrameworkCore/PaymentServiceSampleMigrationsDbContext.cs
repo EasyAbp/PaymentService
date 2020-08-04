@@ -1,4 +1,5 @@
 ﻿using EasyAbp.PaymentService.EntityFrameworkCore;
+using EasyAbp.PaymentService.Prepayment.EntityFrameworkCore;
 using EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
@@ -46,6 +47,7 @@ namespace PaymentServiceSample.EntityFrameworkCore
 
             builder.ConfigurePaymentServiceSample();
             builder.ConfigurePaymentService();
+            builder.ConfigurePaymentServicePrepayment();
             builder.ConfigurePaymentServiceWeChatPay();
         }
     }

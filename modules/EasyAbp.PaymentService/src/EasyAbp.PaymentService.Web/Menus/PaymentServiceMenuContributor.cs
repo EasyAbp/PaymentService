@@ -4,6 +4,7 @@ using EasyAbp.PaymentService.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using EasyAbp.PaymentService.Localization;
+using EasyAbp.PaymentService.Web.Menus;
 using Microsoft.AspNetCore.Authorization;
 using Volo.Abp.UI.Navigation;
 
@@ -23,28 +24,26 @@ namespace EasyAbp.PaymentService.Web
         {
             var l = context.GetLocalizer<PaymentServiceResource>();            //Add main menu items.
 
-            var paymentManagementMenuItem = new ApplicationMenuItem("EasyAbpPaymentService", l["Menu:PaymentManagement"]);
+            var paymentManagementMenuItem = new ApplicationMenuItem(PaymentServiceMenus.Prefix, l["Menu:PaymentManagement"]);
 
             if (await context.IsGrantedAsync(PaymentServicePermissions.Payments.Manage))
             {
                 paymentManagementMenuItem.AddItem(
-                    new ApplicationMenuItem("EasyAbpPaymentServicePayment", l["Menu:Payment"], "/PaymentService/Payments/Payment")
+                    new ApplicationMenuItem(PaymentServiceMenus.Payment, l["Menu:Payment"], "/PaymentService/Payments/Payment")
                 );
             }
             
             if (await context.IsGrantedAsync(PaymentServicePermissions.Refunds.Manage))
             {
                 paymentManagementMenuItem.AddItem(
-                    new ApplicationMenuItem("EasyAbpPaymentServiceRefund", l["Menu:Refund"], "/PaymentService/Refunds/Refund")
+                    new ApplicationMenuItem(PaymentServiceMenus.Refund, l["Menu:Refund"], "/PaymentService/Refunds/Refund")
                 );
             }
             
             if (!paymentManagementMenuItem.Items.IsNullOrEmpty())
             {
-                var paymentServiceMenuItem = context.Menu.Items.GetOrAdd(i => i.Name == "EasyAbpPaymentService",
-                    () => new ApplicationMenuItem("EasyAbpPaymentService", l["Menu:EasyAbpPaymentService"]));
-                
-                paymentServiceMenuItem.Items.Add(paymentManagementMenuItem);
+                context.Menu.Items.GetOrAdd(i => i.Name == PaymentServiceMenus.Prefix,
+                    () => paymentManagementMenuItem);
             }
         }
     }

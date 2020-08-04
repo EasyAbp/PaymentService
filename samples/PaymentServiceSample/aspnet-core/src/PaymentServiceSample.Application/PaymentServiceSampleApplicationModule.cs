@@ -1,4 +1,5 @@
 ﻿using EasyAbp.PaymentService;
+using EasyAbp.PaymentService.Prepayment;
 using EasyAbp.PaymentService.WeChatPay;
 using Volo.Abp.Account;
 using Volo.Abp.AutoMapper;
@@ -19,6 +20,7 @@ namespace PaymentServiceSample
         typeof(AbpTenantManagementApplicationModule),
         typeof(AbpFeatureManagementApplicationModule),
         typeof(PaymentServiceApplicationModule),
+        typeof(PaymentServicePrepaymentApplicationModule),
         typeof(PaymentServiceWeChatPayApplicationModule)
         )]
     public class PaymentServiceSampleApplicationModule : AbpModule

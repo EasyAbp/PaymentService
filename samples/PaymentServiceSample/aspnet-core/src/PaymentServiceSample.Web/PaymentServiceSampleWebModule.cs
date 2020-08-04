@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using EasyAbp.PaymentService;
+using EasyAbp.PaymentService.Prepayment.Web;
 using EasyAbp.PaymentService.Web;
 using EasyAbp.PaymentService.WeChatPay;
 using EasyAbp.PaymentService.WeChatPay.Web;
@@ -55,6 +56,7 @@ namespace PaymentServiceSample.Web
         typeof(AbpTenantManagementWebModule),
         typeof(AbpAspNetCoreSerilogModule),
         typeof(PaymentServiceWebModule),
+        typeof(PaymentServicePrepaymentWebModule),
         typeof(PaymentServiceWeChatPayWebModule)
         )]
     public class PaymentServiceSampleWebModule : AbpModule

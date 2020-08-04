@@ -41,6 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\modules\EasyAbp.PaymentService.Prepayment\src\EasyAbp.PaymentService.Prepayment.Web\EasyAbp.PaymentService.Prepayment.Web.csproj" />
     <ProjectReference Include="..\..\..\..\..\modules\EasyAbp.PaymentService\src\EasyAbp.PaymentService.Web\EasyAbp.PaymentService.Web.csproj" />
     <ProjectReference Include="..\..\..\..\..\modules\EasyAbp.PaymentService.WeChatPay\src\EasyAbp.PaymentService.WeChatPay.Web\EasyAbp.PaymentService.WeChatPay.Web.csproj" />
     <ProjectReference Include="..\PaymentServiceSample.Application\PaymentServiceSample.Application.csproj" />

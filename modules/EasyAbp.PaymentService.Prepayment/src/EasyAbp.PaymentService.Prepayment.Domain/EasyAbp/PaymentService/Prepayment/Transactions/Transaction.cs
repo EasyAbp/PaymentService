@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using JetBrains.Annotations;
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.MultiTenancy;
@@ -11,7 +11,7 @@ namespace EasyAbp.PaymentService.Prepayment.Transactions
         
         public virtual Guid AccountId { get; protected set; }
         
-        public virtual Guid UserId { get; protected set; }
+        public virtual Guid AccountUserId { get; protected set; }
         
         public virtual Guid? PaymentId { get; protected set; }
 
@@ -32,5 +32,35 @@ namespace EasyAbp.PaymentService.Prepayment.Transactions
         public virtual decimal ChangedBalance { get; protected set; }
         
         public virtual decimal OriginalBalance { get; protected set; }
+
+        protected Transaction()
+        {
+        }
+
+        public Transaction(Guid id,
+            Guid? tenantId,
+            Guid accountId,
+            Guid accountUserId,
+            Guid? paymentId,
+            TransactionType transactionType,
+            [NotNull] string actionName,
+            [NotNull] string paymentMethod,
+            [CanBeNull] string oppositePartAccount,
+            [CanBeNull] string externalTradingCode,
+            decimal changedBalance,
+            decimal originalBalance) : base(id)
+        {
+            TenantId = tenantId;
+            AccountId = accountId;
+            AccountUserId = accountUserId;
+            PaymentId = paymentId;
+            TransactionType = transactionType;
+            ActionName = actionName;
+            PaymentMethod = paymentMethod;
+            OppositePartAccount = oppositePartAccount;
+            ExternalTradingCode = externalTradingCode;
+            ChangedBalance = changedBalance;
+            OriginalBalance = originalBalance;
+        }
     }
 }

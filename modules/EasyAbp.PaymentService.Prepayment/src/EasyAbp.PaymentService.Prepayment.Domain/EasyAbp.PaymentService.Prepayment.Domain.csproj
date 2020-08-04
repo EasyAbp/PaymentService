@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Volo.Abp.Ddd.Domain" Version="3.0.4" />
+    <ProjectReference Include="..\..\..\EasyAbp.PaymentService\src\EasyAbp.PaymentService.Domain\EasyAbp.PaymentService.Domain.csproj" />
     <ProjectReference Include="..\EasyAbp.PaymentService.Prepayment.Domain.Shared\EasyAbp.PaymentService.Prepayment.Domain.Shared.csproj" />
   </ItemGroup>
 

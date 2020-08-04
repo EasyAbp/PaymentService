@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using EasyAbp.PaymentService.Prepayment.Localization;
+using EasyAbp.PaymentService.Prepayment.Permissions;
 using Volo.Abp.UI.Navigation;
 
 namespace EasyAbp.PaymentService.Prepayment.Web.Menus
@@ -13,11 +16,33 @@ namespace EasyAbp.PaymentService.Prepayment.Web.Menus
             }
         }
 
-        private Task ConfigureMainMenu(MenuConfigurationContext context)
+        private async Task ConfigureMainMenu(MenuConfigurationContext context)
         {
-            //Add main menu items.
+            var l = context.GetLocalizer<PrepaymentResource>();
+             //Add main menu items.
 
-            return Task.CompletedTask;
+             var prepaymentManagementMenuItem = new ApplicationMenuItem(PrepaymentMenus.Prefix, l["Menu:PrepaymentManagement"]);
+
+            if (await context.IsGrantedAsync(PrepaymentPermissions.Account.Default))
+            {
+                prepaymentManagementMenuItem.AddItem(
+                    new ApplicationMenuItem(PrepaymentMenus.Account, l["Menu:Account"], "/PaymentService/Prepayment/Accounts/Account")
+                );
+            }
+            if (await context.IsGrantedAsync(PrepaymentPermissions.Transaction.Default))
+            {
+                prepaymentManagementMenuItem.AddItem(
+                    new ApplicationMenuItem(PrepaymentMenus.Transaction, l["Menu:Transaction"], "/PaymentService/Prepayment/Transactions/Transaction")
+                );
+            }
+            
+            if (!prepaymentManagementMenuItem.Items.IsNullOrEmpty())
+            {
+                var paymentServiceMenuItem = context.Menu.Items.GetOrAdd(i => i.Name == PrepaymentMenus.ModuleGroupPrefix,
+                    () => new ApplicationMenuItem(PrepaymentMenus.ModuleGroupPrefix, l["Menu:EasyAbpPaymentService"]));
+                
+                paymentServiceMenuItem.Items.Add(prepaymentManagementMenuItem);
+            }
         }
     }
 }

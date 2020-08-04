@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Data;
 using Volo.Abp.EntityFrameworkCore;
+using EasyAbp.PaymentService.Prepayment.Accounts;
+using EasyAbp.PaymentService.Prepayment.Transactions;
 
 namespace EasyAbp.PaymentService.Prepayment.EntityFrameworkCore
 {
@@ -10,6 +12,8 @@ namespace EasyAbp.PaymentService.Prepayment.EntityFrameworkCore
         /* Add DbSet for each Aggregate Root here. Example:
          * public DbSet<Question> Questions { get; set; }
          */
+        public DbSet<Account> Accounts { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
 
         public PrepaymentDbContext(DbContextOptions<PrepaymentDbContext> options) 
             : base(options)
@@ -21,7 +25,7 @@ namespace EasyAbp.PaymentService.Prepayment.EntityFrameworkCore
         {
             base.OnModelCreating(builder);
 
-            builder.ConfigurePrepayment();
+            builder.ConfigurePaymentServicePrepayment();
         }
     }
 }
