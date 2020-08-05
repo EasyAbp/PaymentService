@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using EasyAbp.PaymentService;
+using EasyAbp.PaymentService.Prepayment.Options;
 using EasyAbp.PaymentService.Prepayment.Web;
 using EasyAbp.PaymentService.Web;
 using EasyAbp.PaymentService.WeChatPay;
@@ -89,6 +90,18 @@ namespace PaymentServiceSample.Web
             ConfigureNavigationServices();
             ConfigureAutoApiControllers();
             ConfigureSwaggerServices(context.Services);
+            ConfigurePaymentServicePrepayment();
+        }
+
+        private void ConfigurePaymentServicePrepayment()
+        {
+            Configure<PaymentServicePrepaymentOptions>(options =>
+            {
+                options.AccountGroups.Configure<DefaultAccountGroup>(accountGroup =>
+                {
+                    // accountGroup.DisableUserRecharge = true;
+                });
+            });
         }
 
         private void ConfigureUrls(IConfiguration configuration)

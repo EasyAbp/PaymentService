@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.Prepayment.Permissions;
 using EasyAbp.PaymentService.Prepayment.Accounts.Dtos;
+using EasyAbp.PaymentService.Prepayment.Options;
 using EasyAbp.PaymentService.Prepayment.Transactions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Options;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.EventBus.Distributed;
@@ -20,15 +22,18 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
         protected override string GetPolicyName { get; set; } = PrepaymentPermissions.Account.Default;
         protected override string GetListPolicyName { get; set; } = PrepaymentPermissions.Account.Default;
 
+        private readonly PaymentServicePrepaymentOptions _options;
         private readonly IDistributedEventBus _distributedEventBus;
         private readonly ITransactionRepository _transactionRepository;
         private readonly IAccountRepository _repository;
         
         public AccountAppService(
+            IOptions<PaymentServicePrepaymentOptions> options,
             IDistributedEventBus distributedEventBus,
             ITransactionRepository transactionRepository,
             IAccountRepository repository) : base(repository)
         {
+            _options = options.Value;
             _distributedEventBus = distributedEventBus;
             _transactionRepository = transactionRepository;
             _repository = repository;
@@ -60,11 +65,27 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
 
             var result = await base.GetListAsync(input);
 
-            if (input.UserId.HasValue)
+            if (!input.UserId.HasValue)
             {
-                // Todo: Automatically create user's missing accounts.
+                return result;
             }
-            
+
+            var allAccountGroupNames = _options.AccountGroups.GetAutoCreationAccountGroupNames();
+                
+            var missingAccountGroupNames =
+                allAccountGroupNames.Except(result.Items.Select(x => x.AccountGroupName)).ToArray();
+
+            foreach (var accountGroupName in missingAccountGroupNames)
+            {
+                await _repository.InsertAsync(new Account(GuidGenerator.Create(), CurrentTenant.Id,
+                    accountGroupName, input.UserId.Value, 0, 0), true);
+            }
+
+            if (!missingAccountGroupNames.IsNullOrEmpty())
+            {
+                result = await base.GetListAsync(input);
+            }
+
             return result;
         }
 

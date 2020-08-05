@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using Volo.Abp;
 
@@ -54,6 +55,13 @@ namespace EasyAbp.PaymentService.Prepayment.Options.AccountGroups
         public AccountGroupConfiguration GetConfiguration<TAccountGroup>()
         {
             return GetConfiguration(AccountGroupNameAttribute.GetAccountGroupName<TAccountGroup>());
+        }
+        
+        [NotNull]
+        public string[] GetAutoCreationAccountGroupNames()
+        {
+            return _accountGroups.Where(pair => !pair.Value.DisableAccountAutoCreation).Select(pair => pair.Key)
+                .ToArray();
         }
 
         [NotNull]
