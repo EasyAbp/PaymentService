@@ -3,6 +3,11 @@
     public class AccountGroupConfiguration
     {
         /// <summary>
+        /// The currency of the account balance, the default value is "USD".
+        /// </summary>
+        public string Currency { get; set; } = "USD";
+        
+        /// <summary>
         /// Admin should manually create users' account.
         /// </summary>
         public bool DisableAccountAutoCreation { get; set; }

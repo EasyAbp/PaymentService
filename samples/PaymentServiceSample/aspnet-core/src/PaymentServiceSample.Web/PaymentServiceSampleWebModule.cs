@@ -99,7 +99,7 @@ namespace PaymentServiceSample.Web
             {
                 options.AccountGroups.Configure<DefaultAccountGroup>(accountGroup =>
                 {
-                    // accountGroup.DisableUserRecharge = true;
+                    accountGroup.Currency = "CNY";
                 });
             });
         }

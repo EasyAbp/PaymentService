@@ -6,6 +6,7 @@ using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.Prepayment.Permissions;
 using EasyAbp.PaymentService.Prepayment.Accounts.Dtos;
 using EasyAbp.PaymentService.Prepayment.Options;
+using EasyAbp.PaymentService.Prepayment.Options.AccountGroups;
 using EasyAbp.PaymentService.Prepayment.Transactions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
@@ -23,17 +24,20 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
         protected override string GetListPolicyName { get; set; } = PrepaymentPermissions.Account.Default;
 
         private readonly PaymentServicePrepaymentOptions _options;
+        private readonly IAccountGroupConfigurationProvider _accountGroupConfigurationProvider;
         private readonly IDistributedEventBus _distributedEventBus;
         private readonly ITransactionRepository _transactionRepository;
         private readonly IAccountRepository _repository;
         
         public AccountAppService(
+            IAccountGroupConfigurationProvider accountGroupConfigurationProvider,
             IOptions<PaymentServicePrepaymentOptions> options,
             IDistributedEventBus distributedEventBus,
             ITransactionRepository transactionRepository,
             IAccountRepository repository) : base(repository)
         {
             _options = options.Value;
+            _accountGroupConfigurationProvider = accountGroupConfigurationProvider;
             _distributedEventBus = distributedEventBus;
             _transactionRepository = transactionRepository;
             _repository = repository;
@@ -133,21 +137,20 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
             
             var extraProperties = new Dictionary<string, object>();
 
-            // Todo: get currency from configuration.
-            var currency = "";
+            var configuration = _accountGroupConfigurationProvider.Get(account.AccountGroupName);
             
             await _distributedEventBus.PublishAsync(new CreatePaymentEto
             {
                 TenantId = CurrentTenant.Id,
                 UserId = CurrentUser.GetId(),
                 PaymentMethod = input.PaymentMethod,
-                Currency = currency,
+                Currency = configuration.Currency,
                 ExtraProperties = extraProperties,
                 PaymentItems = new List<CreatePaymentItemEto>(new []{new CreatePaymentItemEto
                 {
                     ItemType = PrepaymentConsts.RechargePaymentItemType,
                     ItemKey = account.Id,
-                    Currency = currency,
+                    Currency = configuration.Currency,
                     OriginalPaymentAmount = input.Amount
                 }})
             });
