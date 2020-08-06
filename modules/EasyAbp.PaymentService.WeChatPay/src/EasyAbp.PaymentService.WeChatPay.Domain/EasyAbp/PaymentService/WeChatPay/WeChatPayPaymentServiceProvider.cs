@@ -1,31 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Xml;
 using EasyAbp.Abp.WeChat.Pay.Services.Pay;
 using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.Refunds;
 using EasyAbp.PaymentService.WeChatPay.PaymentRecords;
-using EasyAbp.PaymentService.WeChatPay.RefundRecords;
 using EasyAbp.PaymentService.WeChatPay.Settings;
-using Microsoft.Extensions.Configuration;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
-using Volo.Abp.EventBus.Distributed;
 using Volo.Abp.EventBus.Local;
 using Volo.Abp.Guids;
 using Volo.Abp.MultiTenancy;
 using Volo.Abp.Settings;
-using Volo.Abp.Timing;
 using Volo.Abp.Uow;
 
 namespace EasyAbp.PaymentService.WeChatPay
 {
-    public class WeChatPayPaymentServiceProvider : IPaymentServiceProvider, ITransientDependency
+    public class WeChatPayPaymentServiceProvider : PaymentServiceProvider
     {
         private readonly ServiceProviderPayService _serviceProviderPayService;
-        private readonly IClock _clock;
         private readonly ISettingProvider _settingProvider;
         private readonly IGuidGenerator _guidGenerator;
         private readonly ICurrentTenant _currentTenant;
@@ -41,7 +34,6 @@ namespace EasyAbp.PaymentService.WeChatPay
         
         public WeChatPayPaymentServiceProvider(
             ServiceProviderPayService serviceProviderPayService,
-            IClock clock,
             ISettingProvider settingProvider,
             IGuidGenerator guidGenerator,
             ICurrentTenant currentTenant,
@@ -54,7 +46,6 @@ namespace EasyAbp.PaymentService.WeChatPay
             IPaymentRepository paymentRepository)
         {
             _serviceProviderPayService = serviceProviderPayService;
-            _clock = clock;
             _settingProvider = settingProvider;
             _guidGenerator = guidGenerator;
             _currentTenant = currentTenant;
@@ -67,7 +58,7 @@ namespace EasyAbp.PaymentService.WeChatPay
             _paymentRepository = paymentRepository;
         }
 
-        public async Task OnPaymentStartedAsync(Payment payment, Dictionary<string, object> configurations)
+        public override async Task OnPaymentStartedAsync(Payment payment, Dictionary<string, object> configurations)
         {
             if (payment.Currency != "CNY")
             {
@@ -140,7 +131,7 @@ namespace EasyAbp.PaymentService.WeChatPay
             await _paymentRepository.UpdateAsync(payment, true);
         }
 
-        public virtual async Task OnCancelStartedAsync(Payment payment)
+        public override async Task OnCancelStartedAsync(Payment payment)
         {
             _unitOfWorkManager.Current.OnCompleted(async () =>
             {
@@ -157,7 +148,7 @@ namespace EasyAbp.PaymentService.WeChatPay
             await _paymentManager.CompleteCancelAsync(payment);
         }
 
-        public virtual Task OnRefundStartedAsync(Payment payment, IEnumerable<Refund> refunds, string displayReason = null)
+        public override Task OnRefundStartedAsync(Payment payment, IEnumerable<Refund> refunds, string displayReason = null)
         {
             _unitOfWorkManager.Current.OnCompleted(async () =>
             {

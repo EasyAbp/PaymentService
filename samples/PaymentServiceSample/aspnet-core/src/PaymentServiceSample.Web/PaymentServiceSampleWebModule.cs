@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
 using EasyAbp.PaymentService;
+using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.Prepayment;
 using EasyAbp.PaymentService.Prepayment.Options;
+using EasyAbp.PaymentService.Prepayment.PaymentService;
 using EasyAbp.PaymentService.Prepayment.Web;
 using EasyAbp.PaymentService.Web;
 using EasyAbp.PaymentService.WeChatPay;
@@ -33,6 +35,7 @@ using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
 using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.Autofac;
 using Volo.Abp.AutoMapper;
+using Volo.Abp.DependencyInjection;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity.Web;
 using Volo.Abp.Localization;
@@ -106,6 +109,7 @@ namespace PaymentServiceSample.Web
                 options.AccountGroups.Configure<CustomAccountGroup>(accountGroup =>
                 {
                     accountGroup.Currency = "CNY";
+                    accountGroup.AllowedToRechargeOtherAccounts = true;
                 });
             });
         }
@@ -248,6 +252,17 @@ namespace PaymentServiceSample.Web
             app.UseAuditing();
             app.UseAbpSerilogEnrichers();
             app.UseConfiguredEndpoints();
+
+            RegisterPaymentMethods(context);
+        }
+
+        private static void RegisterPaymentMethods(IServiceProviderAccessor context)
+        {
+            var resolver = context.ServiceProvider.GetService<IPaymentServiceResolver>();
+
+            resolver.TryRegisterProvider(FreePaymentServiceProvider.PaymentMethod, typeof(FreePaymentServiceProvider));
+            resolver.TryRegisterProvider(PrepaymentPaymentServiceProvider.PaymentMethod, typeof(PrepaymentPaymentServiceProvider));
+            resolver.TryRegisterProvider(WeChatPayPaymentServiceProvider.PaymentMethod, typeof(WeChatPayPaymentServiceProvider));
         }
     }
 }

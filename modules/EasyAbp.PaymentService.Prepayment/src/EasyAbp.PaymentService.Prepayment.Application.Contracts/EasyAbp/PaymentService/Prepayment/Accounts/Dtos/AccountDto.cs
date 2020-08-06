@@ -4,7 +4,7 @@ using Volo.Abp.Application.Dtos;
 namespace EasyAbp.PaymentService.Prepayment.Accounts.Dtos
 {
     [Serializable]
-    public class AccountDto : FullAuditedEntityDto<Guid>
+    public class AccountDto : ExtensibleAuditedEntityDto<Guid>
     {
         public string AccountGroupName { get; set; }
 

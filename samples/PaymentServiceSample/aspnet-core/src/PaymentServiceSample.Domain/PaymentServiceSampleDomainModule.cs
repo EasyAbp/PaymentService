@@ -42,14 +42,6 @@ namespace PaymentServiceSample
             PaymentServiceSampleDomainObjectExtensions.Configure();
         }
 
-        public override void OnApplicationInitialization(ApplicationInitializationContext context)
-        {
-            var resolver = context.ServiceProvider.GetService<IPaymentServiceResolver>();
-
-            resolver.TryRegisterProvider(FreePaymentServiceProvider.PaymentMethod, typeof(FreePaymentServiceProvider));
-            resolver.TryRegisterProvider(WeChatPayPaymentServiceProvider.PaymentMethod, typeof(WeChatPayPaymentServiceProvider));
-        }
-
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
             Configure<AbpMultiTenancyOptions>(options =>

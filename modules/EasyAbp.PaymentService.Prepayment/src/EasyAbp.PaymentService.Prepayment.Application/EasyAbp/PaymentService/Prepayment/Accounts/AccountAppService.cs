@@ -135,8 +135,6 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
                 throw new UnauthorizedRechargeException(account.Id);
             }
 
-            var extraProperties = new Dictionary<string, object> {{"AccountId", account.Id.ToString()}};
-
             var configuration = _accountGroupConfigurationProvider.Get(account.AccountGroupName);
             
             await _distributedEventBus.PublishAsync(new CreatePaymentEto
@@ -145,7 +143,6 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
                 UserId = CurrentUser.GetId(),
                 PaymentMethod = input.PaymentMethod,
                 Currency = configuration.Currency,
-                ExtraProperties = extraProperties,
                 PaymentItems = new List<CreatePaymentItemEto>(new []{new CreatePaymentItemEto
                 {
                     ItemType = PrepaymentConsts.RechargePaymentItemType,

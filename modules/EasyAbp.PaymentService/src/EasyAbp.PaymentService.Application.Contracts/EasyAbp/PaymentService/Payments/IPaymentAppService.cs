@@ -15,6 +15,6 @@ namespace EasyAbp.PaymentService.Payments
     {
         Task<ListResultDto<PaymentMethodDto>> GetListPaymentMethod();
         
-        Task<PaymentDto> PayAsync(PayDto input);
+        Task<PaymentDto> PayAsync(PayInput input);
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace EasyAbp.PaymentService.Payments.Dtos
 {
-    public class PayDto
+    public class PayInput
     {
         public Guid PaymentId { get; set; }
         

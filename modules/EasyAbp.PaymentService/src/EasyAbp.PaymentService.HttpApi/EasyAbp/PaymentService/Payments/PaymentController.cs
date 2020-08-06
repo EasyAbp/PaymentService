@@ -40,7 +40,7 @@ namespace EasyAbp.PaymentService.Payments
 
         [HttpPost]
         [Route("pay")]
-        public Task<PaymentDto> PayAsync(PayDto input)
+        public Task<PaymentDto> PayAsync(PayInput input)
         {
             return _service.PayAsync(input);
         }

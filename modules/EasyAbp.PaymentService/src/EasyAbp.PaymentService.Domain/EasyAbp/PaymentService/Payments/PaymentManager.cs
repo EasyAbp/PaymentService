@@ -125,7 +125,7 @@ namespace EasyAbp.PaymentService.Payments
         {
             _unitOfWorkManager.Current.OnCompleted(async () =>
             {
-                await _distributedEventBus.PublishAsync(new PaymentRefundRollbackEto
+                await _distributedEventBus.PublishAsync(new PaymentRefundCompletedEto
                 {
                     Payment = _objectMapper.Map<Payment, PaymentEto>(payment),
                     Refunds = _objectMapper.Map<IEnumerable<Refund>, IEnumerable<RefundEto>>(refunds)

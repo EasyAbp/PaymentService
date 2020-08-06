@@ -7,10 +7,11 @@ using Volo.Abp.Timing;
 
 namespace EasyAbp.PaymentService.Payments
 {
-    public class FreePaymentServiceProvider : IPaymentServiceProvider, ITransientDependency
+    public class FreePaymentServiceProvider : PaymentServiceProvider
     {
         private readonly IPaymentManager _paymentManager;
         private readonly IPaymentRepository _paymentRepository;
+        
         public const string PaymentMethod = "Free";
         
         public FreePaymentServiceProvider(
@@ -21,7 +22,7 @@ namespace EasyAbp.PaymentService.Payments
             _paymentRepository = paymentRepository;
         }
 
-        public async Task OnPaymentStartedAsync(Payment payment, Dictionary<string, object> configurations)
+        public override async Task OnPaymentStartedAsync(Payment payment, Dictionary<string, object> configurations)
         {
             if (payment.ActualPaymentAmount != decimal.Zero)
             {
@@ -30,19 +31,19 @@ namespace EasyAbp.PaymentService.Payments
             
             payment.SetPayeeAccount("None");
             
-            payment.SetExternalTradingCode(payment.Id.ToString());
+            // payment.SetExternalTradingCode(payment.Id.ToString());
 
             await _paymentManager.CompletePaymentAsync(payment);
 
             await _paymentRepository.UpdateAsync(payment, true);
         }
 
-        public virtual async Task OnCancelStartedAsync(Payment payment)
+        public override async Task OnCancelStartedAsync(Payment payment)
         {
             await _paymentManager.CompleteCancelAsync(payment);
         }
 
-        public virtual Task OnRefundStartedAsync(Payment payment, IEnumerable<Refund> refunds, string displayReason = null)
+        public override Task OnRefundStartedAsync(Payment payment, IEnumerable<Refund> refunds, string displayReason = null)
         {
             throw new NotSupportedException();
         }

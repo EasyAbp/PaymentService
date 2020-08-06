@@ -26,5 +26,10 @@
         /// The balance cannot be withdrawn.
         /// </summary>
         public bool DisableUserWithdrawal { get; set; }
+        
+        /// <summary>
+        /// Can be the payment method of recharging of other accounts.
+        /// </summary>
+        public bool AllowedToRechargeOtherAccounts { get; set; }
     }
 }

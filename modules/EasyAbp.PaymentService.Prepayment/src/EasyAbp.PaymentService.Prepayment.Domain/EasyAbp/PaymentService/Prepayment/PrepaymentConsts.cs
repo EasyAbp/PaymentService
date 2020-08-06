@@ -16,8 +16,12 @@
 
         public const string ChangeBalancePaymentMethod = ManualOperationPaymentMethod;
         
-        public const string RechargeActionName = "Recharge";
+        public const string PaymentActionName = "Payment";
+        
+        public const string RefundActionName = "Refund";
 
+        public const string RechargeActionName = "Recharge";
+        
         public const string RechargePaymentItemType = "EasyAbpPaymentServicePrepaymentRecharge";
     }
 }

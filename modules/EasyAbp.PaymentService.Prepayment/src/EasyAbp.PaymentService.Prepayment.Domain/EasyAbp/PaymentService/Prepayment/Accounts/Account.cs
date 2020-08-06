@@ -1,5 +1,6 @@
 using System;
 using JetBrains.Annotations;
+using Volo.Abp.Data;
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.MultiTenancy;
 
@@ -7,6 +8,8 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
 {
     public class Account : FullAuditedAggregateRoot<Guid>, IMultiTenant
     {
+        private const string PendingRechargePaymentIdPropertyName = "PendingRechargePaymentId";
+        
         public virtual Guid? TenantId { get; protected set; }
         
         [NotNull]
@@ -71,6 +74,21 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
             }
 
             LockedBalance = newLockedBalance;
+        }
+
+        public void SetPendingRechargePaymentId(Guid? pendingRechargePaymentId)
+        {
+            this.SetProperty(PendingRechargePaymentIdPropertyName, pendingRechargePaymentId.ToString());
+        }
+        
+        public Guid? GetPendingRechargePaymentId()
+        {
+            if (Guid.TryParse(this.GetProperty<string>(PendingRechargePaymentIdPropertyName), out var paymentId))
+            {
+                return paymentId;
+            }
+
+            return null;
         }
     }
 }
