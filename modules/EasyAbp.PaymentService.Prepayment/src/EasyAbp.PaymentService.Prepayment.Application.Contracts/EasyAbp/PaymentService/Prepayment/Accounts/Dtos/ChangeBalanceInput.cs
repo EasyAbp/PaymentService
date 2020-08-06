@@ -7,8 +7,6 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts.Dtos
     [Serializable]
     public class ChangeBalanceInput : IValidatableObject
     {
-        public Guid AccountId { get; set; }
-        
         public decimal ChangedBalance { get; set; }
         
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

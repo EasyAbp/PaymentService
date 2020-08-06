@@ -94,15 +94,15 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
         }
 
         [Authorize(PrepaymentPermissions.Account.Manage)]
-        public virtual async Task<AccountDto> ChangeBalanceAsync(ChangeBalanceInput input)
+        public virtual async Task<AccountDto> ChangeBalanceAsync(Guid id, ChangeBalanceInput input)
         {
-            var account = await _repository.GetAsync(input.AccountId);
+            var account = await _repository.GetAsync(id);
 
             var transactionType = input.ChangedBalance > decimal.Zero ? TransactionType.Debit : TransactionType.Credit;
 
             var transaction = new Transaction(GuidGenerator.Create(), CurrentTenant.Id, account.Id, account.UserId,
                 null, transactionType, PrepaymentConsts.ChangeBalanceActionName,
-                PrepaymentConsts.ChangeBalancePaymentMethod, null, null, input.ChangedBalance, account.Balance);
+                PrepaymentConsts.ChangeBalancePaymentMethod, null, input.ChangedBalance, account.Balance);
 
             await _transactionRepository.InsertAsync(transaction, true);
             
@@ -114,9 +114,9 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
         }
 
         [Authorize(PrepaymentPermissions.Account.Manage)]
-        public virtual async Task<AccountDto> ChangeLockedBalanceAsync(ChangeLockedBalanceInput input)
+        public virtual async Task<AccountDto> ChangeLockedBalanceAsync(Guid id, ChangeLockedBalanceInput input)
         {
-            var account = await _repository.GetAsync(input.AccountId);
+            var account = await _repository.GetAsync(id);
 
             account.ChangeLockedBalance(input.ChangedLockedBalance);
 
@@ -126,16 +126,16 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
         }
 
         [Authorize(PrepaymentPermissions.Account.Recharge)]
-        public virtual async Task RechargeAsync(RechargeInput input)
+        public virtual async Task RechargeAsync(Guid id, RechargeInput input)
         {
-            var account = await _repository.GetAsync(input.AccountId);
+            var account = await _repository.GetAsync(id);
 
             if (account.UserId != CurrentUser.GetId())
             {
                 throw new UnauthorizedRechargeException(account.Id);
             }
-            
-            var extraProperties = new Dictionary<string, object>();
+
+            var extraProperties = new Dictionary<string, object> {{"AccountId", account.Id.ToString()}};
 
             var configuration = _accountGroupConfigurationProvider.Get(account.AccountGroupName);
             

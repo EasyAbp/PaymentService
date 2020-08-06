@@ -32,7 +32,6 @@ $(function () {
             { data: "transactionType" },
             { data: "actionName" },
             { data: "paymentMethod" },
-            { data: "oppositePartAccount" },
             { data: "externalTradingCode" },
             { data: "changedBalance" },
             { data: "originalBalance" },

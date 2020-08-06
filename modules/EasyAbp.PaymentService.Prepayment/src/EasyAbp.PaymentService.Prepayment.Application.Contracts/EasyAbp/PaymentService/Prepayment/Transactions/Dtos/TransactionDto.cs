@@ -18,8 +18,6 @@ namespace EasyAbp.PaymentService.Prepayment.Transactions.Dtos
 
         public string PaymentMethod { get; set; }
 
-        public string OppositePartAccount { get; set; }
-
         public string ExternalTradingCode { get; set; }
 
         public decimal ChangedBalance { get; set; }

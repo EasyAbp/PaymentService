@@ -7,8 +7,6 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts.Dtos
     {
         public string PaymentMethod { get; set; }
 
-        public Guid AccountId { get; set; }
-        
         public decimal Amount { get; set; }
     }
 }

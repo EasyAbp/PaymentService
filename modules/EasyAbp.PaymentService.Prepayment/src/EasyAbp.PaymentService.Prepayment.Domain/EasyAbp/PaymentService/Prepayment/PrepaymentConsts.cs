@@ -6,7 +6,7 @@
         
         public const decimal AccountMaxBalance = 999999999999.99999999m;
         
-        public const decimal AccountMinLockedBalance = 0m;
+        public const decimal AccountMinLockedBalance = decimal.Zero;
         
         public const decimal AccountMaxLockedBalance = AccountMaxBalance;
 
@@ -16,6 +16,8 @@
 
         public const string ChangeBalancePaymentMethod = ManualOperationPaymentMethod;
         
+        public const string RechargeActionName = "Recharge";
+
         public const string RechargePaymentItemType = "EasyAbpPaymentServicePrepaymentRecharge";
     }
 }

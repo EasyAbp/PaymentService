@@ -24,9 +24,6 @@ namespace EasyAbp.PaymentService.Prepayment.Transactions
         public virtual string PaymentMethod { get; protected set; }
         
         [CanBeNull]
-        public virtual string OppositePartAccount { get; protected set; }
-        
-        [CanBeNull]
         public virtual string ExternalTradingCode { get; protected set; }
         
         public virtual decimal ChangedBalance { get; protected set; }
@@ -45,7 +42,6 @@ namespace EasyAbp.PaymentService.Prepayment.Transactions
             TransactionType transactionType,
             [NotNull] string actionName,
             [NotNull] string paymentMethod,
-            [CanBeNull] string oppositePartAccount,
             [CanBeNull] string externalTradingCode,
             decimal changedBalance,
             decimal originalBalance) : base(id)
@@ -57,7 +53,6 @@ namespace EasyAbp.PaymentService.Prepayment.Transactions
             TransactionType = transactionType;
             ActionName = actionName;
             PaymentMethod = paymentMethod;
-            OppositePartAccount = oppositePartAccount;
             ExternalTradingCode = externalTradingCode;
             ChangedBalance = changedBalance;
             OriginalBalance = originalBalance;

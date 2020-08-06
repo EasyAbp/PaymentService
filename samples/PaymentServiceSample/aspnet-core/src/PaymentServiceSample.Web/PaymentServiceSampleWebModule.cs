@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using EasyAbp.PaymentService;
+using EasyAbp.PaymentService.Prepayment;
 using EasyAbp.PaymentService.Prepayment.Options;
 using EasyAbp.PaymentService.Prepayment.Web;
 using EasyAbp.PaymentService.Web;
@@ -101,6 +102,11 @@ namespace PaymentServiceSample.Web
                 {
                     accountGroup.Currency = "CNY";
                 });
+                
+                options.AccountGroups.Configure<CustomAccountGroup>(accountGroup =>
+                {
+                    accountGroup.Currency = "CNY";
+                });
             });
         }
 
@@ -143,6 +149,18 @@ namespace PaymentServiceSample.Web
                     options.FileSets.ReplaceEmbeddedByPhysical<PaymentServiceSampleApplicationContractsModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}PaymentServiceSample.Application.Contracts"));
                     options.FileSets.ReplaceEmbeddedByPhysical<PaymentServiceSampleApplicationModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}PaymentServiceSample.Application"));
                     options.FileSets.ReplaceEmbeddedByPhysical<PaymentServiceSampleWebModule>(hostingEnvironment.ContentRootPath);
+                    
+                    options.FileSets.ReplaceEmbeddedByPhysical<PaymentServiceWeChatPayDomainSharedModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}modules{Path.DirectorySeparatorChar}EasyAbp.PaymentService.WeChatPay{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}EasyAbp.PaymentService.WeChatPay.Domain.Shared"));
+                    options.FileSets.ReplaceEmbeddedByPhysical<PaymentServiceWeChatPayDomainModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}modules{Path.DirectorySeparatorChar}EasyAbp.PaymentService.WeChatPay{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}EasyAbp.PaymentService.WeChatPay.Domain"));
+                    options.FileSets.ReplaceEmbeddedByPhysical<PaymentServiceWeChatPayApplicationContractsModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}modules{Path.DirectorySeparatorChar}EasyAbp.PaymentService.WeChatPay{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}EasyAbp.PaymentService.WeChatPay.Application.Contracts"));
+                    options.FileSets.ReplaceEmbeddedByPhysical<PaymentServiceWeChatPayApplicationModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}modules{Path.DirectorySeparatorChar}EasyAbp.PaymentService.WeChatPay{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}EasyAbp.PaymentService.WeChatPay.Application"));
+                    options.FileSets.ReplaceEmbeddedByPhysical<PaymentServiceWeChatPayWebModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}modules{Path.DirectorySeparatorChar}EasyAbp.PaymentService.WeChatPay{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}EasyAbp.PaymentService.WeChatPay.Web"));
+                    
+                    options.FileSets.ReplaceEmbeddedByPhysical<PaymentServicePrepaymentDomainSharedModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}modules{Path.DirectorySeparatorChar}EasyAbp.PaymentService.Prepayment{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}EasyAbp.PaymentService.Prepayment.Domain.Shared"));
+                    options.FileSets.ReplaceEmbeddedByPhysical<PaymentServicePrepaymentDomainModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}modules{Path.DirectorySeparatorChar}EasyAbp.PaymentService.Prepayment{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}EasyAbp.PaymentService.Prepayment.Domain"));
+                    options.FileSets.ReplaceEmbeddedByPhysical<PaymentServicePrepaymentApplicationContractsModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}modules{Path.DirectorySeparatorChar}EasyAbp.PaymentService.Prepayment{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}EasyAbp.PaymentService.Prepayment.Application.Contracts"));
+                    options.FileSets.ReplaceEmbeddedByPhysical<PaymentServicePrepaymentApplicationModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}modules{Path.DirectorySeparatorChar}EasyAbp.PaymentService.Prepayment{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}EasyAbp.PaymentService.Prepayment.Application"));
+                    options.FileSets.ReplaceEmbeddedByPhysical<PaymentServicePrepaymentWebModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}modules{Path.DirectorySeparatorChar}EasyAbp.PaymentService.Prepayment{Path.DirectorySeparatorChar}src{Path.DirectorySeparatorChar}EasyAbp.PaymentService.Prepayment.Web"));
                 });
             }
         }

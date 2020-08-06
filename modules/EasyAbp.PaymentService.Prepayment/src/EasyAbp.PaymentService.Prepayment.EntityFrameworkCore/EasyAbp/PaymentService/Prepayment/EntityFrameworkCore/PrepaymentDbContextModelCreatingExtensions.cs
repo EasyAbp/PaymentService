@@ -50,6 +50,7 @@ namespace EasyAbp.PaymentService.Prepayment.EntityFrameworkCore
                 /* Configure more properties here */
                 b.Property(x => x.Balance).HasColumnType("decimal(20,8)");
                 b.Property(x => x.LockedBalance).HasColumnType("decimal(20,8)");
+                b.HasIndex(x => x.UserId);
             });
 
             builder.Entity<Transaction>(b =>
@@ -60,6 +61,8 @@ namespace EasyAbp.PaymentService.Prepayment.EntityFrameworkCore
                 /* Configure more properties here */
                 b.Property(x => x.ChangedBalance).HasColumnType("decimal(20,8)");
                 b.Property(x => x.OriginalBalance).HasColumnType("decimal(20,8)");
+                b.HasIndex(x => x.AccountId);
+                b.HasIndex(x => x.AccountUserId);
             });
         }
     }

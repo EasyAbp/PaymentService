@@ -12,10 +12,10 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
             Guid, 
             GetAccountListInput>
     {
-        Task<AccountDto> ChangeBalanceAsync(ChangeBalanceInput input);
+        Task<AccountDto> ChangeBalanceAsync(Guid id, ChangeBalanceInput input);
         
-        Task<AccountDto> ChangeLockedBalanceAsync(ChangeLockedBalanceInput input);
+        Task<AccountDto> ChangeLockedBalanceAsync(Guid id, ChangeLockedBalanceInput input);
         
-        Task RechargeAsync(RechargeInput input);
+        Task RechargeAsync(Guid id, RechargeInput input);
     }
 }
