@@ -207,14 +207,32 @@ namespace PaymentServiceSample.Web
 
         private void ConfigureSwaggerServices(IServiceCollection services)
         {
-            services.AddSwaggerGen(
-                options =>
-                {
-                    options.SwaggerDoc("v1", new OpenApiInfo { Title = "PaymentServiceSample API", Version = "v1" });
-                    options.DocInclusionPredicate((docName, description) => true);
-                    options.CustomSchemaIds(type => type.FullName);
-                }
-            );
+            // Register the Swagger services
+            services.AddSwaggerDocument(options =>
+            {
+                options.DocumentName = "EasyAbpPaymentService";
+                options.ApiGroupNames = new[] {"EasyAbpPaymentService"};
+                options.Title = "EasyAbp PaymentService API";
+            });
+            
+            services.AddSwaggerDocument(options =>
+            {
+                options.DocumentName = "EasyAbpPaymentServicePrepayment";
+                options.ApiGroupNames = new[] {"EasyAbpPaymentServicePrepayment"};
+                options.Title = "EasyAbp PaymentService Prepayment API";
+            });
+            
+            services.AddSwaggerDocument(options =>
+            {
+                options.DocumentName = "EasyAbpPaymentServiceWeChatPay";
+                options.ApiGroupNames = new[] {"EasyAbpPaymentServiceWeChatPay"};
+                options.Title = "EasyAbp PaymentService WeChatPay API";
+            });
+            
+            services.AddSwaggerDocument(options =>
+            {
+                options.Title = "PaymentServiceSample API";
+            });
         }
 
         public override void OnApplicationInitialization(ApplicationInitializationContext context)
@@ -244,11 +262,8 @@ namespace PaymentServiceSample.Web
             app.UseIdentityServer();
             app.UseAuthorization();
             app.UseAbpRequestLocalization();
-            app.UseSwagger();
-            app.UseSwaggerUI(options =>
-            {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "PaymentServiceSample API");
-            });
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
             app.UseAuditing();
             app.UseAbpSerilogEnrichers();
             app.UseConfiguredEndpoints();
