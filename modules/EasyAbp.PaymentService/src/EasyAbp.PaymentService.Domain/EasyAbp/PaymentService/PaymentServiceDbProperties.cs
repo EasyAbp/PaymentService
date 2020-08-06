@@ -2,10 +2,10 @@
 {
     public static class PaymentServiceDbProperties
     {
-        public static string DbTablePrefix { get; set; } = "PaymentService";
+        public static string DbTablePrefix { get; set; } = "EasyAbpPaymentService";
 
         public static string DbSchema { get; set; } = null;
 
-        public const string ConnectionStringName = "PaymentService";
+        public const string ConnectionStringName = "EasyAbpPaymentService";
     }
 }
