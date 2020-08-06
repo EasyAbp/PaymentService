@@ -51,6 +51,10 @@ WeChatPay provider for the EasyAbp.PaymentService module.
 
     > See the [demo](https://github.com/EasyAbp/PaymentService/blob/master/samples/PaymentServiceSample/aspnet-core/src/PaymentServiceSample.Web/appsettings.json), it is also according to the [document](https://github.com/EasyAbp/Abp.WeChat/blob/master/doc/WeChatPay.md) of the EasyAbp.Abp.WeChat module.
 
+3. Try to pay:
+
+    Todo.
+
 ## Roadmap
 
 - [ ] More payment providers.
