@@ -65,6 +65,11 @@ namespace EasyAbp.PaymentService.WeChatPay
                 throw new CurrencyNotSupportedException(payment.PaymentMethod, payment.Currency);
             }
 
+            if (payment.ActualPaymentAmount <= decimal.Zero)
+            {
+                throw new PaymentAmountInvalidException(payment.ActualPaymentAmount, PaymentMethod);
+            }
+
             var payeeAccount = configurations.GetOrDefault("PayeeAccount") as string ??
                                await _settingProvider.GetOrNullAsync(WeChatPaySettings.MchId);
             

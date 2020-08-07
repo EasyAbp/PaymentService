@@ -49,6 +49,11 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
 
         public override async Task OnPaymentStartedAsync(Payment payment, Dictionary<string, object> configurations)
         {
+            if (payment.ActualPaymentAmount <= decimal.Zero)
+            {
+                throw new PaymentAmountInvalidException(payment.ActualPaymentAmount, PaymentMethod);
+            }
+            
             if (!Guid.TryParse(configurations.GetOrDefault("AccountId") as string, out var accountId))
             {
                 throw new ArgumentNullException("AccountId");
