@@ -9,7 +9,7 @@ namespace EasyAbp.PaymentService
         typeof(AbpHttpClientModule))]
     public class PaymentServiceHttpApiClientModule : AbpModule
     {
-        public const string RemoteServiceName = "PaymentService";
+        public const string RemoteServiceName = "EasyAbpPaymentService";
 
         public override void ConfigureServices(ServiceConfigurationContext context)
         {

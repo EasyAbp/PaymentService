@@ -7,8 +7,8 @@ using Volo.Abp.Application.Dtos;
 
 namespace EasyAbp.PaymentService.Prepayment.Accounts
 {
-    [RemoteService(Name = "AccountService")]
-    [Route("/api/prepayment/account")]
+    [RemoteService(Name = "EasyAbpPaymentServicePrepayment")]
+    [Route("/api/paymentService/prepayment/account")]
     public class AccountController : PrepaymentController, IAccountAppService
     {
         private readonly IAccountAppService _service;
