@@ -60,9 +60,9 @@ namespace EasyAbp.PaymentService.Payments
             return Task.FromResult(new ListResultDto<PaymentMethodDto>(paymentMethods));
         }
 
-        public virtual async Task<PaymentDto> PayAsync(PayInput input)
+        public virtual async Task<PaymentDto> PayAsync(Guid id, PayInput input)
         {
-            var payment = await _repository.GetAsync(input.PaymentId);
+            var payment = await _repository.GetAsync(id);
             
             var configurations = await GetPayeeConfigurationsAsync(payment);
             
