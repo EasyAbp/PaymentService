@@ -8,11 +8,9 @@ An abp application module that provides payment service.
 ## Getting Started
 
 * Install with [AbpHelper](https://github.com/EasyAbp/AbpHelper.GUI)
-
     Coming soon.
 
 1. Install the following NuGet packages. (see how)
-
     * EasyAbp.PaymentService.Application
     * EasyAbp.PaymentService.Application.Contracts
     * EasyAbp.PaymentService.Domain
@@ -32,24 +30,22 @@ An abp application module that provides payment service.
 ## Usage
 
 1. Register the Free payment method, it is used to pay with 0.00 amount:
+
     ```csharp
     public override void OnApplicationInitialization(ApplicationInitializationContext context)
     {
-        var resolver = context.ServiceProvider.GetRequiredService<IPaymentServiceResolver>();
-
-        resolver.TryRegisterProvider(FreePaymentServiceProvider.PaymentMethod, typeof(FreePaymentServiceProvider));
+      var resolver = context.ServiceProvider.GetRequiredService<IPaymentServiceResolver>();
+    
+      resolver.TryRegisterProvider(FreePaymentServiceProvider.PaymentMethod, typeof(FreePaymentServiceProvider));
     }
     ```
 
-Please refer to [EasyAbp.EShop.Payments](https://github.com/EasyAbp/EShop/tree/dev/modules/EasyAbp.EShop.Payments) for more information.
+2. Choose the payment service providers you want:
+    * Free
+    * [Prepayment](docs/Prepayment/README.md)
+    * [WeChatPay](docs/WeChatPay/README.md)
 
 ![Payment](docs/images/Payment.png)
-
-## Payment Providers
-
-* Free
-* [Prepayment](docs/Prepayment/README.md)
-* [WeChatPay](docs/WeChatPay/README.md)
 
 ## Roadmap
 
