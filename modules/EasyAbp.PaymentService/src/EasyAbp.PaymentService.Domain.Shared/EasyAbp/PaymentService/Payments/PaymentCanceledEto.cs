@@ -3,7 +3,7 @@
 namespace EasyAbp.PaymentService.Payments
 {
     [Serializable]
-    public class PaymentCancelCompletedEto
+    public class PaymentCanceledEto
     {
         public PaymentEto Payment { get; set; }
     }

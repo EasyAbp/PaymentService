@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using EasyAbp.PaymentService.Authorization;
 using EasyAbp.PaymentService.Localization;
 using EasyAbp.PaymentService.Payments.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Localization;
-using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
+using Volo.Abp.Users;
 
 namespace EasyAbp.PaymentService.Payments
 {
@@ -60,9 +61,15 @@ namespace EasyAbp.PaymentService.Payments
             return Task.FromResult(new ListResultDto<PaymentMethodDto>(paymentMethods));
         }
 
+        [Authorize]
         public virtual async Task<PaymentDto> PayAsync(Guid id, PayInput input)
         {
             var payment = await _repository.GetAsync(id);
+
+            if (payment.UserId != CurrentUser.GetId())
+            {
+                throw new UsingUnauthorizedPaymentException(CurrentUser.GetId(), payment.Id);
+            }
             
             var configurations = await GetPayeeConfigurationsAsync(payment);
             
@@ -75,7 +82,22 @@ namespace EasyAbp.PaymentService.Payments
 
             return MapToGetOutputDto(payment);
         }
-        
+
+        public virtual async Task<PaymentDto> CancelAsync(Guid id)
+        {
+            var payment = await _repository.GetAsync(id);
+
+            if (payment.UserId != CurrentUser.GetId() &&
+                !await AuthorizationService.IsGrantedAsync(PaymentServicePermissions.Payments.Manage))
+            {
+                throw new UsingUnauthorizedPaymentException(CurrentUser.GetId(), payment.Id);
+            }
+
+            await _paymentManager.StartCancelAsync(payment);
+
+            return MapToGetOutputDto(payment);
+        }
+
         protected virtual Task<Dictionary<string, object>> GetPayeeConfigurationsAsync(Payment payment)
         {
             // Todo: use payee configurations provider.

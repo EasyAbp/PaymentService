@@ -79,7 +79,7 @@ namespace EasyAbp.PaymentService.Payments
         {
             _unitOfWorkManager.Current.OnCompleted(async () =>
             {
-                await _distributedEventBus.PublishAsync(new PaymentCancelCompletedEto
+                await _distributedEventBus.PublishAsync(new PaymentCanceledEto
                 {
                     Payment = _objectMapper.Map<Payment, PaymentEto>(payment)
                 });
