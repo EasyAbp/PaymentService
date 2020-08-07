@@ -8,7 +8,7 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
 {
     public class Account : FullAuditedAggregateRoot<Guid>, IMultiTenant
     {
-        private const string PendingRechargePaymentIdPropertyName = "PendingRechargePaymentId";
+        private const string PendingTopUpPaymentIdPropertyName = "PendingTopUpPaymentId";
         
         public virtual Guid? TenantId { get; protected set; }
         
@@ -76,21 +76,21 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
             LockedBalance = newLockedBalance;
         }
 
-        public void SetPendingRechargePaymentId(Guid? pendingRechargePaymentId)
+        public void SetPendingTopUpPaymentId(Guid? pendingTopUpPaymentId)
         {
-            if (pendingRechargePaymentId.HasValue)
+            if (pendingTopUpPaymentId.HasValue)
             {
-                this.SetProperty(PendingRechargePaymentIdPropertyName, pendingRechargePaymentId.ToString());
+                this.SetProperty(PendingTopUpPaymentIdPropertyName, pendingTopUpPaymentId.ToString());
             }
             else
             {
-                this.RemoveProperty(PendingRechargePaymentIdPropertyName);
+                this.RemoveProperty(PendingTopUpPaymentIdPropertyName);
             }
         }
         
-        public Guid? GetPendingRechargePaymentId()
+        public Guid? GetPendingTopUpPaymentId()
         {
-            if (Guid.TryParse(this.GetProperty<string>(PendingRechargePaymentIdPropertyName), out var paymentId))
+            if (Guid.TryParse(this.GetProperty<string>(PendingTopUpPaymentIdPropertyName), out var paymentId))
             {
                 return paymentId;
             }

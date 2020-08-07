@@ -15,7 +15,7 @@ namespace EasyAbp.PaymentService.Prepayment.Permissions
         {
             public const string Default = GroupName + ".Account";
             public const string Manage = Default + ".Manage";
-            public const string Recharge = Default + ".Recharge";
+            public const string TopUp = Default + ".TopUp";
         }
 
         public class Transaction

@@ -9,12 +9,12 @@ using Volo.Abp.Uow;
 
 namespace EasyAbp.PaymentService.Prepayment.PaymentService
 {
-    public class RechargePaymentCanceledEventHandler : IDistributedEventHandler<PaymentCanceledEto>, ITransientDependency
+    public class TopUpPaymentCanceledEventHandler : IDistributedEventHandler<PaymentCanceledEto>, ITransientDependency
     {
         private readonly IAccountRepository _accountRepository;
         private readonly ICurrentTenant _currentTenant;
 
-        public RechargePaymentCanceledEventHandler(
+        public TopUpPaymentCanceledEventHandler(
             IAccountRepository accountRepository,
             ICurrentTenant currentTenant)
         {
@@ -29,11 +29,11 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
 
             using var currentTenant = _currentTenant.Change(payment.TenantId);
 
-            foreach (var item in payment.PaymentItems.Where(item => item.ItemType == PrepaymentConsts.RechargePaymentItemType))
+            foreach (var item in payment.PaymentItems.Where(item => item.ItemType == PrepaymentConsts.TopUpPaymentItemType))
             {
                 var account = await _accountRepository.GetAsync(item.ItemKey);
                 
-                account.SetPendingRechargePaymentId(null);
+                account.SetPendingTopUpPaymentId(null);
 
                 await _accountRepository.UpdateAsync(account, true);
             }

@@ -128,14 +128,14 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
             return MapToGetOutputDto(account);
         }
 
-        [Authorize(PrepaymentPermissions.Account.Recharge)]
-        public virtual async Task RechargeAsync(Guid id, RechargeInput input)
+        [Authorize(PrepaymentPermissions.Account.TopUp)]
+        public virtual async Task TopUpAsync(Guid id, TopUpInput input)
         {
             var account = await _repository.GetAsync(id);
 
             if (account.UserId != CurrentUser.GetId())
             {
-                throw new UnauthorizedRechargeException(account.Id);
+                throw new UnauthorizedTopUpException(account.Id);
             }
 
             var configuration = _accountGroupConfigurationProvider.Get(account.AccountGroupName);
@@ -148,7 +148,7 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
                 Currency = configuration.Currency,
                 PaymentItems = new List<CreatePaymentItemEto>(new []{new CreatePaymentItemEto
                 {
-                    ItemType = PrepaymentConsts.RechargePaymentItemType,
+                    ItemType = PrepaymentConsts.TopUpPaymentItemType,
                     ItemKey = account.Id,
                     Currency = configuration.Currency,
                     OriginalPaymentAmount = input.Amount

@@ -3,7 +3,7 @@
 namespace EasyAbp.PaymentService.Prepayment.Accounts.Dtos
 {
     [Serializable]
-    public class RechargeInput
+    public class TopUpInput
     {
         public string PaymentMethod { get; set; }
 

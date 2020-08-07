@@ -20,8 +20,8 @@
         
         public const string RefundActionName = "Refund";
 
-        public const string RechargeActionName = "Recharge";
+        public const string TopUpActionName = "TopUp";
         
-        public const string RechargePaymentItemType = "EasyAbpPaymentServicePrepaymentRecharge";
+        public const string TopUpPaymentItemType = "EasyAbpPaymentServicePrepaymentTopUp";
     }
 }

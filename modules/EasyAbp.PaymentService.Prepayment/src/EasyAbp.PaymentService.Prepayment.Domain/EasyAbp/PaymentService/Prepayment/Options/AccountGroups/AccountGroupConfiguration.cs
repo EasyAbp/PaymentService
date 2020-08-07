@@ -18,7 +18,7 @@ namespace EasyAbp.PaymentService.Prepayment.Options.AccountGroups
         /// <summary>
         /// Only admin can change accounts' balance.
         /// </summary>
-        public bool DisableUserRecharge { get; set; }
+        public bool DisableUserTopUp { get; set; }
         
         /// <summary>
         /// The account cannot be a payment method.
@@ -31,8 +31,8 @@ namespace EasyAbp.PaymentService.Prepayment.Options.AccountGroups
         public bool DisableUserWithdrawal { get; set; }
         
         /// <summary>
-        /// Can be the payment method of recharging of other accounts.
+        /// Can be the payment method to top up other prepayment accounts.
         /// </summary>
-        public bool AllowedToRechargeOtherAccounts { get; set; }
+        public bool AllowedUsingToTopUpOtherAccounts { get; set; }
     }
 }

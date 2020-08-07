@@ -14,7 +14,7 @@ using Volo.Abp.Uow;
 
 namespace EasyAbp.PaymentService.Prepayment.PaymentService
 {
-    public class RechargePaymentCompletedEventHandler : IDistributedEventHandler<PaymentCompletedEto>, ITransientDependency
+    public class TopUpPaymentCompletedEventHandler : IDistributedEventHandler<PaymentCompletedEto>, ITransientDependency
     {
         private readonly IGuidGenerator _guidGenerator;
         private readonly ITransactionRepository _transactionRepository;
@@ -22,7 +22,7 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
         private readonly IAccountRepository _accountRepository;
         private readonly ICurrentTenant _currentTenant;
 
-        public RechargePaymentCompletedEventHandler(
+        public TopUpPaymentCompletedEventHandler(
             IGuidGenerator guidGenerator,
             ITransactionRepository transactionRepository,
             IAccountGroupConfigurationProvider accountGroupConfigurationProvider,
@@ -43,7 +43,7 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
 
             using var currentTenant = _currentTenant.Change(payment.TenantId);
 
-            foreach (var item in payment.PaymentItems.Where(item => item.ItemType == PrepaymentConsts.RechargePaymentItemType))
+            foreach (var item in payment.PaymentItems.Where(item => item.ItemType == PrepaymentConsts.TopUpPaymentItemType))
             {
                 var changedBalance = GetChangedBalance(item);
                 
@@ -52,7 +52,7 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
                 var configuration = _accountGroupConfigurationProvider.Get(account.AccountGroupName);
 
                 var transaction = new Transaction(_guidGenerator.Create(), _currentTenant.Id, account.Id,
-                    account.UserId, null, TransactionType.Debit, PrepaymentConsts.RechargeActionName,
+                    account.UserId, null, TransactionType.Debit, PrepaymentConsts.TopUpActionName,
                     payment.PaymentMethod, payment.ExternalTradingCode, configuration.Currency, changedBalance,
                     account.Balance);
 
@@ -64,7 +64,7 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
                 }
                 
                 account.ChangeBalance(changedBalance);
-                account.SetPendingRechargePaymentId(null);
+                account.SetPendingTopUpPaymentId(null);
 
                 await _accountRepository.UpdateAsync(account, true);
             }

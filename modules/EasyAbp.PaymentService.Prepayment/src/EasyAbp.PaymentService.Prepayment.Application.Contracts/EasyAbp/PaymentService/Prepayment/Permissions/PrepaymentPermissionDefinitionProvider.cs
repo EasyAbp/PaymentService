@@ -12,7 +12,7 @@ namespace EasyAbp.PaymentService.Prepayment.Permissions
 
             var accountPermission = myGroup.AddPermission(PrepaymentPermissions.Account.Default, L("Permission:Account"));
             accountPermission.AddChild(PrepaymentPermissions.Account.Manage, L("Permission:Manage"));
-            accountPermission.AddChild(PrepaymentPermissions.Account.Recharge, L("Permission:Recharge"));
+            accountPermission.AddChild(PrepaymentPermissions.Account.TopUp, L("Permission:TopUp"));
 
             var transactionPermission = myGroup.AddPermission(PrepaymentPermissions.Transaction.Default, L("Permission:Transaction"));
             transactionPermission.AddChild(PrepaymentPermissions.Transaction.Manage, L("Permission:Manage"));

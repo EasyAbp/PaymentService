@@ -10,12 +10,12 @@ using Volo.Abp.Uow;
 
 namespace EasyAbp.PaymentService.Prepayment.PaymentService
 {
-    public class RechargePaymentCreatedEventHandler : IDistributedEventHandler<EntityCreatedEto<PaymentEto>>, ITransientDependency
+    public class TopUpPaymentCreatedEventHandler : IDistributedEventHandler<EntityCreatedEto<PaymentEto>>, ITransientDependency
     {
         private readonly ICurrentTenant _currentTenant;
         private readonly IAccountRepository _accountRepository;
 
-        public RechargePaymentCreatedEventHandler(
+        public TopUpPaymentCreatedEventHandler(
             ICurrentTenant currentTenant,
             IAccountRepository accountRepository)
         {
@@ -28,7 +28,7 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
         {
             var payment = eventData.Entity;
 
-            var items = payment.PaymentItems.Where(item => item.ItemType == PrepaymentConsts.RechargePaymentItemType)
+            var items = payment.PaymentItems.Where(item => item.ItemType == PrepaymentConsts.TopUpPaymentItemType)
                 .ToList();
 
             foreach (var item in items)
@@ -39,7 +39,7 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
 
                 var account = await _accountRepository.GetAsync(accountId);
             
-                account.SetPendingRechargePaymentId(payment.Id);
+                account.SetPendingTopUpPaymentId(payment.Id);
 
                 await _accountRepository.UpdateAsync(account, true);
             }

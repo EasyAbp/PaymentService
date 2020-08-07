@@ -33,10 +33,10 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
         }
 
         [HttpPost]
-        [Route("{id}/recharge")]
-        public Task RechargeAsync(Guid id, RechargeInput input)
+        [Route("{id}/topUp")]
+        public Task TopUpAsync(Guid id, TopUpInput input)
         {
-            return _service.RechargeAsync(id, input);
+            return _service.TopUpAsync(id, input);
         }
 
         [HttpGet]

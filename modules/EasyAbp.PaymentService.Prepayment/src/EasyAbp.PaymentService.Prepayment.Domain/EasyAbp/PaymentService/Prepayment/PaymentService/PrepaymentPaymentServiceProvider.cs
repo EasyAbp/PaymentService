@@ -68,16 +68,16 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
 
             var accountGroupConfiguration = _accountGroupConfigurationProvider.Get(account.AccountGroupName);
 
-            if (!accountGroupConfiguration.AllowedToRechargeOtherAccounts &&
-                payment.PaymentItems.Any(x => x.ItemType == PrepaymentConsts.RechargePaymentItemType))
+            if (!accountGroupConfiguration.AllowedUsingToTopUpOtherAccounts &&
+                payment.PaymentItems.Any(x => x.ItemType == PrepaymentConsts.TopUpPaymentItemType))
             {
-                throw new AccountRechargingOtherAccountsIsNotAllowedException(account.AccountGroupName);
+                throw new AccountTopingUpOtherAccountsIsNotAllowedException(account.AccountGroupName);
             }
 
             if (payment.PaymentItems.Any(x =>
-                x.ItemType == PrepaymentConsts.RechargePaymentItemType && x.ItemKey == accountId))
+                x.ItemType == PrepaymentConsts.TopUpPaymentItemType && x.ItemKey == accountId))
             {
-                throw new SelfRechargingException();
+                throw new SelfTopUpException();
             }
 
             if (payment.Currency != accountGroupConfiguration.Currency)

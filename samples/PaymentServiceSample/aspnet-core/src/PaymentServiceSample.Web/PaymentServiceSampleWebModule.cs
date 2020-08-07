@@ -109,7 +109,7 @@ namespace PaymentServiceSample.Web
                 options.AccountGroups.Configure<CustomAccountGroup>(accountGroup =>
                 {
                     accountGroup.Currency = "CNY";
-                    accountGroup.AllowedToRechargeOtherAccounts = true;
+                    accountGroup.AllowedUsingToTopUpOtherAccounts = true;
                 });
             });
         }
