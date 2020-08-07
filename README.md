@@ -34,9 +34,9 @@ An abp application module that provides payment service.
     ```csharp
     public override void OnApplicationInitialization(ApplicationInitializationContext context)
     {
-      var resolver = context.ServiceProvider.GetRequiredService<IPaymentServiceResolver>();
+        var resolver = context.ServiceProvider.GetRequiredService<IPaymentServiceResolver>();
     
-      resolver.TryRegisterProvider(FreePaymentServiceProvider.PaymentMethod, typeof(FreePaymentServiceProvider));
+        resolver.TryRegisterProvider(FreePaymentServiceProvider.PaymentMethod, typeof(FreePaymentServiceProvider));
     }
     ```
 
