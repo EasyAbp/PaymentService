@@ -57,13 +57,13 @@ Prepayment implementation of the EasyAbp.PaymentService module.
 
 3. Access the API `/api/paymentService/prepayment/account` (with the request param `UserId`), then the account will be created automatically.
 
-4. Recharge your account:
+4. Top up your account:
 
-    1. Use the API `/api/paymentService/prepayment/account/recharge` to start recharging.
+    1. Use the API `/api/paymentService/prepayment/account/topUp` to start top-up.
     
-    2. Use the API `/api/paymentService/prepayment/account/{id}` to get the `ExtraProperties.PendingRechargePaymentId`.
+    2. Use the API `/api/paymentService/prepayment/account/{id}` to get the `ExtraProperties.PendingTopUpPaymentId`.
     
-    3. Use the API `/api/paymentService/payment/{id}/pay` to finish the payment. (for example you can use WeChatPay to recharge your prepayment account, please refer to the document of the payment method you want)
+    3. Use the API `/api/paymentService/payment/{id}/pay` to finish the payment. (for example you can use WeChatPay to top up your prepayment account, please refer to the document of the payment method you want)
     
     4. If you want to cancel an ongoing payment, please use the API `/api/paymentService/payment/{id}/cancel`.
 
