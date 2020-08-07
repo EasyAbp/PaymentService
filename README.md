@@ -11,29 +11,23 @@ An abp application module that provides payment service.
 
     Coming soon.
 
-* Install Manually
+1. Install the following NuGet packages. (see how)
 
-    1. Install `EasyAbp.PaymentService.Application` NuGet package to `MyProject.Application` project and add `[DependsOn(PaymentServiceApplicationModule)]` attribute to the module.
+    * EasyAbp.PaymentService.Application
+    * EasyAbp.PaymentService.Application.Contracts
+    * EasyAbp.PaymentService.Domain
+    * EasyAbp.PaymentService.Domain.Shared
+    * EasyAbp.PaymentService.EntityFrameworkCore
+    * EasyAbp.PaymentService.HttpApi
+    * EasyAbp.PaymentService.HttpApi.Client
+    * (Optional) EasyAbp.PaymentService.MongoDB
+    * (Optional) EasyAbp.PaymentService.Web
 
-    1. Install `EasyAbp.PaymentService.Application.Contracts` NuGet package to `MyProject.Application.Contracts` project and add `[DependsOn(PaymentServiceApplicationContractsModule)]` attribute to the module.
+1. Add `DependsOn(typeof(xxx))` attribute to configure the module dependencies. (see how)
 
-    1. Install `EasyAbp.PaymentService.Domain` NuGet package to `MyProject.Domain` project and add `[DependsOn(PaymentServiceDomainModule)]` attribute to the module.
+1. Add `builder.ConfigurePaymentService();` to the `OnModelCreating()` method in **MyProjectMigrationsDbContext.cs**.
 
-    1. Install `EasyAbp.PaymentService.Domain.Shared` NuGet package to `MyProject.Domain.Shared` project and add `[DependsOn(PaymentServiceDomainSharedModule)]` attribute to the module.
-
-    1. Install `EasyAbp.PaymentService.EntityFrameworkCore` NuGet package to `MyProject.EntityFrameworkCore` project and add `[DependsOn(PaymentServiceEntityFrameworkCoreModule)]` attribute to the module.
-
-    1. Install `EasyAbp.PaymentService.HttpApi` NuGet package to `MyProject.HttpApi` project and add `[DependsOn(PaymentServiceHttpApiModule)]` attribute to the module.
-
-    1. Install `EasyAbp.PaymentService.HttpApi.Client` NuGet package to `MyProject.HttpApi.Client` project and add `[DependsOn(PaymentServiceHttpApiClientModule)]` attribute to the module.
-
-    1. Install `EasyAbp.PaymentService.MongoDB` NuGet package to `MyProject.MongoDB` project and add `[DependsOn(PaymentServiceMongoDbModule)]` attribute to the module.
-
-    1. (Optional) If you need MVC UI, install `EasyAbp.PaymentService.Web` NuGet package to `MyProject.Web` project and add `[DependsOn(PaymentServiceWebModule)]` attribute to the module.
-
-    1. Add `builder.ConfigurePaymentService();` to OnModelCreating method in `MyProjectMigrationsDbContext.cs`.
-
-    1. Add EF Core migrations and update your database. See: [ABP document](https://docs.abp.io/en/abp/latest/Tutorials/Part-1?UI=MVC#add-new-migration-update-the-database).
+1. Add EF Core migrations and update your database. See: [ABP document](https://docs.abp.io/en/abp/latest/Tutorials/Part-1?UI=MVC#add-new-migration-update-the-database).
 
 ## Usage
 
@@ -54,9 +48,14 @@ Please refer to [EasyAbp.EShop.Payments](https://github.com/EasyAbp/EShop/tree/d
 ## Payment Providers
 
 * Free
+* [Prepayment](docs/Prepayment/README.md)
 * [WeChatPay](docs/WeChatPay/README.md)
 
 ## Roadmap
 
-- [ ] More payment providers.
+- [x] Prepayment.
+- [x] Support WeChatPay.
+- [ ] Support Paypal.
+- [ ] Support Alipay.
+- [ ] Support Bitcoin payment.
 - [ ] Unit tests.
