@@ -33,6 +33,7 @@ $(function () {
             { data: "actionName" },
             { data: "paymentMethod" },
             { data: "externalTradingCode" },
+            { data: "currency" },
             { data: "changedBalance" },
             { data: "originalBalance" },
         ]

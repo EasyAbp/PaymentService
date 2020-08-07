@@ -28,6 +28,7 @@
     "TransactionActionName": "TransactionActionName",
     "TransactionPaymentMethod": "TransactionPaymentMethod",
     "TransactionExternalTradingCode": "TransactionExternalTradingCode",
+    "TransactionCurrency": "TransactionCurrency",
     "TransactionChangedBalance": "TransactionChangedBalance",
     "TransactionOriginalBalance": "TransactionOriginalBalance",
     "CreateTransaction": "CreateTransaction",

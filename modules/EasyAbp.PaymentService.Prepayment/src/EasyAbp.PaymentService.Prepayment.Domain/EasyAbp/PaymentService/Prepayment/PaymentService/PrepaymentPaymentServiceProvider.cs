@@ -81,10 +81,11 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
             }
 
             var accountChangedBalance = -1 * payment.ActualPaymentAmount;
-            
+
             var transaction = new Transaction(_guidGenerator.Create(), _currentTenant.Id, account.Id, account.UserId,
-                payment.Id, TransactionType.Credit, PrepaymentConsts.PaymentActionName,
-                payment.PaymentMethod, payment.ExternalTradingCode, accountChangedBalance, account.Balance);
+                payment.Id, TransactionType.Credit, PrepaymentConsts.PaymentActionName, payment.PaymentMethod,
+                payment.ExternalTradingCode, accountGroupConfiguration.Currency, accountChangedBalance,
+                account.Balance);
 
             await _transactionRepository.InsertAsync(transaction, true);
 
@@ -111,11 +112,13 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
             
             var account = await _accountRepository.GetAsync(accountId);
 
+            var configuration = _accountGroupConfigurationProvider.Get(account.AccountGroupName);
+
             var accountChangedBalance = payment.ActualPaymentAmount;
 
             var transaction = new Transaction(_guidGenerator.Create(), _currentTenant.Id, account.Id, account.UserId,
                 payment.Id, TransactionType.Debit, PrepaymentConsts.RefundActionName, payment.PaymentMethod,
-                payment.ExternalTradingCode, accountChangedBalance, account.Balance);
+                payment.ExternalTradingCode, configuration.Currency, accountChangedBalance, account.Balance);
 
             await _transactionRepository.InsertAsync(transaction, true);
 

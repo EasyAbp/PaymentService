@@ -49,9 +49,12 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
                 
                 var account = await _accountRepository.GetAsync(item.ItemKey);
 
-                var transaction = new Transaction(_guidGenerator.Create(), _currentTenant.Id, account.Id, account.UserId,
-                    null, TransactionType.Debit, PrepaymentConsts.RechargeActionName,
-                    payment.PaymentMethod, payment.ExternalTradingCode, changedBalance, account.Balance);
+                var configuration = _accountGroupConfigurationProvider.Get(account.AccountGroupName);
+
+                var transaction = new Transaction(_guidGenerator.Create(), _currentTenant.Id, account.Id,
+                    account.UserId, null, TransactionType.Debit, PrepaymentConsts.RechargeActionName,
+                    payment.PaymentMethod, payment.ExternalTradingCode, configuration.Currency, changedBalance,
+                    account.Balance);
 
                 await _transactionRepository.InsertAsync(transaction, true);
                 

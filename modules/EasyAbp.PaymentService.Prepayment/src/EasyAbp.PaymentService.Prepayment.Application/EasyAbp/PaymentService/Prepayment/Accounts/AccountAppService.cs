@@ -98,11 +98,14 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
         {
             var account = await _repository.GetAsync(id);
 
+            var configuration = _accountGroupConfigurationProvider.Get(account.AccountGroupName);
+
             var transactionType = input.ChangedBalance > decimal.Zero ? TransactionType.Debit : TransactionType.Credit;
 
             var transaction = new Transaction(GuidGenerator.Create(), CurrentTenant.Id, account.Id, account.UserId,
                 null, transactionType, PrepaymentConsts.ChangeBalanceActionName,
-                PrepaymentConsts.ChangeBalancePaymentMethod, null, input.ChangedBalance, account.Balance);
+                PrepaymentConsts.ChangeBalancePaymentMethod, null, configuration.Currency, input.ChangedBalance,
+                account.Balance);
 
             await _transactionRepository.InsertAsync(transaction, true);
             

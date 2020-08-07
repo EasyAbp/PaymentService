@@ -1,10 +1,13 @@
-﻿namespace EasyAbp.PaymentService.Prepayment.Options.AccountGroups
+﻿using JetBrains.Annotations;
+
+namespace EasyAbp.PaymentService.Prepayment.Options.AccountGroups
 {
     public class AccountGroupConfiguration
     {
         /// <summary>
         /// The currency of the account balance, the default value is "USD".
         /// </summary>
+        [NotNull]
         public string Currency { get; set; } = "USD";
         
         /// <summary>
