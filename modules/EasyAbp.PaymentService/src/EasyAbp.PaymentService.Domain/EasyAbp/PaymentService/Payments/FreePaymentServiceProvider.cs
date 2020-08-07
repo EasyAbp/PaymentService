@@ -29,7 +29,7 @@ namespace EasyAbp.PaymentService.Payments
                 throw new PaymentAmountInvalidException(payment.ActualPaymentAmount, PaymentMethod);
             }
             
-            payment.SetPayeeAccount("None");
+            // payment.SetPayeeAccount("None");
             
             // payment.SetExternalTradingCode(payment.Id.ToString());
 

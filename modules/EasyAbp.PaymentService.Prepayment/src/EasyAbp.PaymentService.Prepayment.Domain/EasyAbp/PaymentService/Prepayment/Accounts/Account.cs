@@ -78,7 +78,14 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
 
         public void SetPendingRechargePaymentId(Guid? pendingRechargePaymentId)
         {
-            this.SetProperty(PendingRechargePaymentIdPropertyName, pendingRechargePaymentId.ToString());
+            if (pendingRechargePaymentId.HasValue)
+            {
+                this.SetProperty(PendingRechargePaymentIdPropertyName, pendingRechargePaymentId.ToString());
+            }
+            else
+            {
+                this.RemoveProperty(PendingRechargePaymentIdPropertyName);
+            }
         }
         
         public Guid? GetPendingRechargePaymentId()

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.Prepayment.Accounts;
-using Volo.Abp.Data;
+using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Entities.Events.Distributed;
 using Volo.Abp.EventBus.Distributed;
 using Volo.Abp.MultiTenancy;
@@ -12,7 +10,7 @@ using Volo.Abp.Uow;
 
 namespace EasyAbp.PaymentService.Prepayment.PaymentService
 {
-    public class RechargePaymentCreatedEventHandler : IDistributedEventHandler<EntityCreatedEto<PaymentEto>>
+    public class RechargePaymentCreatedEventHandler : IDistributedEventHandler<EntityCreatedEto<PaymentEto>>, ITransientDependency
     {
         private readonly ICurrentTenant _currentTenant;
         private readonly IAccountRepository _accountRepository;
@@ -33,23 +31,18 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
             var items = payment.PaymentItems.Where(item => item.ItemType == PrepaymentConsts.RechargePaymentItemType)
                 .ToList();
 
-            if (items.IsNullOrEmpty())
+            foreach (var item in items)
             {
-                return;
-            }
+                var accountId = item.ItemKey;
 
-            if (!Guid.TryParse(payment.GetProperty<string>("AccountId"), out var accountId))
-            {
-                throw new ArgumentNullException("AccountId");
-            }
+                using var currentTenant = _currentTenant.Change(payment.TenantId);
 
-            using var currentTenant = _currentTenant.Change(payment.TenantId);
-
-            var account = await _accountRepository.GetAsync(accountId);
+                var account = await _accountRepository.GetAsync(accountId);
             
-            account.SetPendingRechargePaymentId(payment.Id);
+                account.SetPendingRechargePaymentId(payment.Id);
 
-            await _accountRepository.UpdateAsync(account, true);
+                await _accountRepository.UpdateAsync(account, true);
+            }
         }
     }
 }

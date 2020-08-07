@@ -7,7 +7,7 @@ using EasyAbp.PaymentService.Prepayment.Accounts;
 using EasyAbp.PaymentService.Prepayment.Options.AccountGroups;
 using EasyAbp.PaymentService.Prepayment.Transactions;
 using EasyAbp.PaymentService.Refunds;
-using Volo.Abp.DependencyInjection;
+using Volo.Abp.Data;
 using Volo.Abp.Guids;
 using Volo.Abp.MultiTenancy;
 using Volo.Abp.Users;
@@ -22,7 +22,6 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
         private readonly IPaymentManager _paymentManager;
         private readonly IPaymentRepository _paymentRepository;
         private readonly IAccountRepository _accountRepository;
-        private readonly IPrepaymentPayeeAccountProvider _payeeAccountProvider;
         private readonly ITransactionRepository _transactionRepository;
         private readonly IAccountGroupConfigurationProvider _accountGroupConfigurationProvider;
 
@@ -35,7 +34,6 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
             IPaymentManager paymentManager,
             IPaymentRepository paymentRepository,
             IAccountRepository accountRepository,
-            IPrepaymentPayeeAccountProvider payeeAccountProvider,
             ITransactionRepository transactionRepository,
             IAccountGroupConfigurationProvider accountGroupConfigurationProvider)
         {
@@ -45,7 +43,6 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
             _paymentManager = paymentManager;
             _paymentRepository = paymentRepository;
             _accountRepository = accountRepository;
-            _payeeAccountProvider = payeeAccountProvider;
             _transactionRepository = transactionRepository;
             _accountGroupConfigurationProvider = accountGroupConfigurationProvider;
         }
@@ -83,8 +80,6 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
                 throw new CurrencyNotSupportedException(payment.Currency);
             }
 
-            payment.SetPayeeAccount(await _payeeAccountProvider.GetPayeeAccountAsync(account));
-
             var accountChangedBalance = -1 * payment.ActualPaymentAmount;
             
             var transaction = new Transaction(_guidGenerator.Create(), _currentTenant.Id, account.Id, account.UserId,
@@ -109,7 +104,12 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
 
         public override async Task OnRefundStartedAsync(Payment payment, IEnumerable<Refund> refunds, string displayReason = null)
         {
-            var account = await _payeeAccountProvider.GetAccountByPayeeAccountAsync(payment.PayeeAccount);
+            if (!Guid.TryParse(payment.GetProperty<string>("AccountId"), out var accountId))
+            {
+                throw new ArgumentNullException("AccountId");
+            }
+            
+            var account = await _accountRepository.GetAsync(accountId);
 
             var accountChangedBalance = payment.ActualPaymentAmount;
 
