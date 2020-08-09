@@ -7,7 +7,7 @@ namespace EasyAbp.PaymentService.WeChatPay.RefundRecords
 {
     public class RefundRecordRepository : EfCoreRepository<IWeChatPayDbContext, RefundRecord, Guid>, IRefundRecordRepository
     {
-        public RefundRecordRepository(IDbContextProvider<WeChatPayDbContext> dbContextProvider) : base(dbContextProvider)
+        public RefundRecordRepository(IDbContextProvider<IWeChatPayDbContext> dbContextProvider) : base(dbContextProvider)
         {
         }
     }

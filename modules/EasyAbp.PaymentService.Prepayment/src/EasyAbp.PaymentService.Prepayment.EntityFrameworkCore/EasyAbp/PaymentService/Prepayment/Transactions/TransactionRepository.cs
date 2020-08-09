@@ -7,7 +7,7 @@ namespace EasyAbp.PaymentService.Prepayment.Transactions
 {
     public class TransactionRepository : EfCoreRepository<IPrepaymentDbContext, Transaction, Guid>, ITransactionRepository
     {
-        public TransactionRepository(IDbContextProvider<PrepaymentDbContext> dbContextProvider) : base(dbContextProvider)
+        public TransactionRepository(IDbContextProvider<IPrepaymentDbContext> dbContextProvider) : base(dbContextProvider)
         {
         }
     }

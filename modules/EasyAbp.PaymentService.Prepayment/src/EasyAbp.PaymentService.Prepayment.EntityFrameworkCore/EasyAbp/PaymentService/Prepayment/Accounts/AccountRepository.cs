@@ -7,7 +7,7 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
 {
     public class AccountRepository : EfCoreRepository<IPrepaymentDbContext, Account, Guid>, IAccountRepository
     {
-        public AccountRepository(IDbContextProvider<PrepaymentDbContext> dbContextProvider) : base(dbContextProvider)
+        public AccountRepository(IDbContextProvider<IPrepaymentDbContext> dbContextProvider) : base(dbContextProvider)
         {
         }
     }

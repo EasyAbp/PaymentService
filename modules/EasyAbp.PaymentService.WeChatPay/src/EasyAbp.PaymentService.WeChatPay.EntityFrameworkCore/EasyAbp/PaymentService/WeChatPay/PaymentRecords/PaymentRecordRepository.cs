@@ -11,7 +11,7 @@ namespace EasyAbp.PaymentService.WeChatPay.PaymentRecords
 {
     public class PaymentRecordRepository : EfCoreRepository<IWeChatPayDbContext, PaymentRecord, Guid>, IPaymentRecordRepository
     {
-        public PaymentRecordRepository(IDbContextProvider<WeChatPayDbContext> dbContextProvider) : base(dbContextProvider)
+        public PaymentRecordRepository(IDbContextProvider<IWeChatPayDbContext> dbContextProvider) : base(dbContextProvider)
         {
         }
 
