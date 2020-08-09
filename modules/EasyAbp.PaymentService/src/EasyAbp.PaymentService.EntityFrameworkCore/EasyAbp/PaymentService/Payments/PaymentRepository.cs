@@ -8,7 +8,7 @@ using Volo.Abp.EntityFrameworkCore;
 
 namespace EasyAbp.PaymentService.Payments
 {
-    public class PaymentRepository : EfCoreRepository<PaymentServiceDbContext, Payment, Guid>, IPaymentRepository
+    public class PaymentRepository : EfCoreRepository<IPaymentServiceDbContext, Payment, Guid>, IPaymentRepository
     {
         public PaymentRepository(IDbContextProvider<PaymentServiceDbContext> dbContextProvider) : base(dbContextProvider)
         {

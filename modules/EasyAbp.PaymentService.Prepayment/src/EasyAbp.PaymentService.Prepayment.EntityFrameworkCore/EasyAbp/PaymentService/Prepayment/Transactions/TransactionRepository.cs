@@ -5,7 +5,7 @@ using Volo.Abp.EntityFrameworkCore;
 
 namespace EasyAbp.PaymentService.Prepayment.Transactions
 {
-    public class TransactionRepository : EfCoreRepository<PrepaymentDbContext, Transaction, Guid>, ITransactionRepository
+    public class TransactionRepository : EfCoreRepository<IPrepaymentDbContext, Transaction, Guid>, ITransactionRepository
     {
         public TransactionRepository(IDbContextProvider<PrepaymentDbContext> dbContextProvider) : base(dbContextProvider)
         {
