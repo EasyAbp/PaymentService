@@ -20,34 +20,34 @@ namespace EasyAbp.PaymentService.Payments
 
         [HttpGet]
         [Route("{id}")]
-        public Task<PaymentDto> GetAsync(Guid id)
+        public virtual Task<PaymentDto> GetAsync(Guid id)
         {
             return _service.GetAsync(id);
         }
 
         [HttpGet]
-        public Task<PagedResultDto<PaymentDto>> GetListAsync(PagedAndSortedResultRequestDto input)
+        public virtual Task<PagedResultDto<PaymentDto>> GetListAsync(PagedAndSortedResultRequestDto input)
         {
             return _service.GetListAsync(input);
         }
 
         [HttpGet]
         [Route("paymentMethod")]
-        public Task<ListResultDto<PaymentMethodDto>> GetListPaymentMethod()
+        public virtual Task<ListResultDto<PaymentMethodDto>> GetListPaymentMethod()
         {
             return _service.GetListPaymentMethod();
         }
 
         [HttpPost]
         [Route("{id}/pay")]
-        public Task<PaymentDto> PayAsync(Guid id, PayInput input)
+        public virtual Task<PaymentDto> PayAsync(Guid id, PayInput input)
         {
             return _service.PayAsync(id, input);
         }
 
         [HttpPut]
         [Route("{id}/cancel")]
-        public Task<PaymentDto> CancelAsync(Guid id)
+        public virtual Task<PaymentDto> CancelAsync(Guid id)
         {
             return _service.CancelAsync(id);
         }

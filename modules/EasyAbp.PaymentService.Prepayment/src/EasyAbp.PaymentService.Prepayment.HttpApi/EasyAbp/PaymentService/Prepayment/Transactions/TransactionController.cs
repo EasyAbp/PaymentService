@@ -20,13 +20,13 @@ namespace EasyAbp.PaymentService.Prepayment.Transactions
 
         [HttpGet]
         [Route("{id}")]
-        public Task<TransactionDto> GetAsync(Guid id)
+        public virtual Task<TransactionDto> GetAsync(Guid id)
         {
             return _service.GetAsync(id);
         }
 
         [HttpGet]
-        public Task<PagedResultDto<TransactionDto>> GetListAsync(PagedAndSortedResultRequestDto input)
+        public virtual Task<PagedResultDto<TransactionDto>> GetListAsync(PagedAndSortedResultRequestDto input)
         {
             return _service.GetListAsync(input);
         }
