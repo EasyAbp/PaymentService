@@ -20,34 +20,34 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
 
         [HttpPost]
         [Route("{id}/change/balance")]
-        public Task<AccountDto> ChangeBalanceAsync(Guid id, ChangeBalanceInput input)
+        public virtual Task<AccountDto> ChangeBalanceAsync(Guid id, ChangeBalanceInput input)
         {
             return _service.ChangeBalanceAsync(id, input);
         }
 
         [HttpPost]
         [Route("{id}/change/lockedBalance")]
-        public Task<AccountDto> ChangeLockedBalanceAsync(Guid id, ChangeLockedBalanceInput input)
+        public virtual Task<AccountDto> ChangeLockedBalanceAsync(Guid id, ChangeLockedBalanceInput input)
         {
             return _service.ChangeLockedBalanceAsync(id, input);
         }
 
         [HttpPost]
         [Route("{id}/topUp")]
-        public Task TopUpAsync(Guid id, TopUpInput input)
+        public virtual Task TopUpAsync(Guid id, TopUpInput input)
         {
             return _service.TopUpAsync(id, input);
         }
 
         [HttpGet]
         [Route("{id}")]
-        public Task<AccountDto> GetAsync(Guid id)
+        public virtual Task<AccountDto> GetAsync(Guid id)
         {
             return _service.GetAsync(id);
         }
 
         [HttpGet]
-        public Task<PagedResultDto<AccountDto>> GetListAsync(GetAccountListInput input)
+        public virtual Task<PagedResultDto<AccountDto>> GetListAsync(GetAccountListInput input)
         {
             return _service.GetListAsync(input);
         }

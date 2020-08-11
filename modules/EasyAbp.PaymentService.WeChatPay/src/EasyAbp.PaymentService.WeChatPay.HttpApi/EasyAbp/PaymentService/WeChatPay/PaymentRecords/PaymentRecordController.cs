@@ -20,13 +20,13 @@ namespace EasyAbp.PaymentService.WeChatPay.PaymentRecords
 
         [HttpGet]
         [Route("{id}")]
-        public Task<PaymentRecordDto> GetAsync(Guid id)
+        public virtual Task<PaymentRecordDto> GetAsync(Guid id)
         {
             return _service.GetAsync(id);
         }
 
         [HttpGet]
-        public Task<PagedResultDto<PaymentRecordDto>> GetListAsync(PagedAndSortedResultRequestDto input)
+        public virtual Task<PagedResultDto<PaymentRecordDto>> GetListAsync(PagedAndSortedResultRequestDto input)
         {
             return _service.GetListAsync(input);
         }
