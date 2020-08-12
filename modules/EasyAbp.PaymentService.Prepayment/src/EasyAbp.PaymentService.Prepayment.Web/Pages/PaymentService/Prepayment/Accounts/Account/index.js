@@ -55,4 +55,9 @@ $(function () {
     changeLockedBalanceModal.onResult(function () {
         dataTable.ajax.reload();
     });
+
+    $('#search-button').click(function (e) {
+        e.preventDefault();
+        document.location.href = document.location.origin + document.location.pathname + '?userId=' + $('#UserId').val();
+    })
 });
