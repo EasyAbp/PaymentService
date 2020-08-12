@@ -29,12 +29,6 @@ namespace EasyAbp.PaymentService.Prepayment.Web.Menus
                     new ApplicationMenuItem(PrepaymentMenus.Account, l["Menu:Account"], "/PaymentService/Prepayment/Accounts/Account")
                 );
             }
-            if (await context.IsGrantedAsync(PrepaymentPermissions.Transaction.Default))
-            {
-                prepaymentManagementMenuItem.AddItem(
-                    new ApplicationMenuItem(PrepaymentMenus.Transaction, l["Menu:Transaction"], "/PaymentService/Prepayment/Transactions/Transaction")
-                );
-            }
             
             if (!prepaymentManagementMenuItem.Items.IsNullOrEmpty())
             {

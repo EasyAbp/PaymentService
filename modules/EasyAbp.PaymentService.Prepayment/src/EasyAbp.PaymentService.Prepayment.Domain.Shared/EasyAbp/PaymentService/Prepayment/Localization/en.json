@@ -19,7 +19,6 @@
     "AccountDeletionConfirmationMessage": "Are you sure to delete the account {0}?",
     "SuccessfullyDeleted": "Successfully deleted",
     "Permission:Transaction": "Transaction",
-    "Menu:Transaction": "MenuTransaction",
     "Transaction": "Transaction",
     "TransactionAccountId": "TransactionAccountId",
     "TransactionAccountUserId": "TransactionAccountUserId",

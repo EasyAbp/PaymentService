@@ -9,7 +9,7 @@ namespace EasyAbp.PaymentService.Prepayment.Transactions
         IReadOnlyAppService< 
             TransactionDto, 
             Guid, 
-            PagedAndSortedResultRequestDto>
+            GetTransactionListInput>
     {
 
     }

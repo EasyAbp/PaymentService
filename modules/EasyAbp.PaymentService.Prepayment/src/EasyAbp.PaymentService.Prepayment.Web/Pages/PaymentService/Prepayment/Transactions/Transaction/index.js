@@ -12,7 +12,9 @@ $(function () {
         autoWidth: false,
         scrollCollapse: true,
         order: [[0, "asc"]],
-        ajax: abp.libs.datatables.createAjax(service.getList),
+        ajax: abp.libs.datatables.createAjax(service.getList, function () {
+            return { accountId: accountId };
+        }),
         columnDefs: [
             {
                 rowAction: {
@@ -26,8 +28,6 @@ $(function () {
                         ]
                 }
             },
-            { data: "accountId" },
-            { data: "accountUserId" },
             { data: "paymentId" },
             { data: "transactionType" },
             { data: "actionName" },

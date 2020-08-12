@@ -26,7 +26,7 @@ namespace EasyAbp.PaymentService.Prepayment.Transactions
         }
 
         [HttpGet]
-        public virtual Task<PagedResultDto<TransactionDto>> GetListAsync(PagedAndSortedResultRequestDto input)
+        public virtual Task<PagedResultDto<TransactionDto>> GetListAsync(GetTransactionListInput input)
         {
             return _service.GetListAsync(input);
         }

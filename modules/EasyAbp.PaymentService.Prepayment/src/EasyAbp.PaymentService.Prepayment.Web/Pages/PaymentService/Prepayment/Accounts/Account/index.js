@@ -21,8 +21,9 @@ $(function () {
                     items:
                         [
                             {
-                                text: l('Detail'),
+                                text: l('Transaction'),
                                 action: function (data) {
+                                    document.location.href = document.location.origin + '/PaymentService/Prepayment/Transactions/Transaction?AccountId=' + data.record.id;
                                 }
                             },
                             {

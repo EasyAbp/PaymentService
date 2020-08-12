@@ -12,6 +12,16 @@
     PageLayout.Content.Title = L["Transaction"].Value;
     PageLayout.Content.BreadCrumb.Add(L["Menu:Transaction"].Value);
     PageLayout.Content.MenuItemName = "Transaction";
+
+    var title = L["Transaction"].Value;
+    if (!Model.UserName.IsNullOrEmpty())
+    {
+        title += $" - {Model.UserName}";
+    }
+    if (!Model.AccountGroupName.IsNullOrEmpty())
+    {
+        title += $" ({L[Model.AccountGroupName].Value})";
+    }
 }
 
 @section scripts
@@ -23,11 +33,15 @@
     <abp-style src="/Pages/PaymentService/Prepayment/Transactions/Transaction/index.css"/>
 }
 
+<script>
+    var accountId = '@Model.AccountId';
+</script>
+
 <abp-card>
     <abp-card-header>
         <abp-row>
             <abp-column size-md="_6">
-                <abp-card-title>@L["Transaction"]</abp-card-title>
+                <abp-card-title>@title</abp-card-title>
             </abp-column>
             <abp-column size-md="_6" class="text-right">
             </abp-column>
@@ -38,8 +52,6 @@
             <thead>
             <tr>
                 <th>@L["Actions"]</th>
-                <th>@L["TransactionAccountId"]</th>
-                <th>@L["TransactionAccountUserId"]</th>
                 <th>@L["TransactionPaymentId"]</th>
                 <th>@L["TransactionTransactionType"]</th>
                 <th>@L["TransactionActionName"]</th>

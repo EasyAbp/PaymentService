@@ -10,8 +10,5 @@
         //public const string Home = Prefix + ".MyNewMenuItem";
 
         public const string Account = Prefix + ".Account";
-        
-        public const string Transaction = Prefix + ".Transaction";
-
     }
 }

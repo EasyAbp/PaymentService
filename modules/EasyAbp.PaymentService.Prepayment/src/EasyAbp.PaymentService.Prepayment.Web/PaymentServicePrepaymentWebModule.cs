@@ -9,14 +9,16 @@ using Volo.Abp.Modularity;
 using Volo.Abp.UI.Navigation;
 using Volo.Abp.VirtualFileSystem;
 using EasyAbp.PaymentService.Prepayment.Permissions;
+using Volo.Abp.Users;
 
 namespace EasyAbp.PaymentService.Prepayment.Web
 {
     [DependsOn(
         typeof(PaymentServicePrepaymentHttpApiModule),
         typeof(AbpAspNetCoreMvcUiThemeSharedModule),
-        typeof(AbpAutoMapperModule)
-        )]
+        typeof(AbpAutoMapperModule),
+        typeof(AbpUsersAbstractionModule)
+    )]
     public class PaymentServicePrepaymentWebModule : AbpModule
     {
         public override void PreConfigureServices(ServiceConfigurationContext context)
