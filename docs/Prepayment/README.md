@@ -81,11 +81,13 @@ Prepayment implementation of the EasyAbp.PaymentService module.
         ```
 
     > Skip the following steps if you are using [EasyAbp.EShop](https://github.com/EasyAbp/EShop))
+
     <details>
     <summary>See more steps</summary>
 
     2. Create a payment with the payment method `Prepayment`.
         > Other modules or apps that depend on PaymentService module should create payments via distributed events.
+
         <details>
         <summary>See sample code</summary>
 
