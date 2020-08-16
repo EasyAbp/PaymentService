@@ -7,7 +7,7 @@ Prepayment implementation of the EasyAbp.PaymentService module.
 
 ## Getting Started
 
-> Should also install the [PaymentService module](../../README.md#getting-started) since this module depends on it.
+> Should also install the [PaymentService module](/docs/README.md#getting-started) since this module depends on it.
 
 * Install with [AbpHelper](https://github.com/EasyAbp/AbpHelper.GUI)
 
@@ -53,7 +53,7 @@ Prepayment implementation of the EasyAbp.PaymentService module.
         });
     });
     ```
-    > please refer to the `ConfigurePaymentServicePrepayment` method in the [Web module](../../samples/PaymentServiceSample/aspnet-core/src/PaymentServiceSample.Web/PaymentServiceSampleWebModule.cs) of the sample app.
+    > please refer to the `ConfigurePaymentServicePrepayment` method in the [Web module](https://github.com/EasyAbp/PaymentService/blob/master/samples/PaymentServiceSample/aspnet-core/src/PaymentServiceSample.Web/PaymentServiceSampleWebModule.cs) of the sample app.
 
 3. Access the API `/api/paymentService/prepayment/account` (with the request param `UserId`), then the account will be created automatically.
 

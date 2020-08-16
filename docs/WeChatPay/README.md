@@ -7,7 +7,7 @@ WeChatPay implementation of the EasyAbp.PaymentService module.
 
 ## Getting Started
 
-> Should also install the [PaymentService module](../../README.md#getting-started) since this module depends on it.
+> Should also install the [PaymentService module](/docs/README.md#getting-started) since this module depends on it.
 
 * Install with [AbpHelper](https://github.com/EasyAbp/AbpHelper.GUI)
     Coming soon.
@@ -42,8 +42,8 @@ WeChatPay implementation of the EasyAbp.PaymentService module.
     }
     ```
     
-2. Configure the [WeChatPay settings](../../modules/EasyAbp.PaymentService.WeChatPay/src/EasyAbp.PaymentService.WeChatPay.Domain/EasyAbp/PaymentService/WeChatPay/Settings/WeChatPaySettings.cs), you can try to use [SettingUI](https://github.com/EasyAbp/Abp.SettingUi) to finish this work.
-    > See the [demo](../../samples/PaymentServiceSample/aspnet-core/src/PaymentServiceSample.Web/appsettings.json), it is also according to the [document](https://github.com/EasyAbp/Abp.WeChat/blob/master/doc/WeChatPay.md) of the EasyAbp.Abp.WeChat module.
+2. Configure the [WeChatPay settings](https://github.com/EasyAbp/PaymentService/blob/master/modules/EasyAbp.PaymentService.WeChatPay/src/EasyAbp.PaymentService.WeChatPay.Domain/EasyAbp/PaymentService/WeChatPay/Settings/WeChatPaySettings.cs), you can try to use [SettingUI](https://github.com/EasyAbp/Abp.SettingUi) to finish this work.
+    > See the [demo](https://github.com/EasyAbp/PaymentService/blob/master/samples/PaymentServiceSample/aspnet-core/src/PaymentServiceSample.Web/appsettings.json), it is also according to the [document](https://github.com/EasyAbp/Abp.WeChat/blob/master/doc/WeChatPay.md) of the EasyAbp.Abp.WeChat module.
 
 3. Pay with WeChatPay.
     1. Users can use the API `/api/paymentService/payment/{id}/pay` to finish the payment, please put the necessary params in the `ExtraProperties`:
