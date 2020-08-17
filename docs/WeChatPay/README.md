@@ -9,8 +9,11 @@ WeChatPay implementation of the EasyAbp.PaymentService module.
 
 > Should also install the [PaymentService module](/docs/README.md#getting-started) since this module depends on it.
 
-* Install with [AbpHelper](https://github.com/EasyAbp/AbpHelper.GUI)
-    Coming soon.
+### Install with [AbpHelper](https://github.com/EasyAbp/AbpHelper.GUI)
+
+* Coming soon.
+
+### Install Manually
 
 1. Install the following NuGet packages. (see how)
     * EasyAbp.PaymentService.WeChatPay.Application
