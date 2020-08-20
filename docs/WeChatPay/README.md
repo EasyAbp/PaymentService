@@ -2,20 +2,20 @@
 
 [![NuGet](https://img.shields.io/nuget/v/EasyAbp.PaymentService.WeChatPay.Domain.Shared.svg?style=flat-square)](https://www.nuget.org/packages/EasyAbp.PaymentService.WeChatPay.Domain.Shared)
 [![NuGet Download](https://img.shields.io/nuget/dt/EasyAbp.PaymentService.WeChatPay.Domain.Shared.svg?style=flat-square)](https://www.nuget.org/packages/EasyAbp.PaymentService.WeChatPay.Domain.Shared)
+[![GitHub stars](https://img.shields.io/github/stars/EasyAbp/PaymentService.WeChatPay?style=social)](https://www.github.com/EasyAbp/PaymentService.WeChatPay)
 
 WeChatPay implementation of the EasyAbp.PaymentService module.
 
-## Getting Started
+## Online Demo
+
+We have launched an online demo for this module: [https://pay.samples.easyabp.io](https://pay.samples.easyabp.io)
+
+## Installation
 
 > Should also install the [PaymentService module](/docs/README.md#getting-started) since this module depends on it.
 
-### Install with [AbpHelper](https://github.com/EasyAbp/AbpHelper.GUI)
+1. Install the following NuGet packages. ([see how](https://github.com/EasyAbp/EasyAbpGuide/blob/master/How-To.md#add-nuget-packages))
 
-* Coming soon.
-
-### Install Manually
-
-1. Install the following NuGet packages. (see how)
     * EasyAbp.PaymentService.WeChatPay.Application
     * EasyAbp.PaymentService.WeChatPay.Application.Contracts
     * EasyAbp.PaymentService.WeChatPay.Domain
@@ -26,7 +26,7 @@ WeChatPay implementation of the EasyAbp.PaymentService module.
     * (Optional) EasyAbp.PaymentService.WeChatPay.MongoDB
     * (Optional) EasyAbp.PaymentService.WeChatPay.Web
 
-1. Add `DependsOn(typeof(xxx))` attribute to configure the module dependencies. (see how)
+1. Add `DependsOn(typeof(PaymentServiceWeChatPayXxxModule))` attribute to configure the module dependencies. ([see how](https://github.com/EasyAbp/EasyAbpGuide/blob/master/How-To.md#add-module-dependencies))
 
 1. Add `builder.ConfigurePaymentServiceWeChatPay();` to the `OnModelCreating()` method in **MyProjectMigrationsDbContext.cs**.
 
@@ -35,7 +35,6 @@ WeChatPay implementation of the EasyAbp.PaymentService module.
 ## Usage
 
 1. Register the WeChatPay payment method:
-
     ```csharp
     public override void OnApplicationInitialization(ApplicationInitializationContext context)
     {

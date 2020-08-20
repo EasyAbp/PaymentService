@@ -2,20 +2,19 @@
 
 [![NuGet](https://img.shields.io/nuget/v/EasyAbp.PaymentService.Prepayment.Domain.Shared.svg?style=flat-square)](https://www.nuget.org/packages/EasyAbp.PaymentService.Prepayment.Domain.Shared)
 [![NuGet Download](https://img.shields.io/nuget/dt/EasyAbp.PaymentService.Prepayment.Domain.Shared.svg?style=flat-square)](https://www.nuget.org/packages/EasyAbp.PaymentService.Prepayment.Domain.Shared)
+[![GitHub stars](https://img.shields.io/github/stars/EasyAbp/PaymentService.Prepayment?style=social)](https://www.github.com/EasyAbp/PaymentService.Prepayment)
 
 Prepayment implementation of the EasyAbp.PaymentService module.
 
-## Getting Started
+## Online Demo
+
+We have launched an online demo for this module: [https://pay.samples.easyabp.io](https://pay.samples.easyabp.io)
+
+## Installation
 
 > Should also install the [PaymentService module](/docs/README.md#getting-started) since this module depends on it.
 
-### Install with [AbpHelper](https://github.com/EasyAbp/AbpHelper.GUI)
-
-* Coming soon.
-
-### Install Manually
-
-1. Install the following NuGet packages. (see how)
+1. Install the following NuGet packages. ([see how](https://github.com/EasyAbp/EasyAbpGuide/blob/master/How-To.md#add-nuget-packages))
 
     * EasyAbp.PaymentService.Prepayment.Application
     * EasyAbp.PaymentService.Prepayment.Application.Contracts
@@ -27,7 +26,7 @@ Prepayment implementation of the EasyAbp.PaymentService module.
     * (Optional) EasyAbp.PaymentService.Prepayment.MongoDB
     * (Optional) EasyAbp.PaymentService.Prepayment.Web
 
-1. Add `DependsOn(typeof(xxx))` attribute to configure the module dependencies. (see how)
+1. Add `DependsOn(typeof(PaymentServicePrepaymentXxxModule))` attribute to configure the module dependencies. ([see how](https://github.com/EasyAbp/EasyAbpGuide/blob/master/How-To.md#add-module-dependencies))
 
 1. Add `builder.ConfigurePaymentServicePrepayment();` to the `OnModelCreating()` method in **MyProjectMigrationsDbContext.cs**.
 
