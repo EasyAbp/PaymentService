@@ -2,7 +2,7 @@
 
 [![NuGet](https://img.shields.io/nuget/v/EasyAbp.PaymentService.WeChatPay.Domain.Shared.svg?style=flat-square)](https://www.nuget.org/packages/EasyAbp.PaymentService.WeChatPay.Domain.Shared)
 [![NuGet Download](https://img.shields.io/nuget/dt/EasyAbp.PaymentService.WeChatPay.Domain.Shared.svg?style=flat-square)](https://www.nuget.org/packages/EasyAbp.PaymentService.WeChatPay.Domain.Shared)
-[![GitHub stars](https://img.shields.io/github/stars/EasyAbp/PaymentService.WeChatPay?style=social)](https://www.github.com/EasyAbp/PaymentService.WeChatPay)
+[![GitHub stars](https://img.shields.io/github/stars/EasyAbp/PaymentService?style=social)](https://www.github.com/EasyAbp/PaymentService)
 
 WeChatPay implementation of the EasyAbp.PaymentService module.
 

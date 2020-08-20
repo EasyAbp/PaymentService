@@ -2,7 +2,7 @@
 
 [![NuGet](https://img.shields.io/nuget/v/EasyAbp.PaymentService.Prepayment.Domain.Shared.svg?style=flat-square)](https://www.nuget.org/packages/EasyAbp.PaymentService.Prepayment.Domain.Shared)
 [![NuGet Download](https://img.shields.io/nuget/dt/EasyAbp.PaymentService.Prepayment.Domain.Shared.svg?style=flat-square)](https://www.nuget.org/packages/EasyAbp.PaymentService.Prepayment.Domain.Shared)
-[![GitHub stars](https://img.shields.io/github/stars/EasyAbp/PaymentService.Prepayment?style=social)](https://www.github.com/EasyAbp/PaymentService.Prepayment)
+[![GitHub stars](https://img.shields.io/github/stars/EasyAbp/PaymentService?style=social)](https://www.github.com/EasyAbp/PaymentService)
 
 Prepayment implementation of the EasyAbp.PaymentService module.
 
