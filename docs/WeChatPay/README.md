@@ -59,7 +59,7 @@ We have launched an online demo for this module: [https://pay.samples.easyabp.io
         }
         ```
 
-    > Skip the following steps if you are using [EasyAbp.EShop](https://github.com/EasyAbp/EShop))
+    > Skip the following steps if you are using the [EasyAbp.EShop](https://github.com/EasyAbp/EShop).
 
     <details>
     <summary>See more steps</summary>
