@@ -13,7 +13,8 @@
         public const string IsSandBox = GroupName + ".IsSandBox";
         public const string NotifyUrl = GroupName + ".NotifyUrl";
         public const string RefundNotifyUrl = GroupName + ".RefundNotifyUrl";
-        public const string CertificatePath = GroupName + ".CertificatePath";
+        public const string CertificateBlobContainerName = GroupName + ".CertificateBlobContainerName";
+        public const string CertificateBlobName = GroupName + ".CertificateBlobName";
         public const string CertificateSecret = GroupName + ".CertificateSecret";
     }
 }

@@ -25,7 +25,8 @@ namespace EasyAbp.PaymentService.WeChatPay
                 IsSandBox = Convert.ToBoolean(await settingProvider.GetOrNullAsync(WeChatPaySettings.IsSandBox)),
                 NotifyUrl = await settingProvider.GetOrNullAsync(WeChatPaySettings.NotifyUrl),
                 RefundNotifyUrl = await settingProvider.GetOrNullAsync(WeChatPaySettings.RefundNotifyUrl),
-                CertificatePath = await settingProvider.GetOrNullAsync(WeChatPaySettings.CertificatePath),
+                CertificateBlobContainerName = await settingProvider.GetOrNullAsync(WeChatPaySettings.CertificateBlobContainerName),
+                CertificateBlobName = await settingProvider.GetOrNullAsync(WeChatPaySettings.CertificateBlobName),
                 CertificateSecret = await settingProvider.GetOrNullAsync(WeChatPaySettings.CertificateSecret)
             };
         }

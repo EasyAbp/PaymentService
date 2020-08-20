@@ -24,10 +24,11 @@ namespace EasyAbp.PaymentService.WeChatPay.Settings
                 new SettingDefinition(WeChatPaySettings.ApiKey),
                 new SettingDefinition(WeChatPaySettings.IsSandBox, "false"),
                 new SettingDefinition(WeChatPaySettings.NotifyUrl,
-                    _configuration["App:SelfUrl"]?.EnsureEndsWith('/') + "WeChatPay/Notify"),
+                    _configuration["App:SelfUrl"]?.EnsureEndsWith('/') + "wechat-pay/notify"),
                 new SettingDefinition(WeChatPaySettings.RefundNotifyUrl,
-                    _configuration["App:SelfUrl"]?.EnsureEndsWith('/') + "WeChatPay/RefundNotify"),
-                new SettingDefinition(WeChatPaySettings.CertificatePath),
+                    _configuration["App:SelfUrl"]?.EnsureEndsWith('/') + "wechat-pay/refund-notify"),
+                new SettingDefinition(WeChatPaySettings.CertificateBlobContainerName),
+                new SettingDefinition(WeChatPaySettings.CertificateBlobName),
                 new SettingDefinition(WeChatPaySettings.CertificateSecret)
             );
         }
