@@ -138,19 +138,16 @@ namespace EasyAbp.PaymentService.WeChatPay
 
         public override async Task OnCancelStartedAsync(Payment payment)
         {
-            _unitOfWorkManager.Current.OnCompleted(async () =>
-            {
-                // Just try to close it.
-                await _serviceProviderPayService.CloseOrderAsync(
-                    appId: payment.GetProperty<string>("appid"),
-                    mchId: payment.PayeeAccount,
-                    subAppId: null,
-                    subMchId: null,
-                    outTradeNo: payment.Id.ToString("N")
-                );
-            });
-
             await _paymentManager.CompleteCancelAsync(payment);
+            
+            // Just try to close it.
+            await _serviceProviderPayService.CloseOrderAsync(
+                appId: payment.GetProperty<string>("appid"),
+                mchId: payment.PayeeAccount,
+                subAppId: null,
+                subMchId: null,
+                outTradeNo: payment.Id.ToString("N")
+            );
         }
 
         public override Task OnRefundStartedAsync(Payment payment, IEnumerable<Refund> refunds, string displayReason = null)
