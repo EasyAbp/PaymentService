@@ -67,10 +67,12 @@ steps:
     script: | 
        dotnet ef database update --project samples/PaymentServiceSample/aspnet-core/src/PaymentServiceSample.EntityFrameworkCore.DbMigrations/PaymentServiceSample.EntityFrameworkCore.DbMigrations.csproj -s samples/PaymentServiceSample/aspnet-core/src/PaymentServiceSample.Web/PaymentServiceSample.Web.csproj
 
-- task: DotNetCoreCLI@2
+- task: CmdLine@2
   inputs:
-    command: 'run'
-    projects: 'samples/PaymentServiceSample/aspnet-core/src/PaymentServiceSample.DbMigrator/PaymentServiceSample.DbMigrator.csproj'
+    script: |
+      cd samples/PaymentServiceSample/aspnet-core/src/PaymentServiceSample.DbMigrator/PaymentServiceSample.DbMigrator.csproj
+      
+      dotnet run
 
 - task: Docker@2
   displayName: 'build and push docker'
