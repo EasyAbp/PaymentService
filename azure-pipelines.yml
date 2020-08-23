@@ -59,13 +59,13 @@ steps:
   displayName: 'drop database'
   inputs:
     script: |
-      dotnet ef database drop --project samples/PaymentServiceSample/aspnet-core/src/PaymentServiceSample.EntityFrameworkCore/PaymentServiceSample.EntityFrameworkCore.csproj -f
+      dotnet ef database drop --project samples/PaymentServiceSample/aspnet-core/src/PaymentServiceSample.EntityFrameworkCore.DbMigrations/PaymentServiceSample.EntityFrameworkCore.DbMigrations.csproj -s samples/PaymentServiceSample/aspnet-core/src/PaymentServiceSample.Web/PaymentServiceSample.Web.csproj -f
       
 - task: CmdLine@2
   displayName: 'update database'
   inputs:
     script: | 
-      dotnet ef database update --project samples/PaymentServiceSample/aspnet-core/src/PaymentServiceSample.EntityFrameworkCore/PaymentServiceSample.EntityFrameworkCore.csproj
+       dotnet ef database update --project samples/PaymentServiceSample/aspnet-core/src/PaymentServiceSample.EntityFrameworkCore.DbMigrations/PaymentServiceSample.EntityFrameworkCore.DbMigrations.csproj -s samples/PaymentServiceSample/aspnet-core/src/PaymentServiceSample.Web/PaymentServiceSample.Web.csproj
 
 - task: DotNetCoreCLI@2
   inputs:
