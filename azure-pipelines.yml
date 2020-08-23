@@ -70,7 +70,7 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      cd samples/PaymentServiceSample/aspnet-core/src/PaymentServiceSample.DbMigrator/PaymentServiceSample.DbMigrator.csproj
+      cd samples/PaymentServiceSample/aspnet-core/src/PaymentServiceSample.DbMigrator
       
       dotnet run
 
