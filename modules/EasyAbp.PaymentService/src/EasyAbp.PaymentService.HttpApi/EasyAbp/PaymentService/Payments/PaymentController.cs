@@ -45,7 +45,7 @@ namespace EasyAbp.PaymentService.Payments
             return _service.PayAsync(id, input);
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route("{id}/cancel")]
         public virtual Task<PaymentDto> CancelAsync(Guid id)
         {
