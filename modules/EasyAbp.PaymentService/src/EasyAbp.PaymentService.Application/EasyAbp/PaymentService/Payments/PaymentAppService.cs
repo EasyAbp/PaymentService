@@ -108,6 +108,11 @@ namespace EasyAbp.PaymentService.Payments
         {
             var payment = await _repository.GetAsync(id);
 
+            if (payment.PendingRefundAmount <= decimal.Zero)
+            {
+                throw new PaymentIsInUnexpectedStageException(payment.Id);
+            }
+
             var refunds = await _refundRepository.GetOngoingRefundListAsync(payment.Id);
 
             await _paymentManager.RollbackRefundAsync(payment, refunds);
