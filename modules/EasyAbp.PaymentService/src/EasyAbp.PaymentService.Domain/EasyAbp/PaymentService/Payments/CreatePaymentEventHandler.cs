@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Guids;
+using Volo.Abp.MultiTenancy;
 using Volo.Abp.ObjectExtending;
 using Volo.Abp.Uow;
 
@@ -12,17 +13,20 @@ namespace EasyAbp.PaymentService.Payments
 {
     public class CreatePaymentEventHandler : ICreatePaymentEventHandler, ITransientDependency
     {
+        private readonly ICurrentTenant _currentTenant;
         private readonly IPaymentRepository _paymentRepository;
         private readonly IPaymentServiceResolver _paymentServiceResolver;
         private readonly IServiceProvider _serviceProvider;
         private readonly IGuidGenerator _guidGenerator;
 
         public CreatePaymentEventHandler(
+            ICurrentTenant currentTenant,
             IPaymentRepository paymentRepository,
             IPaymentServiceResolver paymentServiceResolver,
             IServiceProvider serviceProvider,
             IGuidGenerator guidGenerator)
         {
+            _currentTenant = currentTenant;
             _paymentRepository = paymentRepository;
             _paymentServiceResolver = paymentServiceResolver;
             _serviceProvider = serviceProvider;
@@ -32,6 +36,8 @@ namespace EasyAbp.PaymentService.Payments
         [UnitOfWork(true)]
         public virtual async Task HandleEventAsync(CreatePaymentEto eventData)
         {
+            using var changeTenant = _currentTenant.Change(eventData.TenantId);
+
             var providerType = _paymentServiceResolver.GetProviderTypeOrDefault(eventData.PaymentMethod) ??
                                throw new UnknownPaymentMethodException(eventData.PaymentMethod);
 
