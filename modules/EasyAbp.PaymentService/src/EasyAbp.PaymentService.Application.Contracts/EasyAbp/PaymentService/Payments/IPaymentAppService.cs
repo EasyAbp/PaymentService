@@ -17,5 +17,7 @@ namespace EasyAbp.PaymentService.Payments
         Task<PaymentDto> PayAsync(Guid id, PayInput input);
         
         Task<PaymentDto> CancelAsync(Guid id);
+
+        Task<PaymentDto> RefundRollbackAsync(Guid id);
     }
 }

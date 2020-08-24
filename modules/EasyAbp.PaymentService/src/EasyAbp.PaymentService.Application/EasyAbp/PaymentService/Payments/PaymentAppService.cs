@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using EasyAbp.PaymentService.Authorization;
 using EasyAbp.PaymentService.Localization;
 using EasyAbp.PaymentService.Payments.Dtos;
+using EasyAbp.PaymentService.Refunds;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Localization;
 using Volo.Abp.Application.Dtos;
@@ -13,6 +14,7 @@ using Volo.Abp.Users;
 
 namespace EasyAbp.PaymentService.Payments
 {
+    [Authorize]
     public class PaymentAppService : ReadOnlyAppService<Payment, PaymentDto, Guid, PagedAndSortedResultRequestDto>,
         IPaymentAppService
     {
@@ -22,17 +24,20 @@ namespace EasyAbp.PaymentService.Payments
         private readonly IPaymentManager _paymentManager;
         private readonly IStringLocalizer<PaymentServiceResource> _stringLocalizer;
         private readonly IPaymentServiceResolver _paymentServiceResolver;
+        private readonly IRefundRepository _refundRepository;
         private readonly IPaymentRepository _repository;
 
         public PaymentAppService(
             IPaymentManager paymentManager,
             IStringLocalizer<PaymentServiceResource> stringLocalizer,
             IPaymentServiceResolver paymentServiceResolver,
+            IRefundRepository refundRepository,
             IPaymentRepository repository) : base(repository)
         {
             _paymentManager = paymentManager;
             _stringLocalizer = stringLocalizer;
             _paymentServiceResolver = paymentServiceResolver;
+            _refundRepository = refundRepository;
             _repository = repository;
         }
 
@@ -48,6 +53,7 @@ namespace EasyAbp.PaymentService.Payments
             return base.GetListAsync(input);
         }
 
+        [AllowAnonymous]
         public virtual Task<ListResultDto<PaymentMethodDto>> GetListPaymentMethod()
         {
             var paymentMethods = _paymentServiceResolver.GetPaymentMethods().Select(paymentMethod =>
@@ -61,7 +67,6 @@ namespace EasyAbp.PaymentService.Payments
             return Task.FromResult(new ListResultDto<PaymentMethodDto>(paymentMethods));
         }
 
-        [Authorize]
         public virtual async Task<PaymentDto> PayAsync(Guid id, PayInput input)
         {
             var payment = await _repository.GetAsync(id);
@@ -94,6 +99,18 @@ namespace EasyAbp.PaymentService.Payments
             }
 
             await _paymentManager.StartCancelAsync(payment);
+
+            return MapToGetOutputDto(payment);
+        }
+
+        [Authorize(PaymentServicePermissions.Payments.Manage)]
+        public async Task<PaymentDto> RefundRollbackAsync(Guid id)
+        {
+            var payment = await _repository.GetAsync(id);
+
+            var refunds = await _refundRepository.GetOngoingRefundListAsync(payment.Id);
+
+            await _paymentManager.RollbackRefundAsync(payment, refunds);
 
             return MapToGetOutputDto(payment);
         }

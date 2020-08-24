@@ -51,5 +51,12 @@ namespace EasyAbp.PaymentService.Payments
         {
             return _service.CancelAsync(id);
         }
+
+        [HttpPost]
+        [Route("{id}/refund/rollback")]
+        public virtual Task<PaymentDto> RefundRollbackAsync(Guid id)
+        {
+            return _service.RefundRollbackAsync(id);
+        }
     }
 }
