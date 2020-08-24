@@ -42,6 +42,8 @@ namespace EasyAbp.PaymentService.WeChatPay
 
             if (dict.GetOrDefault("return_code") != "SUCCESS" || dict.GetOrDefault("device_info") != PaymentServiceWeChatPayConsts.DeviceInfo)
             {
+                context.IsSuccess = false;
+
                 return;
             }
 
@@ -67,6 +69,8 @@ namespace EasyAbp.PaymentService.WeChatPay
             {
                 await _paymentManager.StartCancelAsync(payment);
             }
+            
+            context.IsSuccess = true;
         }
         
         protected virtual async Task<PaymentRecord> RecordPaymentResultAsync(Dictionary<string, string> dict, Guid paymentId)

@@ -61,6 +61,8 @@ namespace EasyAbp.PaymentService.WeChatPay
 
             if (payment == null || refunds.IsNullOrEmpty())
             {
+                context.IsSuccess = false;
+
                 return;
             }
             
@@ -82,6 +84,8 @@ namespace EasyAbp.PaymentService.WeChatPay
             {
                 await _paymentManager.RollbackRefundAsync(payment, refunds);
             }
+
+            context.IsSuccess = true;
         }
     }
 }
