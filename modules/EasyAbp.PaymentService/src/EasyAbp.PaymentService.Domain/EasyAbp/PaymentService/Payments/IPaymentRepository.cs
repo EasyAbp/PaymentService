@@ -6,6 +6,6 @@ namespace EasyAbp.PaymentService.Payments
 {
     public interface IPaymentRepository : IRepository<Payment, Guid>
     {
-        Task<Payment> FindPaymentInProgressByPaymentItem(string paymentItemType, Guid paymentItemKey);
+        Task<Payment> FindPaymentInProgressByPaymentItem(string paymentItemType, string paymentItemKey);
     }
 }

@@ -7,7 +7,7 @@ namespace EasyAbp.PaymentService.Payments
     {
         string ItemType { get; }
         
-        Guid ItemKey { get; }
+        string ItemKey { get; }
         
         decimal OriginalPaymentAmount { get; }
 

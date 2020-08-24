@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using EasyAbp.PaymentService.Payments;
@@ -47,7 +47,7 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
             {
                 var changedBalance = GetChangedBalance(item);
                 
-                var account = await _accountRepository.GetAsync(item.ItemKey);
+                var account = await _accountRepository.GetAsync(Guid.Parse(item.ItemKey));
 
                 var configuration = _accountGroupConfigurationProvider.Get(account.AccountGroupName);
 

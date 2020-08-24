@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.Prepayment.Accounts;
@@ -31,7 +32,7 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
 
             foreach (var item in payment.PaymentItems.Where(item => item.ItemType == PrepaymentConsts.TopUpPaymentItemType))
             {
-                var account = await _accountRepository.GetAsync(item.ItemKey);
+                var account = await _accountRepository.GetAsync(Guid.Parse(item.ItemKey));
                 
                 account.SetPendingTopUpPaymentId(null);
 

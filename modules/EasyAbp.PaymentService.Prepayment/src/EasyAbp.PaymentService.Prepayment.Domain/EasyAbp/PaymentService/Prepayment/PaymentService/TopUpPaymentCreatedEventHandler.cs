@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.Prepayment.Accounts;
@@ -33,7 +34,7 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
 
             foreach (var item in items)
             {
-                var accountId = item.ItemKey;
+                var accountId = Guid.Parse(item.ItemKey);
 
                 using var currentTenant = _currentTenant.Change(payment.TenantId);
 

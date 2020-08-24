@@ -19,7 +19,7 @@ namespace EasyAbp.PaymentService.Payments
             return base.WithDetails().Include(x => x.PaymentItems);
         }
 
-        public virtual async Task<Payment> FindPaymentInProgressByPaymentItem(string paymentItemType, Guid paymentItemKey)
+        public virtual async Task<Payment> FindPaymentInProgressByPaymentItem(string paymentItemType, string paymentItemKey)
         {
             return await base.WithDetails()
                 .Where(payment => !payment.CompletionTime.HasValue && !payment.CanceledTime.HasValue)

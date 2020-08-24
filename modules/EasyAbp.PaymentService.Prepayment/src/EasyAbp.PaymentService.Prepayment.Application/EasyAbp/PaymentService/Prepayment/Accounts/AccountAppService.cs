@@ -149,7 +149,7 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
                 PaymentItems = new List<CreatePaymentItemEto>(new []{new CreatePaymentItemEto
                 {
                     ItemType = PrepaymentConsts.TopUpPaymentItemType,
-                    ItemKey = account.Id,
+                    ItemKey = account.Id.ToString(),
                     OriginalPaymentAmount = input.Amount
                 }})
             });

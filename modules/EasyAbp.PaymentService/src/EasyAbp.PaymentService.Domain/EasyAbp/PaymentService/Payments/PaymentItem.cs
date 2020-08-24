@@ -10,7 +10,7 @@ namespace EasyAbp.PaymentService.Payments
         [NotNull]
         public virtual string ItemType { get; protected set; }
         
-        public virtual Guid ItemKey { get; protected set; }
+        public virtual string ItemKey { get; protected set; }
 
         public virtual decimal OriginalPaymentAmount { get; protected set; }
 
@@ -32,7 +32,7 @@ namespace EasyAbp.PaymentService.Payments
         public PaymentItem(
             Guid id,
             [NotNull] string itemType,
-            Guid itemKey,
+            [NotNull] string itemKey,
             decimal originalPaymentAmount
         ) :base(id)
         {

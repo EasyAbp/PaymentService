@@ -75,7 +75,7 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
             }
 
             if (payment.PaymentItems.Any(x =>
-                x.ItemType == PrepaymentConsts.TopUpPaymentItemType && x.ItemKey == accountId))
+                x.ItemType == PrepaymentConsts.TopUpPaymentItemType && x.ItemKey == accountId.ToString()))
             {
                 throw new SelfTopUpException();
             }

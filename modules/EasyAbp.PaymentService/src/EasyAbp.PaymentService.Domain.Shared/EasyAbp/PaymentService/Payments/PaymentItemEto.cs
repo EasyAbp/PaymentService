@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Volo.Abp.Data;
 
@@ -12,8 +12,6 @@ namespace EasyAbp.PaymentService.Payments
         public string ItemType { get; set; }
 
         public string ItemKey { get; set; }
-
-        public string Currency { get; set; }
 
         public decimal OriginalPaymentAmount { get; set; }
 

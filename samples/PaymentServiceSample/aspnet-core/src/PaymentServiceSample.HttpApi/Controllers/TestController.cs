@@ -42,7 +42,7 @@ namespace PaymentServiceSample.Controllers
                     new CreatePaymentItemEto
                     {
                         ItemType = "Test",
-                        ItemKey = Guid.NewGuid(),
+                        ItemKey = Guid.NewGuid().ToString(),
                         OriginalPaymentAmount = 0
                     }
                 }),

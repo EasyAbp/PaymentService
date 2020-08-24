@@ -9,8 +9,6 @@ namespace EasyAbp.PaymentService.Payments.Dtos
 
         public string ItemKey { get; set; }
 
-        public string Currency { get; set; }
-
         public decimal OriginalPaymentAmount { get; set; }
 
         public decimal PaymentDiscount { get; set; }
