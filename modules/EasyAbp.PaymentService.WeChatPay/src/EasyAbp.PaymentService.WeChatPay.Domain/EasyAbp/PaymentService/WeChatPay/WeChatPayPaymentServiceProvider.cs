@@ -140,14 +140,26 @@ namespace EasyAbp.PaymentService.WeChatPay
         {
             await _paymentManager.CompleteCancelAsync(payment);
             
-            // Just try to close it.
-            await _serviceProviderPayService.CloseOrderAsync(
+            var outTradeNo = payment.Id.ToString("N");
+
+            var orderQueryResult = await _serviceProviderPayService.CloseOrderAsync(
                 appId: payment.GetProperty<string>("appid"),
                 mchId: payment.PayeeAccount,
                 subAppId: null,
                 subMchId: null,
-                outTradeNo: payment.Id.ToString("N")
+                outTradeNo: outTradeNo
             );
+            
+            var dict = orderQueryResult.SelectSingleNode("xml").ToDictionary() ?? throw new NullReferenceException();
+            var resultCode = dict.GetOrDefault("result_code");
+            var errCode = dict.GetOrDefault("err_code");
+            var errCodeDes = dict.GetOrDefault("err_code_des");
+
+            // ignore the "ORDERCLOSED" status.
+            if (resultCode != "SUCCESS" && errCode != "ORDERCLOSED")
+            {
+                throw new WeChatPayBusinessErrorException(outTradeNo, errCode, errCodeDes);
+            }
         }
 
         public override Task OnRefundStartedAsync(Payment payment, IEnumerable<Refund> refunds, string displayReason = null)
