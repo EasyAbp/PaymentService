@@ -7,7 +7,7 @@ namespace EasyAbp.PaymentService.Payments.Dtos
     {
         public string ItemType { get; set; }
 
-        public Guid ItemKey { get; set; }
+        public string ItemKey { get; set; }
 
         public string Currency { get; set; }
 

@@ -16,7 +16,6 @@ $(function () {
         columnDefs: [
             { data: "itemType" },
             { data: "itemKey" },
-            { data: "currency" },
             { data: "originalPaymentAmount" },
             { data: "paymentDiscount" },
             { data: "actualPaymentAmount" },

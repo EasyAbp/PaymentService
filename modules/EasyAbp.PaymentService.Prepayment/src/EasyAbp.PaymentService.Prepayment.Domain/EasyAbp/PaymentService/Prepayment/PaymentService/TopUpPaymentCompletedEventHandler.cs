@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using EasyAbp.PaymentService.Payments;
@@ -58,7 +58,7 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
 
                 await _transactionRepository.InsertAsync(transaction, true);
                 
-                if (item.Currency != _accountGroupConfigurationProvider.Get(account.AccountGroupName).Currency)
+                if (payment.Currency != _accountGroupConfigurationProvider.Get(account.AccountGroupName).Currency)
                 {
                     throw new CurrencyNotSupportedException(payment.Currency);
                 }
