@@ -41,7 +41,6 @@ namespace PaymentServiceSample.Controllers
                 {
                     new CreatePaymentItemEto
                     {
-                        Currency = "CNY",
                         ItemType = "Test",
                         ItemKey = Guid.NewGuid(),
                         OriginalPaymentAmount = 0

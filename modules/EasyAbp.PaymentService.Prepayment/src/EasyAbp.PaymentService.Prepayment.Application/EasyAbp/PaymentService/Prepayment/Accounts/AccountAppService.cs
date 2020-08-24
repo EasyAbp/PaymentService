@@ -150,7 +150,6 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
                 {
                     ItemType = PrepaymentConsts.TopUpPaymentItemType,
                     ItemKey = account.Id,
-                    Currency = configuration.Currency,
                     OriginalPaymentAmount = input.Amount
                 }})
             });

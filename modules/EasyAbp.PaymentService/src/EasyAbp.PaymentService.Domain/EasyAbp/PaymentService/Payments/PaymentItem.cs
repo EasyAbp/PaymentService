@@ -11,10 +11,7 @@ namespace EasyAbp.PaymentService.Payments
         public virtual string ItemType { get; protected set; }
         
         public virtual Guid ItemKey { get; protected set; }
-        
-        [NotNull]
-        public virtual string Currency { get; protected set; }
-        
+
         public virtual decimal OriginalPaymentAmount { get; protected set; }
 
         public virtual decimal PaymentDiscount { get; protected set; }
@@ -36,13 +33,11 @@ namespace EasyAbp.PaymentService.Payments
             Guid id,
             [NotNull] string itemType,
             Guid itemKey,
-            [NotNull] string currency,
             decimal originalPaymentAmount
         ) :base(id)
         {
             ItemType = itemType;
             ItemKey = itemKey;
-            Currency = currency;
             OriginalPaymentAmount = originalPaymentAmount;
             ActualPaymentAmount = originalPaymentAmount;
 

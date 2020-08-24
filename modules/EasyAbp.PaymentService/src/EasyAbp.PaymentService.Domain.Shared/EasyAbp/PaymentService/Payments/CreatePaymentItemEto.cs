@@ -11,8 +11,6 @@ namespace EasyAbp.PaymentService.Payments
         
         public Guid ItemKey { get; set; }
 
-        public string Currency { get; set; }
-
         public decimal OriginalPaymentAmount { get; set; }
         
         public Dictionary<string, object> ExtraProperties { get; set; } = new Dictionary<string, object>();

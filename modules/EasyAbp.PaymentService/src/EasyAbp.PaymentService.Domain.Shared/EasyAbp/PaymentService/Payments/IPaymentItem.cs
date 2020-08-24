@@ -9,8 +9,6 @@ namespace EasyAbp.PaymentService.Payments
         
         Guid ItemKey { get; }
         
-        string Currency { get; }
-        
         decimal OriginalPaymentAmount { get; }
 
         decimal PaymentDiscount { get; }

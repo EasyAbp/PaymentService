@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Guids;
 using Volo.Abp.MultiTenancy;
@@ -47,18 +46,13 @@ namespace EasyAbp.PaymentService.Payments
             var paymentItems = eventData.PaymentItems.Select(itemEto =>
                 {
                     var item = new PaymentItem(_guidGenerator.Create(), itemEto.ItemType, itemEto.ItemKey,
-                        itemEto.Currency, itemEto.OriginalPaymentAmount);
+                        itemEto.OriginalPaymentAmount);
 
                     itemEto.MapExtraPropertiesTo(item, MappingPropertyDefinitionChecks.None);
 
                     return item;
                 }
             ).ToList();
-
-            if (paymentItems.Select(item => item.Currency).Any(c => c != eventData.Currency))
-            {
-                throw new MultiCurrencyNotSupportedException();
-            }
 
             if (await HasDuplicatePaymentItemInProgressAsync(paymentItems))
             {

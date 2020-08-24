@@ -103,7 +103,6 @@ We have launched an online demo for this module: [https://pay.samples.easyabp.io
             {
                 ItemType = "MyCustomKeyword", // It is just a sample and you can customize it yourself
                 ItemKey = order.Id,
-                Currency = "CNY",
                 OriginalPaymentAmount = order.Price
             }).ToList()
         });
