@@ -31,10 +31,20 @@
     <Content Remove="Pages\**\*.css" />
     <Content Remove="Pages\**\*.js" />
     <Content Remove="wwwroot\**\*.*" />
+    <Content Update="Pages\PaymentService\Refunds\RefundItem\Index.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Pages\PaymentService\Refunds\RefundItem\Index.cshtml.cs">
+      <DependentUpon>Index.cshtml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>

@@ -14,6 +14,7 @@ namespace EasyAbp.PaymentService
             CreateMap<Payment, PaymentEto>();
             CreateMap<PaymentItem, PaymentItemEto>();
             CreateMap<Refund, RefundEto>();
+            CreateMap<RefundItem, RefundItemEto>();
         }
     }
 }

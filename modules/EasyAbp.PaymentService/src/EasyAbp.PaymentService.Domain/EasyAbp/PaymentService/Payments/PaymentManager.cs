@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EasyAbp.PaymentService.Refunds;
+using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Services;
 using Volo.Abp.EventBus.Distributed;
 using Volo.Abp.ObjectMapping;
@@ -90,68 +91,93 @@ namespace EasyAbp.PaymentService.Payments
             await _paymentRepository.UpdateAsync(payment, true);
         }
 
-        public virtual async Task StartRefundAsync(Payment payment, IEnumerable<RefundInfoModel> refundInfos, string displayReason = null)
+        public virtual async Task StartRefundAsync(Payment payment, CreateRefundInput input)
         {
             var provider = GetProvider(payment);
+
+            input.RefundItems.ForEach(x => x.RefundAmount.EnsureIsNonNegative());
             
-            var refundInfoModels = refundInfos.ToList();
+            var refundAmount = input.RefundItems.Sum(x => x.RefundAmount);
+
+            refundAmount.EnsureIsNonNegative();
+
+            var paymentItemIds = input.RefundItems.Select(x => x.PaymentItemId).ToList();
+
+            var exceptItemIds = paymentItemIds.Except(payment.PaymentItems.Select(x => x.Id)).ToList();
             
-            payment.StartRefund(refundInfoModels);
+            if (exceptItemIds.Any())
+            {
+                throw new EntityNotFoundException(typeof(PaymentItem), exceptItemIds);
+            }
+
+            if (paymentItemIds.Count != paymentItemIds.Distinct().Count())
+            {
+                throw new DuplicatePaymentItemIdException();
+            }
+
+            if (await _refundRepository.FindByPaymentIdAsync(payment.Id) != null)
+            {
+                throw new AnotherRefundIsInProgressException(payment.Id);
+            }
+
+            var refund = CreateRefund(payment, input);
+
+            await _refundRepository.InsertAsync(refund, true);
+            
+            payment.StartRefund(refund);
             
             await _paymentRepository.UpdateAsync(payment, true);
 
-            var refunds = new List<Refund>();
-
-            foreach (var refund in refundInfoModels.Select(model => new Refund(
-                id: GuidGenerator.Create(),
-                tenantId: CurrentTenant.Id,
-                paymentId: payment.Id,
-                paymentItemId: model.PaymentItem.Id,
-                refundPaymentMethod: payment.PaymentMethod,
-                externalTradingCode: null,
-                currency: payment.Currency,
-                refundAmount: model.RefundAmount,
-                customerRemark: model.CustomerRemark,
-                staffRemark: model.StaffRemark
-            )))
-            {
-                refunds.Add(await _refundRepository.InsertAsync(refund, true));
-            }
-
-            await provider.OnRefundStartedAsync(payment, refunds, displayReason);
+            await provider.OnRefundStartedAsync(payment, refund);
         }
 
-        public virtual async Task CompleteRefundAsync(Payment payment, IEnumerable<Refund> refunds)
+        private Refund CreateRefund(IPaymentEntity payment, CreateRefundInput input)
         {
-            _unitOfWorkManager.Current.OnCompleted(async () =>
-            {
-                await _distributedEventBus.PublishAsync(new PaymentRefundCompletedEto
-                {
-                    Payment = _objectMapper.Map<Payment, PaymentEto>(payment),
-                    Refunds = _objectMapper.Map<IEnumerable<Refund>, IEnumerable<RefundEto>>(refunds)
-                });
-            });
-            
+            // Todo: other payment methods?
+            var paymentMethod = payment.PaymentMethod;
+            var currency = payment.Currency;
+
+            var refundAmount = input.RefundItems.Sum(x => x.RefundAmount);
+
+            var refundItems = input.RefundItems.Select(createRefundItemEto => new RefundItem(GuidGenerator.Create(),
+                createRefundItemEto.PaymentItemId, createRefundItemEto.RefundAmount, createRefundItemEto.CustomerRemark,
+                createRefundItemEto.StaffRemark)).ToList();
+
+            return new Refund(GuidGenerator.Create(), CurrentTenant.Id, payment.Id, paymentMethod, null, currency,
+                refundAmount, input.DisplayReason, input.CustomerRemark, input.StaffRemark, refundItems);
+        }
+
+        public virtual async Task CompleteRefundAsync(Payment payment, Refund refund)
+        {
             payment.CompleteRefund();
                 
             await _paymentRepository.UpdateAsync(payment, true);
             
-            foreach (var refund in refunds)
-            {
-                refund.CompleteRefund(_clock.Now);
+            refund.CompleteRefund(_clock.Now);
 
-                await _refundRepository.UpdateAsync(refund, true);
-            }
+            await _refundRepository.UpdateAsync(refund, true);
+
+            var paymentEto = _objectMapper.Map<Payment, PaymentEto>(payment);
+            var refundEto = _objectMapper.Map<Refund, RefundEto>(refund);
+            
+            _unitOfWorkManager.Current.OnCompleted(async () =>
+            {
+                await _distributedEventBus.PublishAsync(new PaymentRefundCompletedEto
+                {
+                    Payment = paymentEto,
+                    Refund = refundEto
+                });
+            });
         }
 
-        public virtual async Task RollbackRefundAsync(Payment payment, IEnumerable<Refund> refunds)
+        public virtual async Task RollbackRefundAsync(Payment payment, Refund refund)
         {
             _unitOfWorkManager.Current.OnCompleted(async () =>
             {
                 await _distributedEventBus.PublishAsync(new PaymentRefundRollbackEto
                 {
                     Payment = _objectMapper.Map<Payment, PaymentEto>(payment),
-                    Refunds = _objectMapper.Map<IEnumerable<Refund>, IEnumerable<RefundEto>>(refunds)
+                    Refund = _objectMapper.Map<Refund, RefundEto>(refund)
                 });
             });
 
@@ -159,12 +185,9 @@ namespace EasyAbp.PaymentService.Payments
             
             await _paymentRepository.UpdateAsync(payment, true);
 
-            foreach (var refund in refunds)
-            {
-                refund.CancelRefund(_clock.Now);
+            refund.CancelRefund(_clock.Now);
 
-                await _refundRepository.UpdateAsync(refund, true);
-            }
+            await _refundRepository.UpdateAsync(refund, true);
         }
 
         protected virtual IPaymentServiceProvider GetProvider(IPayment payment)

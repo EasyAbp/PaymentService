@@ -13,8 +13,9 @@ namespace EasyAbp.PaymentService.EntityFrameworkCore
          * public DbSet<Question> Questions { get; set; }
          */
         public DbSet<Payment> Payments { get; set; }
-        public DbSet<Refund> Refunds { get; set; }
         public DbSet<PaymentItem> PaymentItems { get; set; }
+        public DbSet<Refund> Refunds { get; set; }
+        public DbSet<RefundItem> RefundItems { get; set; }
 
         public PaymentServiceDbContext(DbContextOptions<PaymentServiceDbContext> options) 
             : base(options)

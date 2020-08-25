@@ -12,31 +12,34 @@ $(function () {
         autoWidth: false,
         scrollCollapse: true,
         order: [[1, "asc"]],
-        ajax: abp.libs.datatables.createAjax(service.getList),
+        ajax: function (requestData, callback, settings) {
+            if (callback) {
+                service.get(refundId).then(function (result) {
+                    callback({
+                        recordsTotal: result.refundItems.length,
+                        recordsFiltered: result.refundItems.length,
+                        data: result.refundItems
+                    });
+                });
+            }
+        },
         columnDefs: [
             {
                 rowAction: {
                     items:
                         [
                             {
-                                text: l('RefundItem'),
+                                text: l('Detail'),
                                 action: function (data) {
-                                    document.location.href = document.location.origin + '/PaymentService/Refunds/RefundItem?RefundId=' + data.record.id;
                                 }
                             },
                         ]
                 }
             },
-            { data: "paymentId" },
-            { data: "refundPaymentMethod" },
-            { data: "externalTradingCode" },
-            { data: "currency" },
+            { data: "paymentItemId" },
             { data: "refundAmount" },
-            { data: "displayReason" },
             { data: "customerRemark" },
             { data: "staffRemark" },
-            { data: "completedTime" },
-            { data: "canceledTime" },
         ]
     }));
 });

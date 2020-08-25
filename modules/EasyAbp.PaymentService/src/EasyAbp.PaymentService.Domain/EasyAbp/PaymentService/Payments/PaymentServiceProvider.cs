@@ -17,7 +17,7 @@ namespace EasyAbp.PaymentService.Payments
             return Task.CompletedTask;
         }
 
-        public virtual Task OnRefundStartedAsync(Payment payment, IEnumerable<Refund> refunds, string displayReason = null)
+        public virtual Task OnRefundStartedAsync(Payment payment, Refund refund)
         {
             return Task.CompletedTask;
         }

@@ -15,10 +15,10 @@ namespace EasyAbp.PaymentService.Payments
 
         Task CompleteCancelAsync(Payment payment);
 
-        Task StartRefundAsync(Payment payment, IEnumerable<RefundInfoModel> refundInfos, string displayReason = null);
+        Task StartRefundAsync(Payment payment, CreateRefundInput input);
         
-        Task CompleteRefundAsync(Payment payment, IEnumerable<Refund> refunds);
+        Task CompleteRefundAsync(Payment payment, Refund refund);
         
-        Task RollbackRefundAsync(Payment payment, IEnumerable<Refund> refunds);
+        Task RollbackRefundAsync(Payment payment, Refund refund);
     }
 }

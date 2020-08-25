@@ -21,6 +21,7 @@ $(function () {
                             {
                                 text: l('PaymentItem'),
                                 action: function (data) {
+                                    document.location.href = document.location.origin + '/PaymentService/Payments/PaymentItem?PaymentId=' + data.record.id;
                                 }
                             }
                         ]

@@ -2,7 +2,7 @@ $(function () {
 
     var l = abp.localization.getResource('EasyAbpPaymentService');
 
-    var service = easyAbp.paymentService.payments.PaymentItem;
+    var service = easyAbp.paymentService.payments.payment;
 
     var dataTable = $('#PaymentItemTable').DataTable(abp.libs.datatables.normalizeConfiguration({
         processing: true,
@@ -12,8 +12,30 @@ $(function () {
         autoWidth: false,
         scrollCollapse: true,
         order: [[1, "asc"]],
-        ajax: abp.libs.datatables.createAjax(service.getList),
+        ajax: function (requestData, callback, settings) {
+            if (callback) {
+                service.get(paymentId).then(function (result) {
+                    callback({
+                        recordsTotal: result.paymentItems.length,
+                        recordsFiltered: result.paymentItems.length,
+                        data: result.paymentItems
+                    });
+                });
+            }
+        },
         columnDefs: [
+            {
+                rowAction: {
+                    items:
+                        [
+                            {
+                                text: l('Detail'),
+                                action: function (data) {
+                                }
+                            }
+                        ]
+                }
+            },
             { data: "itemType" },
             { data: "itemKey" },
             { data: "originalPaymentAmount" },

@@ -1,9 +1,10 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
+using Volo.Abp.Application.Dtos;
 
-namespace EasyAbp.PaymentService.Payments
+namespace EasyAbp.PaymentService.Refunds.Dtos
 {
-    [Serializable]
-    public class RefundPaymentItemEto
+    public class RefundItemDto : FullAuditedEntityDto<Guid>, IRefundItem
     {
         public Guid PaymentItemId { get; set; }
         

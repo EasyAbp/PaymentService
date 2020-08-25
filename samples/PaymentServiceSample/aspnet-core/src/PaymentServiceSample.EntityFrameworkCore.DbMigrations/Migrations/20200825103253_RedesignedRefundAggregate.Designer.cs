@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PaymentServiceSample.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
@@ -10,9 +11,10 @@ using Volo.Abp.EntityFrameworkCore;
 namespace PaymentServiceSample.Migrations
 {
     [DbContext(typeof(PaymentServiceSampleMigrationsDbContext))]
-    partial class PaymentServiceSampleMigrationsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200825103253_RedesignedRefundAggregate")]
+    partial class RedesignedRefundAggregate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -411,43 +413,34 @@ namespace PaymentServiceSample.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreationTime")
-                        .HasColumnName("CreationTime")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("CreatorId")
-                        .HasColumnName("CreatorId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CustomerRemark")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("DeleterId")
-                        .HasColumnName("DeleterId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("DeletionTime")
-                        .HasColumnName("DeletionTime")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("IsDeleted")
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnName("LastModificationTime")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("LastModifierId")
-                        .HasColumnName("LastModifierId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("PaymentItemId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("RefundAmount")
-                        .HasColumnType("decimal(20,8)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid?>("RefundId")
                         .HasColumnType("uniqueidentifier");
@@ -459,7 +452,7 @@ namespace PaymentServiceSample.Migrations
 
                     b.HasIndex("RefundId");
 
-                    b.ToTable("EasyAbpPaymentServiceRefundItems");
+                    b.ToTable("RefundItem");
                 });
 
             modelBuilder.Entity("EasyAbp.PaymentService.WeChatPay.PaymentRecords.PaymentRecord", b =>

@@ -7,7 +7,7 @@ namespace EasyAbp.PaymentService.Refunds
 {
     public interface IRefundAppService :
         IReadOnlyAppService< 
-            RefundDto, 
+            Dtos.RefundDto, 
             Guid, 
             PagedAndSortedResultRequestDto>
     {

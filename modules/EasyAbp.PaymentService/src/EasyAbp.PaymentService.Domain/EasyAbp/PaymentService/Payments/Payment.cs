@@ -61,20 +61,10 @@ namespace EasyAbp.PaymentService.Payments
             UserId = userId;
             PaymentMethod = paymentMethod;
             Currency = currency;
-            OriginalPaymentAmount = EnsureAmountIsNotLessThanZero(originalPaymentAmount);
-            ActualPaymentAmount = EnsureAmountIsNotLessThanZero(originalPaymentAmount);
+            OriginalPaymentAmount = originalPaymentAmount.EnsureIsNonNegative();
+            ActualPaymentAmount = originalPaymentAmount.EnsureIsNonNegative();
             PaymentItems = paymentItems;
             RefundAmount = decimal.Zero;
-        }
-
-        private static decimal EnsureAmountIsNotLessThanZero(decimal amount)
-        {
-            if (amount < decimal.Zero)
-            {
-                throw new UnexpectedAmountException(amount);
-            }
-            
-            return amount;
         }
 
         public void SetPayeeAccount([NotNull] string payeeAccount)
@@ -95,8 +85,8 @@ namespace EasyAbp.PaymentService.Payments
 
             paymentItem.SetPaymentDiscount(paymentDiscount);
             
-            PaymentDiscount = EnsureAmountIsNotLessThanZero(PaymentItems.Sum(item => item.PaymentDiscount));
-            ActualPaymentAmount = EnsureAmountIsNotLessThanZero(OriginalPaymentAmount - paymentDiscount);
+            PaymentDiscount = PaymentItems.Sum(item => item.PaymentDiscount).EnsureIsNonNegative();
+            ActualPaymentAmount = (OriginalPaymentAmount - paymentDiscount).EnsureIsNonNegative();
         }
 
         public void CompletePayment(DateTime completionTime)
@@ -113,7 +103,7 @@ namespace EasyAbp.PaymentService.Payments
             CanceledTime = canceledTime;
         }
         
-        public void StartRefund(IEnumerable<RefundInfoModel> refundInfoModels)
+        public void StartRefund(Refund refund)
         {
             if (IsCanceled() || !IsCompleted())
             {
@@ -125,19 +115,10 @@ namespace EasyAbp.PaymentService.Payments
                 throw new AnotherRefundTaskIsOnGoingException(Id);
             }
 
-            var infoModels = refundInfoModels.ToList();
-            
-            var exceptItems = infoModels.Select(model => model.PaymentItem).Except(PaymentItems).ToList();
-            
-            if (exceptItems.Any())
-            {
-                throw new EntityNotFoundException(typeof(PaymentItem), new[] {exceptItems.Select(x => x.Id)});
-            }
+            var refundAmount = refund.RefundAmount.EnsureIsNonNegative();
 
-            var refundAmount = EnsureAmountIsNotLessThanZero(infoModels.Sum(model => model.RefundAmount));
-
-            if (refundAmount <= decimal.Zero || ActualPaymentAmount < RefundAmount + refundAmount ||
-                infoModels.Any(model => !model.PaymentItem.TryStartRefund(model.RefundAmount)))
+            if (ActualPaymentAmount < RefundAmount + refundAmount || refund.RefundItems.Any(item =>
+                !PaymentItems.First(x => x.Id == item.PaymentItemId).TryStartRefund(item.RefundAmount)))
             {
                 throw new InvalidRefundAmountException(Id, refundAmount);
             }
@@ -147,7 +128,7 @@ namespace EasyAbp.PaymentService.Payments
         
         public void CompleteRefund()
         {
-            if (IsCanceled() || !IsCompleted() || EnsureAmountIsNotLessThanZero(PendingRefundAmount) <= decimal.Zero)
+            if (IsCanceled() || !IsCompleted() || PendingRefundAmount.EnsureIsNonNegative() <= decimal.Zero)
             {
                 throw new PaymentIsInUnexpectedStageException(Id);
             }

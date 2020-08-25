@@ -3,29 +3,33 @@
 @using EasyAbp.PaymentService.Web.Menus
 @using Microsoft.AspNetCore.Mvc.Localization
 @using Volo.Abp.AspNetCore.Mvc.UI.Layout
-@model EasyAbp.PaymentService.Web.Pages.PaymentService.Refunds.Refund.IndexModel
+@model EasyAbp.PaymentService.Web.Pages.PaymentService.Refunds.RefundItem.IndexModel
 @inject IPageLayout PageLayout
 @inject IHtmlLocalizer<PaymentServiceResource> L
 @{
-    PageLayout.Content.Title = L["Refund"].Value;
-    PageLayout.Content.BreadCrumb.Add(L["Menu:Refund"].Value);
+    PageLayout.Content.Title = L["RefundItem"].Value;
+    PageLayout.Content.BreadCrumb.Add(L["Menu:RefundItem"].Value);
     PageLayout.Content.MenuItemName = PaymentServiceMenus.Refund;
 }
 
 @section scripts
 {
-    <abp-script src="/Pages/PaymentService/Refunds/Refund/index.js" />
+    <abp-script src="/Pages/PaymentService/Refunds/RefundItem/index.js" />
 }
 @section styles
 {
-    <abp-style src="/Pages/PaymentService/Refunds/Refund/index.css"/>
+    <abp-style src="/Pages/PaymentService/Refunds/RefundItem/index.css"/>
 }
+
+<script>
+    var refundId = '@Model.RefundId';
+</script>
 
 <abp-card>
     <abp-card-header>
         <abp-row>
             <abp-column size-md="_6">
-                <abp-card-title>@L["Refund"]</abp-card-title>
+                <abp-card-title>@L["RefundItem"]</abp-card-title>
             </abp-column>
         </abp-row>
     </abp-card-header>
@@ -34,16 +38,10 @@
             <thead>
             <tr>
                 <th>@L["Actions"]</th>
-                <th>@L["RefundPaymentId"]</th>
-                <th>@L["RefundRefundPaymentMethod"]</th>
-                <th>@L["RefundExternalTradingCode"]</th>
-                <th>@L["RefundCurrency"]</th>
+                <th>@L["RefundPaymentItemId"]</th>
                 <th>@L["RefundRefundAmount"]</th>
-                <th>@L["RefundDisplayReason"]</th>
                 <th>@L["RefundCustomerRemark"]</th>
                 <th>@L["RefundStaffRemark"]</th>
-                <th>@L["RefundCompletedTime"]</th>
-                <th>@L["RefundCanceledTime"]</th>
             </tr>
             </thead>
         </abp-table>

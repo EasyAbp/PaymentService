@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Volo.Abp.Data;
+using Volo.Abp.MultiTenancy;
 
 namespace EasyAbp.PaymentService.Payments
 {
     [Serializable]
-    public class CreatePaymentEto : IHasExtraProperties
+    public class CreatePaymentEto : IMultiTenant, IHasExtraProperties
     {
         public Guid? TenantId { get; set; }
         

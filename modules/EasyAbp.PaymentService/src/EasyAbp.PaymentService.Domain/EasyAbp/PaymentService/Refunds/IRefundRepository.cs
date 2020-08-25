@@ -8,6 +8,6 @@ namespace EasyAbp.PaymentService.Refunds
 {
     public interface IRefundRepository : IRepository<Refund, Guid>
     {
-        Task<List<Refund>> GetOngoingRefundListAsync(Guid paymentId, CancellationToken cancellationToken = default);
+        Task<Refund> FindByPaymentIdAsync(Guid paymentId, CancellationToken cancellationToken = default);
     }
 }

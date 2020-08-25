@@ -10,6 +10,6 @@ namespace EasyAbp.PaymentService.Payments
         
         Task OnCancelStartedAsync(Payment payment);
 
-        Task OnRefundStartedAsync(Payment payment, IEnumerable<Refund> refunds, string displayReason = null);
+        Task OnRefundStartedAsync(Payment payment, Refund refund);
     }
 }

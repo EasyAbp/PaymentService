@@ -4,6 +4,7 @@ using AutoMapper;
 using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.Payments.Dtos;
 using Volo.Abp.AutoMapper;
+using RefundDto = EasyAbp.PaymentService.Refunds.Dtos.RefundDto;
 
 namespace EasyAbp.PaymentService
 {
@@ -15,8 +16,9 @@ namespace EasyAbp.PaymentService
              * Alternatively, you can split your mapping configurations
              * into multiple profile classes for a better organization. */
             CreateMap<Payment, PaymentDto>();
-            CreateMap<Refund, RefundDto>();
             CreateMap<PaymentItem, PaymentItemDto>();
+            CreateMap<Refund, RefundDto>();
+            CreateMap<RefundItem, RefundItemDto>();
         }
     }
 }

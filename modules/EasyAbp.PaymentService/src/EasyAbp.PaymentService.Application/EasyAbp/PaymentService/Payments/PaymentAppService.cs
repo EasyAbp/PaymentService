@@ -113,9 +113,9 @@ namespace EasyAbp.PaymentService.Payments
                 throw new PaymentIsInUnexpectedStageException(payment.Id);
             }
 
-            var refunds = await _refundRepository.GetOngoingRefundListAsync(payment.Id);
+            var refund = await _refundRepository.FindByPaymentIdAsync(payment.Id);
 
-            await _paymentManager.RollbackRefundAsync(payment, refunds);
+            await _paymentManager.RollbackRefundAsync(payment, refund);
 
             return MapToGetOutputDto(payment);
         }

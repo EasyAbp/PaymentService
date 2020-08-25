@@ -43,7 +43,7 @@ namespace EasyAbp.PaymentService.Payments
             await _paymentManager.CompleteCancelAsync(payment);
         }
 
-        public override Task OnRefundStartedAsync(Payment payment, IEnumerable<Refund> refunds, string displayReason = null)
+        public override Task OnRefundStartedAsync(Payment payment, Refund refund)
         {
             throw new NotSupportedException();
         }

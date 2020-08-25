@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.Payments.Dtos;
+using EasyAbp.PaymentService.Refunds;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Volo.Abp;
@@ -64,17 +65,21 @@ namespace PaymentServiceSample.Controllers
             await _distributedEventBus.PublishAsync(new RefundPaymentEto
             {
                 TenantId = CurrentTenant.Id,
-                PaymentId = paymentId,
-                Items = new List<RefundPaymentItemEto>(payment.PaymentItems.Where(item => item.ActualPaymentAmount > 0)
-                    .Select(item => new RefundPaymentItemEto
-                    {
-                        PaymentItemId = item.Id,
-                        RefundAmount = item.ActualPaymentAmount,
-                        CustomerRemark = "Test1",
-                        StaffRemark = "Test2"
-                    })),
-                DisplayReason = "Test",
-                ExtraProperties = new Dictionary<string, object>(),
+                CreateRefundInput = new CreateRefundInput
+                {
+                    PaymentId = payment.Id,
+                    DisplayReason = "Test0",
+                    CustomerRemark = "Test1",
+                    StaffRemark = "Test2",
+                    RefundItems = new List<CreateRefundItemInput>(payment.PaymentItems
+                        .Where(item => item.ActualPaymentAmount > 0).Select(item => new CreateRefundItemInput()
+                        {
+                            PaymentItemId = item.Id,
+                            RefundAmount = item.ActualPaymentAmount,
+                            CustomerRemark = "Test3",
+                            StaffRemark = "Test4"
+                        }))
+                }
             });
 
             return await _paymentAppService.GetAsync(paymentId);

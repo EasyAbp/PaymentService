@@ -20,13 +20,13 @@ namespace EasyAbp.PaymentService.Refunds
 
         [HttpGet]
         [Route("{id}")]
-        public virtual Task<RefundDto> GetAsync(Guid id)
+        public virtual Task<Dtos.RefundDto> GetAsync(Guid id)
         {
             return _service.GetAsync(id);
         }
 
         [HttpGet]
-        public virtual Task<PagedResultDto<RefundDto>> GetListAsync(PagedAndSortedResultRequestDto input)
+        public virtual Task<PagedResultDto<Dtos.RefundDto>> GetListAsync(PagedAndSortedResultRequestDto input)
         {
             return _service.GetListAsync(input);
         }

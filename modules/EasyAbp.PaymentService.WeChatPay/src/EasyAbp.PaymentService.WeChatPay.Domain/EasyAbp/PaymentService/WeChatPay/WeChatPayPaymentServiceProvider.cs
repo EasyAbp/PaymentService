@@ -162,15 +162,14 @@ namespace EasyAbp.PaymentService.WeChatPay
             }
         }
 
-        public override Task OnRefundStartedAsync(Payment payment, IEnumerable<Refund> refunds, string displayReason = null)
+        public override Task OnRefundStartedAsync(Payment payment, Refund refund)
         {
             _unitOfWorkManager.Current.OnCompleted(async () =>
             {
                 await _localEventBus.PublishAsync(new WeChatPayRefundEto
                 {
                     PaymentId = payment.Id,
-                    Refunds = refunds,
-                    DisplayReason = displayReason
+                    Refund = refund
                 });
             });
             

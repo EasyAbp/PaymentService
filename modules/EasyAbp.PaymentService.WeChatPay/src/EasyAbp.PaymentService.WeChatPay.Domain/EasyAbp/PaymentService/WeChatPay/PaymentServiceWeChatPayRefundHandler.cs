@@ -57,9 +57,10 @@ namespace EasyAbp.PaymentService.WeChatPay
             }
             
             var payment = await _paymentRepository.FindAsync(record.PaymentId);
-            var refunds = await _refundRepository.GetOngoingRefundListAsync(record.PaymentId);
+            
+            var refund = await _refundRepository.FindByPaymentIdAsync(record.PaymentId);
 
-            if (payment == null || refunds.IsNullOrEmpty())
+            if (payment == null || refund == null)
             {
                 context.IsSuccess = false;
 
@@ -78,11 +79,11 @@ namespace EasyAbp.PaymentService.WeChatPay
 
             if (dict.GetOrDefault("refund_status") == "SUCCESS")
             {
-                await _paymentManager.CompleteRefundAsync(payment, refunds);
+                await _paymentManager.CompleteRefundAsync(payment, refund);
             }
             else
             {
-                await _paymentManager.RollbackRefundAsync(payment, refunds);
+                await _paymentManager.RollbackRefundAsync(payment, refund);
             }
 
             context.IsSuccess = true;

@@ -64,16 +64,13 @@ namespace EasyAbp.PaymentService.WeChatPay
 
                 var externalTradingCode = dict.GetOrDefault("refund_id");
                 
-                foreach (var refund in eventData.Refunds)
-                {
-                    refund.SetExternalTradingCode(externalTradingCode);
+                eventData.Refund.SetExternalTradingCode(externalTradingCode);
 
-                    await _refundRepository.UpdateAsync(refund, true);
-                }
+                await _refundRepository.UpdateAsync(eventData.Refund, true);
                 
                 if (dict.GetOrDefault("result_code") != "SUCCESS")
                 {
-                    await _paymentManager.RollbackRefundAsync(payment, eventData.Refunds);
+                    await _paymentManager.RollbackRefundAsync(payment, eventData.Refund);
                 }
             }
         }
@@ -117,7 +114,7 @@ namespace EasyAbp.PaymentService.WeChatPay
 
         private async Task<Dictionary<string, string>> RequestWeChatPayRefundAsync(Payment payment, PaymentRecord paymentRecord, WeChatPayRefundEto eventData, string outRefundNo)
         {
-            var refundAmount = eventData.Refunds.Sum(model => model.RefundAmount);
+            var refundAmount = eventData.Refund.RefundAmount;
 
             var result = await _serviceProviderPayService.RefundAsync(
                 appId: payment.GetProperty<string>("appid"),
@@ -130,7 +127,7 @@ namespace EasyAbp.PaymentService.WeChatPay
                 totalFee: paymentRecord.TotalFee,
                 refundFee: _weChatPayFeeConverter.ConvertToWeChatPayFee(refundAmount),
                 refundFeeType: null,
-                refundDesc: eventData.DisplayReason,
+                refundDesc: eventData.Refund.DisplayReason,
                 refundAccount: null,
                 notifyUrl: null
             );

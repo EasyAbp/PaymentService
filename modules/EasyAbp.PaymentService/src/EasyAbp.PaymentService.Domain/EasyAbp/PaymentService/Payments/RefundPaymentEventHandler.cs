@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using EasyAbp.PaymentService.Refunds;
+﻿using System.Threading.Tasks;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.MultiTenancy;
 using Volo.Abp.Uow;
@@ -28,15 +26,9 @@ namespace EasyAbp.PaymentService.Payments
         {
             using var changeTenant = _currentTenant.Change(eventData.TenantId);
 
-            var payment = await _paymentRepository.GetAsync(eventData.PaymentId);
+            var payment = await _paymentRepository.GetAsync(eventData.CreateRefundInput.PaymentId);
 
-            await _paymentManager.StartRefundAsync(payment, eventData.Items.Select(etoItem => new RefundInfoModel
-            {
-                RefundAmount = etoItem.RefundAmount,
-                PaymentItem = payment.PaymentItems.Single(paymentItem => etoItem.PaymentItemId == paymentItem.Id),
-                CustomerRemark = etoItem.CustomerRemark,
-                StaffRemark = etoItem.StaffRemark
-            }), eventData.DisplayReason);
+            await _paymentManager.StartRefundAsync(payment, eventData.CreateRefundInput);
         }
     }
 }

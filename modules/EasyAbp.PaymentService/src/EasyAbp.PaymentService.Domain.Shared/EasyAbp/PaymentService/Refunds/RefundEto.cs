@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using Volo.Abp.Data;
+using Volo.Abp.MultiTenancy;
 
 namespace EasyAbp.PaymentService.Refunds
 {
     [Serializable]
-    public class RefundEto : IRefund, IHasExtraProperties
+    public class RefundEto : IRefund, IMultiTenant, IHasExtraProperties
     {
+        public Guid Id { get; set; }
+
+        public Guid? TenantId { get; set; }
+
         public Guid PaymentId { get; set; }
-        
-        public Guid PaymentItemId { get; set; }
         
         public string RefundPaymentMethod { get; set; }
         
@@ -19,6 +22,8 @@ namespace EasyAbp.PaymentService.Refunds
         
         public decimal RefundAmount { get; set; }
         
+        public string DisplayReason { get; set; }
+
         public string CustomerRemark { get; set; }
         
         public string StaffRemark { get; set; }
@@ -28,5 +33,7 @@ namespace EasyAbp.PaymentService.Refunds
         public DateTime? CanceledTime { get; set; }
 
         public Dictionary<string, object> ExtraProperties { get; set; }
+        
+        public List<RefundItemEto> RefundItems { get; set; } = new List<RefundItemEto>();
     }
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -110,7 +110,7 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
             await _paymentManager.CompleteCancelAsync(payment);
         }
 
-        public override async Task OnRefundStartedAsync(Payment payment, IEnumerable<Refund> refunds, string displayReason = null)
+        public override async Task OnRefundStartedAsync(Payment payment, Refund refund)
         {
             if (!Guid.TryParse(payment.GetProperty<string>("AccountId"), out var accountId))
             {
@@ -133,7 +133,7 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
             
             await _accountRepository.UpdateAsync(account, true);
             
-            await _paymentManager.CompleteRefundAsync(payment, refunds);
+            await _paymentManager.CompleteRefundAsync(payment, refund);
         }
     }
 }

@@ -1,5 +1,6 @@
 @page
 @using EasyAbp.PaymentService.Localization
+@using EasyAbp.PaymentService.Web.Menus
 @using Microsoft.AspNetCore.Mvc.Localization
 @using Volo.Abp.AspNetCore.Mvc.UI.Layout
 @model EasyAbp.PaymentService.Web.Pages.PaymentService.Payments.Payment.IndexModel
@@ -8,7 +9,7 @@
 @{
     PageLayout.Content.Title = L["Payment"].Value;
     PageLayout.Content.BreadCrumb.Add(L["Menu:Payment"].Value);
-    PageLayout.Content.MenuItemName = "EasyAbpPaymentServicePayment";
+    PageLayout.Content.MenuItemName = PaymentServiceMenus.Payment;
 }
 
 @section scripts

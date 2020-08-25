@@ -9,6 +9,6 @@ namespace EasyAbp.PaymentService.Payments
     {
         public PaymentEto Payment { get; set; }
         
-        public IEnumerable<RefundEto> Refunds { get; set; }
+        public RefundEto Refund { get; set; }
     }
 }

@@ -6,8 +6,6 @@ namespace EasyAbp.PaymentService.Refunds
     {
         Guid PaymentId { get; }
         
-        Guid PaymentItemId { get; }
-        
         string RefundPaymentMethod { get; }
         
         string ExternalTradingCode { get; }
@@ -16,6 +14,8 @@ namespace EasyAbp.PaymentService.Refunds
         
         decimal RefundAmount { get; }
 
+        string DisplayReason { get; }
+        
         string CustomerRemark { get; }
         
         string StaffRemark { get; }

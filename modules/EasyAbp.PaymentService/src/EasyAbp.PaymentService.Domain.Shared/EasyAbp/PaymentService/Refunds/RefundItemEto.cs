@@ -1,10 +1,13 @@
-﻿using EasyAbp.PaymentService.Payments;
+﻿using System;
 
 namespace EasyAbp.PaymentService.Refunds
 {
-    public class RefundInfoModel
+    [Serializable]
+    public class RefundItemEto : IRefundItem
     {
-        public PaymentItem PaymentItem { get; set; }
+        public Guid Id { get; set; }
+
+        public Guid PaymentItemId { get; set; }
         
         public decimal RefundAmount { get; set; }
         

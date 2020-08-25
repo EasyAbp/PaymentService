@@ -1,5 +1,6 @@
 @page
 @using EasyAbp.PaymentService.Localization
+@using EasyAbp.PaymentService.Web.Menus
 @using Microsoft.AspNetCore.Mvc.Localization
 @using Volo.Abp.AspNetCore.Mvc.UI.Layout
 @model EasyAbp.PaymentService.Web.Pages.PaymentService.Payments.PaymentItem.IndexModel
@@ -8,17 +9,21 @@
 @{
     PageLayout.Content.Title = L["PaymentItem"].Value;
     PageLayout.Content.BreadCrumb.Add(L["Menu:PaymentItem"].Value);
-    PageLayout.Content.MenuItemName = "EasyAbpPaymentServicePaymentItem";
+    PageLayout.Content.MenuItemName = PaymentServiceMenus.Payment;
 }
 
 @section scripts
 {
-    <abp-script src="/Pages/PaymentService/PaymentItem/index.js" />
+    <abp-script src="/Pages/PaymentService/Payments/PaymentItem/index.js" />
 }
 @section styles
 {
-    <abp-style src="/Pages/PaymentService/PaymentItem/index.css"/>
+    <abp-style src="/Pages/PaymentService/Payments/PaymentItem/index.css"/>
 }
+
+<script>
+    var paymentId = '@Model.PaymentId';
+</script>
 
 <abp-card>
     <abp-card-header>

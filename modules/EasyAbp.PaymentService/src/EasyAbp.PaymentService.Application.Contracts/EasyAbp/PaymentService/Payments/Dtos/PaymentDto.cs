@@ -4,11 +4,13 @@ using Volo.Abp.Application.Dtos;
 
 namespace EasyAbp.PaymentService.Payments.Dtos
 {
-    public class PaymentDto : ExtensibleFullAuditedEntityDto<Guid>
+    public class PaymentDto : ExtensibleFullAuditedEntityDto<Guid>, IPayment
     {
         public Guid UserId { get; set; }
         
         public string PaymentMethod { get; set; }
+        
+        public string PayeeAccount { get; set; }
 
         public string ExternalTradingCode { get; set; }
 
