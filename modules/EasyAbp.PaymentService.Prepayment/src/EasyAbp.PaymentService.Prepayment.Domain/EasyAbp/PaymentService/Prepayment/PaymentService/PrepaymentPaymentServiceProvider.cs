@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -65,6 +65,8 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
             {
                 throw new UserIsNotAccountOwnerException(_currentUser.GetId(), accountId);
             }
+
+            payment.SetProperty("AccountId", accountId);
 
             var accountGroupConfiguration = _accountGroupConfigurationProvider.Get(account.AccountGroupName);
 
