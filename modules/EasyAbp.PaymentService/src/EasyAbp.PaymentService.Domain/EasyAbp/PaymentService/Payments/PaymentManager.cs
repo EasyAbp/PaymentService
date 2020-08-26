@@ -6,6 +6,7 @@ using EasyAbp.PaymentService.Refunds;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Services;
 using Volo.Abp.EventBus.Distributed;
+using Volo.Abp.ObjectExtending;
 using Volo.Abp.ObjectMapping;
 using Volo.Abp.Timing;
 using Volo.Abp.Uow;
@@ -143,8 +144,12 @@ namespace EasyAbp.PaymentService.Payments
                 createRefundItemEto.PaymentItemId, createRefundItemEto.RefundAmount, createRefundItemEto.CustomerRemark,
                 createRefundItemEto.StaffRemark)).ToList();
 
-            return new Refund(GuidGenerator.Create(), CurrentTenant.Id, payment.Id, paymentMethod, null, currency,
+            var refund = new Refund(GuidGenerator.Create(), CurrentTenant.Id, payment.Id, paymentMethod, null, currency,
                 refundAmount, input.DisplayReason, input.CustomerRemark, input.StaffRemark, refundItems);
+
+            input.MapExtraPropertiesTo(refund);
+
+            return refund;
         }
 
         public virtual async Task CompleteRefundAsync(Payment payment, Refund refund)
