@@ -140,9 +140,15 @@ namespace EasyAbp.PaymentService.Payments
 
             var refundAmount = input.RefundItems.Sum(x => x.RefundAmount);
 
-            var refundItems = input.RefundItems.Select(createRefundItemEto => new RefundItem(GuidGenerator.Create(),
-                createRefundItemEto.PaymentItemId, createRefundItemEto.RefundAmount, createRefundItemEto.CustomerRemark,
-                createRefundItemEto.StaffRemark)).ToList();
+            var refundItems = input.RefundItems.Select(createRefundItemEto =>
+                {
+                    var refundItem = new RefundItem(GuidGenerator.Create(), createRefundItemEto.PaymentItemId,
+                        createRefundItemEto.RefundAmount, createRefundItemEto.CustomerRemark,
+                        createRefundItemEto.StaffRemark);
+                    createRefundItemEto.MapExtraPropertiesTo(refundItem);
+                    return refundItem;
+                }
+            ).ToList();
 
             var refund = new Refund(GuidGenerator.Create(), CurrentTenant.Id, payment.Id, paymentMethod, null, currency,
                 refundAmount, input.DisplayReason, input.CustomerRemark, input.StaffRemark, refundItems);
