@@ -23,6 +23,10 @@
     <abp-style src="/Pages/PaymentService/Prepayment/Accounts/Account/index.css"/>
 }
 
+<script>
+    var userId = '@Model.UserId';
+</script>
+
 @if (!Model.UserId.HasValue)
 {
     <form data-ajaxForm="true" asp-page="Index">
