@@ -145,7 +145,7 @@ namespace EasyAbp.PaymentService.Payments
                     var refundItem = new RefundItem(GuidGenerator.Create(), createRefundItemEto.PaymentItemId,
                         createRefundItemEto.RefundAmount, createRefundItemEto.CustomerRemark,
                         createRefundItemEto.StaffRemark);
-                    createRefundItemEto.MapExtraPropertiesTo(refundItem);
+                    createRefundItemEto.MapExtraPropertiesTo(refundItem, MappingPropertyDefinitionChecks.None);
                     return refundItem;
                 }
             ).ToList();
@@ -153,7 +153,7 @@ namespace EasyAbp.PaymentService.Payments
             var refund = new Refund(GuidGenerator.Create(), CurrentTenant.Id, payment.Id, paymentMethod, null, currency,
                 refundAmount, input.DisplayReason, input.CustomerRemark, input.StaffRemark, refundItems);
 
-            input.MapExtraPropertiesTo(refund);
+            input.MapExtraPropertiesTo(refund, MappingPropertyDefinitionChecks.None);
 
             return refund;
         }
