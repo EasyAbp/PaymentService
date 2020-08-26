@@ -20,6 +20,7 @@ namespace EasyAbp.PaymentService
             Configure<AbpDistributedEntityEventOptions>(options =>
             {
                 options.EtoMappings.Add<Payment, PaymentEto>(typeof(PaymentServiceDomainModule));
+                options.EtoMappings.Add<Refund, RefundEto>(typeof(PaymentServiceDomainModule));
                 
                 options.AutoEventSelectors.Add<Payment>();
                 options.AutoEventSelectors.Add<Refund>();
