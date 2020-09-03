@@ -6,8 +6,8 @@ using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.Refunds;
 using EasyAbp.PaymentService.WeChatPay.PaymentRecords;
 using EasyAbp.PaymentService.WeChatPay.Settings;
+using Volo.Abp;
 using Volo.Abp.Data;
-using Volo.Abp.DependencyInjection;
 using Volo.Abp.EventBus.Local;
 using Volo.Abp.Guids;
 using Volo.Abp.MultiTenancy;
@@ -72,6 +72,8 @@ namespace EasyAbp.PaymentService.WeChatPay
 
             var payeeAccount = configurations.GetOrDefault("PayeeAccount") as string ??
                                await _settingProvider.GetOrNullAsync(WeChatPaySettings.MchId);
+
+            Check.NotNullOrWhiteSpace(payeeAccount, "PayeeAccount");
             
             payment.SetPayeeAccount(payeeAccount);
 
