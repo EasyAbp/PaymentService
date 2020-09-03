@@ -141,6 +141,11 @@ namespace EasyAbp.PaymentService.WeChatPay
         public override async Task OnCancelStartedAsync(Payment payment)
         {
             await _paymentManager.CompleteCancelAsync(payment);
+
+            if (payment.PayeeAccount == null)
+            {
+                return;
+            }
             
             var outTradeNo = payment.Id.ToString("N");
 
