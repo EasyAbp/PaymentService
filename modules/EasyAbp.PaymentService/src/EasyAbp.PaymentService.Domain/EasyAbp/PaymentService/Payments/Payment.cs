@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using EasyAbp.PaymentService.Refunds;
 using JetBrains.Annotations;
-using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Entities.Auditing;
-using Volo.Abp.MultiTenancy;
 
 namespace EasyAbp.PaymentService.Payments
 {
-    public class Payment : FullAuditedAggregateRoot<Guid>, IPaymentEntity
+    public class Payment : FullAuditedAggregateRoot<Guid>, IPayment
     {
         public virtual Guid? TenantId { get; protected set; }
         

@@ -1,8 +1,9 @@
 ﻿using System;
+using Volo.Abp.Data;
 
 namespace EasyAbp.PaymentService.Refunds
 {
-    public interface IRefund
+    public interface IRefund : IHasExtraProperties
     {
         Guid PaymentId { get; }
         

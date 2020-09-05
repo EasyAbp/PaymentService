@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using Volo.Abp.Data;
 using Volo.Abp.Domain.Entities.Auditing;
 
 namespace EasyAbp.PaymentService.Payments
 {
-    public class PaymentItem : FullAuditedEntity<Guid>, IPaymentItemEntity
+    public class PaymentItem : FullAuditedEntity<Guid>, IPaymentItem
     {
         [NotNull]
         public virtual string ItemType { get; protected set; }
@@ -27,6 +28,7 @@ namespace EasyAbp.PaymentService.Payments
         protected PaymentItem()
         {
             ExtraProperties = new Dictionary<string, object>();
+            this.SetDefaultsForExtraProperties();
         }
 
         public PaymentItem(
@@ -42,6 +44,7 @@ namespace EasyAbp.PaymentService.Payments
             ActualPaymentAmount = originalPaymentAmount;
 
             ExtraProperties = new Dictionary<string, object>();
+            this.SetDefaultsForExtraProperties();
         }
         
         internal void SetPaymentDiscount(decimal paymentDiscount)

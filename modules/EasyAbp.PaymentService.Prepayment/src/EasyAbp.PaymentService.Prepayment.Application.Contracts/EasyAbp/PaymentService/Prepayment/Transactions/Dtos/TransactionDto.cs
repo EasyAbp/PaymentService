@@ -4,7 +4,7 @@ using Volo.Abp.Application.Dtos;
 namespace EasyAbp.PaymentService.Prepayment.Transactions.Dtos
 {
     [Serializable]
-    public class TransactionDto : CreationAuditedEntityDto<Guid>
+    public class TransactionDto : ExtensibleCreationAuditedEntityDto<Guid>
     {
         public Guid AccountId { get; set; }
 

@@ -6,7 +6,7 @@ using Volo.Abp.MultiTenancy;
 namespace EasyAbp.PaymentService.Payments
 {
     [Serializable]
-    public class PaymentEto : IPayment, IMultiTenant, IHasExtraProperties
+    public class PaymentEto : IPayment, IMultiTenant
     {
         public Guid UserId { get; set; }
 

@@ -1,9 +1,10 @@
 ﻿using System;
 using JetBrains.Annotations;
+using Volo.Abp.Data;
 
 namespace EasyAbp.PaymentService.Payments
 {
-    public interface IPaymentItem
+    public interface IPaymentItem : IHasExtraProperties
     {
         string ItemType { get; }
         

@@ -3,7 +3,8 @@ using Volo.Abp.Application.Dtos;
 
 namespace EasyAbp.PaymentService.Payments.Dtos
 {
-    public class PaymentItemDto : FullAuditedEntityDto<Guid>, IPaymentItem
+    [Serializable]
+    public class PaymentItemDto : ExtensibleFullAuditedEntityDto<Guid>, IPaymentItem
     {
         public string ItemType { get; set; }
 

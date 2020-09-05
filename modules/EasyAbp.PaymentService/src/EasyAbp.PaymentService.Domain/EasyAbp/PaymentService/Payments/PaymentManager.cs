@@ -132,7 +132,7 @@ namespace EasyAbp.PaymentService.Payments
             await provider.OnRefundStartedAsync(payment, refund);
         }
 
-        private Refund CreateRefund(IPaymentEntity payment, CreateRefundInput input)
+        private Refund CreateRefund(Payment payment, CreateRefundInput input)
         {
             // Todo: other payment methods?
             var paymentMethod = payment.PaymentMethod;

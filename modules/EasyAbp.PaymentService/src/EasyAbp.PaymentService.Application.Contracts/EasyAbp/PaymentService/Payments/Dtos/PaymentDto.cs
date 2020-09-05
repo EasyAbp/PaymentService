@@ -4,6 +4,7 @@ using Volo.Abp.Application.Dtos;
 
 namespace EasyAbp.PaymentService.Payments.Dtos
 {
+    [Serializable]
     public class PaymentDto : ExtensibleFullAuditedEntityDto<Guid>, IPayment
     {
         public Guid UserId { get; set; }

@@ -4,7 +4,8 @@ using Volo.Abp.Application.Dtos;
 
 namespace EasyAbp.PaymentService.Refunds.Dtos
 {
-    public class RefundDto : FullAuditedEntityDto<Guid>, IRefund
+    [Serializable]
+    public class RefundDto : ExtensibleFullAuditedEntityDto<Guid>, IRefund
     {
         public Guid PaymentId { get; set; }
         

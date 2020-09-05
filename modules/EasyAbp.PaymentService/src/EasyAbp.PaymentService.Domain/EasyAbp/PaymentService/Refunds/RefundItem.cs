@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using Volo.Abp.Data;
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.MultiTenancy;
 
 namespace EasyAbp.PaymentService.Refunds
 {
-    public class RefundItem : FullAuditedEntity<Guid>, IRefundItemEntity
+    public class RefundItem : FullAuditedEntity<Guid>, IRefundItem
     {
         public virtual Guid PaymentItemId { get; protected set; }
         
@@ -23,6 +24,7 @@ namespace EasyAbp.PaymentService.Refunds
         protected RefundItem()
         {
             ExtraProperties = new Dictionary<string, object>();
+            this.SetDefaultsForExtraProperties();
         }
 
         public RefundItem(
@@ -38,6 +40,7 @@ namespace EasyAbp.PaymentService.Refunds
             StaffRemark = staffRemark;
             
             ExtraProperties = new Dictionary<string, object>();
+            this.SetDefaultsForExtraProperties();
         }
     }
 }

@@ -3,6 +3,7 @@ using Volo.Abp.MultiTenancy;
 
 namespace EasyAbp.PaymentService.Prepayment.Accounts
 {
+    [Serializable]
     public class ChangeAccountBalanceEto : IMultiTenant
     {
         public Guid? TenantId { get; set; }

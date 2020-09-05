@@ -3,7 +3,8 @@ using Volo.Abp.Application.Dtos;
 
 namespace EasyAbp.PaymentService.WeChatPay.RefundRecords.Dtos
 {
-    public class RefundRecordDto : CreationAuditedEntityDto<Guid>
+    [Serializable]
+    public class RefundRecordDto : ExtensibleCreationAuditedEntityDto<Guid>
     {
         public Guid PaymentId { get; set; }
 

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Volo.Abp.ObjectExtending;
 
 namespace EasyAbp.PaymentService.Payments.Dtos
 {
-    public class PayInput
+    [Serializable]
+    public class PayInput : ExtensibleObject
     {
-        public Dictionary<string, object> ExtraProperties { get; set; } = new Dictionary<string, object>();
     }
 }

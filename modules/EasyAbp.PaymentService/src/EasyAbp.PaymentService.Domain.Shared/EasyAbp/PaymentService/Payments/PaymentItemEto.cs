@@ -5,7 +5,7 @@ using Volo.Abp.Data;
 namespace EasyAbp.PaymentService.Payments
 {
     [Serializable]
-    public class PaymentItemEto : IPaymentItem, IHasExtraProperties
+    public class PaymentItemEto : IPaymentItem
     {
         public Guid Id { get; set; }
         

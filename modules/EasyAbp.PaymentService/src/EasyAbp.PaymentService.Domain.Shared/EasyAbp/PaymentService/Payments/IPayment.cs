@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using Volo.Abp.MultiTenancy;
+using Volo.Abp.Data;
 
 namespace EasyAbp.PaymentService.Payments
 {
-    public interface IPayment
+    public interface IPayment : IHasExtraProperties
     {
         Guid UserId { get; }
         
