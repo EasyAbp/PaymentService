@@ -169,9 +169,11 @@ namespace EasyAbp.PaymentService.WeChatPay
             }
         }
 
-        public override Task OnRefundStartedAsync(Payment payment, Refund refund)
+        public override async Task OnRefundStartedAsync(Payment payment, Refund refund)
         {
-            _unitOfWorkManager.Current.OnCompleted(async () =>
+            using var uow = _unitOfWorkManager.Begin(isTransactional: true);
+
+            uow.OnCompleted(async () =>
             {
                 await _localEventBus.PublishAsync(new WeChatPayRefundEto
                 {
@@ -179,8 +181,8 @@ namespace EasyAbp.PaymentService.WeChatPay
                     Refund = refund
                 });
             });
-            
-            return Task.CompletedTask;
+
+            await uow.CompleteAsync();
         }
     }
 }
