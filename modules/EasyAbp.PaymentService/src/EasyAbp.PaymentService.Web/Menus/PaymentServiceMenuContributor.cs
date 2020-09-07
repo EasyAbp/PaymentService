@@ -24,7 +24,7 @@ namespace EasyAbp.PaymentService.Web
         {
             var l = context.GetLocalizer<PaymentServiceResource>();            //Add main menu items.
 
-            var paymentManagementMenuItem = new ApplicationMenuItem(PaymentServiceMenus.Prefix, l["Menu:PaymentManagement"]);
+            var paymentManagementMenuItem = new ApplicationMenuItem(PaymentServiceMenus.Prefix, l["Menu:PaymentService"]);
 
             if (await context.IsGrantedAsync(PaymentServicePermissions.Payments.Manage))
             {
