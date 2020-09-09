@@ -113,7 +113,7 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
 
             await _repository.UpdateAsync(account, true);
             
-            return MapToGetOutputDto(account);
+            return await MapToGetOutputDtoAsync(account);
         }
 
         [Authorize(PrepaymentPermissions.Account.Manage)]
@@ -125,7 +125,7 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
 
             await _repository.UpdateAsync(account, true);
             
-            return MapToGetOutputDto(account);
+            return await MapToGetOutputDtoAsync(account);
         }
 
         [Authorize(PrepaymentPermissions.Account.TopUp)]

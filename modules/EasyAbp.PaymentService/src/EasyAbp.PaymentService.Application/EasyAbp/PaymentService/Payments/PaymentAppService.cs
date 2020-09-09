@@ -85,7 +85,7 @@ namespace EasyAbp.PaymentService.Payments
 
             await _paymentManager.StartPaymentAsync(payment, configurations);
 
-            return MapToGetOutputDto(payment);
+            return await MapToGetOutputDtoAsync(payment);
         }
 
         public virtual async Task<PaymentDto> CancelAsync(Guid id)
@@ -100,7 +100,7 @@ namespace EasyAbp.PaymentService.Payments
 
             await _paymentManager.StartCancelAsync(payment);
 
-            return MapToGetOutputDto(payment);
+            return await MapToGetOutputDtoAsync(payment);
         }
 
         [Authorize(PaymentServicePermissions.Payments.Manage)]
@@ -117,7 +117,7 @@ namespace EasyAbp.PaymentService.Payments
 
             await _paymentManager.RollbackRefundAsync(payment, refund);
 
-            return MapToGetOutputDto(payment);
+            return await MapToGetOutputDtoAsync(payment);
         }
 
         protected virtual Task<Dictionary<string, object>> GetPayeeConfigurationsAsync(Payment payment)
