@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Xml;
 using EasyAbp.Abp.WeChat.Pay.Infrastructure;
 using EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve;
 using EasyAbp.PaymentService.Payments;
@@ -10,10 +9,10 @@ using EasyAbp.PaymentService.WeChatPay.RefundRecords;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.MultiTenancy;
-using Volo.Abp.Timing;
 
 namespace EasyAbp.PaymentService.WeChatPay
 {
+    [ExposeServices(typeof(IWeChatPayHandler), IncludeSelf = true)]
     public class PaymentServiceWeChatPayRefundHandler : IWeChatPayHandler, ITransientDependency
     {
         public WeChatHandlerType Type { get; } = WeChatHandlerType.Refund;
