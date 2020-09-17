@@ -113,6 +113,12 @@ namespace PaymentServiceSample.Web
                     accountGroup.Currency = "CNY";
                     accountGroup.AllowedUsingToTopUpOtherAccounts = true;
                 });
+
+                options.WithdrawalMethods.Configure<NullWithdrawalMethod>(withdrawalMethod =>
+                {
+                    withdrawalMethod.AccountWithdrawalProviderType = typeof(NullAccountWithdrawalProvider);
+                    withdrawalMethod.DailyMaximumWithdrawalAmountEachAccount = 1m;
+                });
             });
         }
 

@@ -22,6 +22,8 @@
 
         public const string TopUpActionName = "TopUp";
         
+        public const string WithdrawalActionName = "Withdrawal";
+        
         public const string TopUpPaymentItemType = "EasyAbpPaymentServicePrepaymentTopUp";
     }
 }

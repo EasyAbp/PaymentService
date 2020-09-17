@@ -28,6 +28,17 @@
     "TransactionExternalTradingCode": "External trading code",
     "TransactionCurrency": "Currency",
     "TransactionChangedBalance": "Changed balance",
-    "TransactionOriginalBalance": "Original balance"
+    "TransactionOriginalBalance": "Original balance",
+    "UserId": "User ID",
+    "Permission:WithdrawalRecord": "Withdrawal record",
+    "Menu:WithdrawalRecord": "Withdrawal record",
+    "WithdrawalRecord": "Withdrawal record",
+    "WithdrawalRecordAccountId": "Account ID",
+    "WithdrawalRecordWithdrawalMethod": "Withdrawal method",
+    "WithdrawalRecordAmount": "Amount",
+    "WithdrawalRecordCompletionTime": "Completion time",
+    "WithdrawalRecordCancellationTime": "Cancellation time",
+    "WithdrawalRecordResultErrorCode": "Result error code",
+    "WithdrawalRecordResultErrorMessage": "Result error message"
   }
 }

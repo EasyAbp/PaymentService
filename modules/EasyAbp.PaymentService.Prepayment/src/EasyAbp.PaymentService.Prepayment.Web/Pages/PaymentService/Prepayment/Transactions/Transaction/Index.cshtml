@@ -4,6 +4,7 @@
 @using Volo.Abp.AspNetCore.Mvc.UI.Layout
 @using EasyAbp.PaymentService.Prepayment.Web.Pages.PaymentService.Prepayment.Transactions.Transaction
 @using EasyAbp.PaymentService.Prepayment.Localization
+@using EasyAbp.PaymentService.Prepayment.Web.Menus
 @model IndexModel
 @inject IPageLayout PageLayout
 @inject IHtmlLocalizer<PrepaymentResource> L
@@ -11,7 +12,7 @@
 @{
     PageLayout.Content.Title = L["Transaction"].Value;
     PageLayout.Content.BreadCrumb.Add(L["Menu:Transaction"].Value);
-    PageLayout.Content.MenuItemName = "Transaction";
+    PageLayout.Content.MenuItemName = PrepaymentMenus.Account;
 
     var title = L["Transaction"].Value;
     if (!Model.UserName.IsNullOrEmpty())

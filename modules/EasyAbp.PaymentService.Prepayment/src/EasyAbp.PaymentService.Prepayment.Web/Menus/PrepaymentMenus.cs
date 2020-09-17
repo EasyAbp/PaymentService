@@ -1,4 +1,4 @@
-﻿namespace EasyAbp.PaymentService.Prepayment.Web.Menus
+namespace EasyAbp.PaymentService.Prepayment.Web.Menus
 {
     public class PrepaymentMenus
     {

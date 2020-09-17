@@ -13,9 +13,13 @@ namespace EasyAbp.PaymentService.Prepayment.Permissions
             var accountPermission = myGroup.AddPermission(PrepaymentPermissions.Account.Default, L("Permission:Account"));
             accountPermission.AddChild(PrepaymentPermissions.Account.Manage, L("Permission:Manage"));
             accountPermission.AddChild(PrepaymentPermissions.Account.TopUp, L("Permission:TopUp"));
+            accountPermission.AddChild(PrepaymentPermissions.Account.Withdraw, L("Permission:Withdraw"));
 
             var transactionPermission = myGroup.AddPermission(PrepaymentPermissions.Transaction.Default, L("Permission:Transaction"));
             transactionPermission.AddChild(PrepaymentPermissions.Transaction.Manage, L("Permission:Manage"));
+
+            var withdrawalRecordPermission = myGroup.AddPermission(PrepaymentPermissions.WithdrawalRecord.Default, L("Permission:WithdrawalRecord"));
+            withdrawalRecordPermission.AddChild(PrepaymentPermissions.WithdrawalRecord.Manage, L("Permission:Manage"));
         }
 
         private static LocalizableString L(string name)

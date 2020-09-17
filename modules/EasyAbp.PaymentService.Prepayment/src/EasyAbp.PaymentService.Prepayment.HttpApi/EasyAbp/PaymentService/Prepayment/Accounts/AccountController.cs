@@ -39,6 +39,13 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
             return _service.TopUpAsync(id, input);
         }
 
+        [HttpPost]
+        [Route("{id}/withdraw")]
+        public virtual Task WithdrawAsync(Guid id, WithdrawInput input)
+        {
+            return _service.WithdrawAsync(id, input);
+        }
+
         [HttpGet]
         [Route("{id}")]
         public virtual Task<AccountDto> GetAsync(Guid id)

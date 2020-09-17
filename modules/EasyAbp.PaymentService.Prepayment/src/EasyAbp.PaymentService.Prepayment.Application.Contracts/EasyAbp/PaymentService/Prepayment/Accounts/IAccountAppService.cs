@@ -17,5 +17,7 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
         Task<AccountDto> ChangeLockedBalanceAsync(Guid id, ChangeLockedBalanceInput input);
         
         Task TopUpAsync(Guid id, TopUpInput input);
+        
+        Task WithdrawAsync(Guid id, WithdrawInput input);
     }
 }

@@ -29,6 +29,16 @@
     "TransactionCurrency": "币种",
     "TransactionChangedBalance": "余额变化",
     "TransactionOriginalBalance": "原始余额",
-    "UserId": "用户 ID"
+    "UserId": "用户 ID",
+    "Permission:WithdrawalRecord": "提现记录",
+    "Menu:WithdrawalRecord": "提现记录",
+    "WithdrawalRecord": "提现记录",
+    "WithdrawalRecordAccountId": "账户 ID",
+    "WithdrawalRecordWithdrawalMethod": "提现方式",
+    "WithdrawalRecordAmount": "金额",
+    "WithdrawalRecordCompletionTime": "完成时间",
+    "WithdrawalRecordCancellationTime": "取消时间",
+    "WithdrawalRecordResultErrorCode": "错误代码",
+    "WithdrawalRecordResultErrorMessage": "错误信息"
   }
 }

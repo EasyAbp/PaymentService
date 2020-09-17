@@ -4,6 +4,7 @@
 @using Volo.Abp.AspNetCore.Mvc.UI.Layout
 @using EasyAbp.PaymentService.Prepayment.Web.Pages.PaymentService.Prepayment.Accounts.Account
 @using EasyAbp.PaymentService.Prepayment.Localization
+@using EasyAbp.PaymentService.Prepayment.Web.Menus
 @model IndexModel
 @inject IPageLayout PageLayout
 @inject IHtmlLocalizer<PrepaymentResource> L
@@ -11,7 +12,7 @@
 @{
     PageLayout.Content.Title = L["Account"].Value;
     PageLayout.Content.BreadCrumb.Add(L["Menu:Account"].Value);
-    PageLayout.Content.MenuItemName = "Account";
+    PageLayout.Content.MenuItemName = PrepaymentMenus.Account;
 }
 
 @section scripts

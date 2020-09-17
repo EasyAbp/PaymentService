@@ -1,7 +1,11 @@
-﻿namespace EasyAbp.PaymentService.Prepayment.Options.WithdrawalMethods
+﻿using System;
+
+namespace EasyAbp.PaymentService.Prepayment.Options.WithdrawalMethods
 {
     public class WithdrawalMethodConfiguration
     {
-        public decimal DailyMaximumWithdrawalAmount { get; set; }
+        public Type AccountWithdrawalProviderType { get; set; }
+        
+        public decimal? DailyMaximumWithdrawalAmountEachAccount { get; set; }
     }
 }

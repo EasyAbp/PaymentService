@@ -23,12 +23,6 @@ $(function () {
                     items:
                         [
                             {
-                                text: l('Transaction'),
-                                action: function (data) {
-                                    document.location.href = document.location.origin + '/PaymentService/Prepayment/Transactions/Transaction?AccountId=' + data.record.id;
-                                }
-                            },
-                            {
                                 text: l('ChangeAccountBalance'),
                                 action: function (data) {
                                     changeBalanceModal.open({ id: data.record.id });
@@ -38,6 +32,18 @@ $(function () {
                                 text: l('ChangeAccountLockedBalance'),
                                 action: function (data) {
                                     changeLockedBalanceModal.open({ id: data.record.id });
+                                }
+                            },
+                            {
+                                text: l('Transaction'),
+                                action: function (data) {
+                                    document.location.href = document.location.origin + '/PaymentService/Prepayment/Transactions/Transaction?AccountId=' + data.record.id;
+                                }
+                            },
+                            {
+                                text: l('WithdrawalRecord'),
+                                action: function (data) {
+                                    document.location.href = document.location.origin + '/PaymentService/Prepayment/WithdrawalRecords/WithdrawalRecord?AccountId=' + data.record.id;
                                 }
                             }
                         ]

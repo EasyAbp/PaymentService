@@ -1,4 +1,4 @@
-﻿using Volo.Abp.Reflection;
+using Volo.Abp.Reflection;
 
 namespace EasyAbp.PaymentService.Authorization
 {
@@ -25,6 +25,14 @@ namespace EasyAbp.PaymentService.Authorization
             public const string Manage = Default + ".Manage";
             public const string CrossStore = Default + ".CrossStore";
             public const string Create = Default + ".Create";
+        }
+
+        public class WithdrawalRecord
+        {
+            public const string Default = GroupName + ".WithdrawalRecord";
+            public const string Update = Default + ".Update";
+            public const string Create = Default + ".Create";
+            public const string Delete = Default + ".Delete";
         }
     }
 }

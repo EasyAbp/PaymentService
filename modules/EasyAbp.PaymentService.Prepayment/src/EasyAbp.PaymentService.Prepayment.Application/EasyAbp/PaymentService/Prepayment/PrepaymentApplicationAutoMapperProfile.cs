@@ -2,6 +2,8 @@ using EasyAbp.PaymentService.Prepayment.Accounts;
 using EasyAbp.PaymentService.Prepayment.Accounts.Dtos;
 using EasyAbp.PaymentService.Prepayment.Transactions;
 using EasyAbp.PaymentService.Prepayment.Transactions.Dtos;
+using EasyAbp.PaymentService.Prepayment.WithdrawalRecords;
+using EasyAbp.PaymentService.Prepayment.WithdrawalRecords.Dtos;
 using AutoMapper;
 
 namespace EasyAbp.PaymentService.Prepayment
@@ -15,6 +17,7 @@ namespace EasyAbp.PaymentService.Prepayment
              * into multiple profile classes for a better organization. */
             CreateMap<Account, AccountDto>();
             CreateMap<Transaction, TransactionDto>();
+            CreateMap<WithdrawalRecord, WithdrawalRecordDto>();
         }
     }
 }

@@ -28,6 +28,17 @@
     "TransactionExternalTradingCode": "外部交易編號",
     "TransactionCurrency": "幣種",
     "TransactionChangedBalance": "餘額變化",
-    "TransactionOriginalBalance": "原始餘額"
+    "TransactionOriginalBalance": "原始餘額",
+    "UserId": "用戶 ID",
+    "Permission:WithdrawalRecord": "提現記錄",
+    "Menu:WithdrawalRecord": "提現記錄",
+    "WithdrawalRecord": "提現記錄",
+    "WithdrawalRecordAccountId": "賬戶 ID",
+    "WithdrawalRecordWithdrawalMethod": "提現方式",
+    "WithdrawalRecordAmount": "金額",
+    "WithdrawalRecordCompletionTime": "完成時間",
+    "WithdrawalRecordCancellationTime": "取消時間",
+    "WithdrawalRecordResultErrorCode": "錯誤代碼",
+    "WithdrawalRecordResultErrorMessage": "錯誤信息"
   }
 }

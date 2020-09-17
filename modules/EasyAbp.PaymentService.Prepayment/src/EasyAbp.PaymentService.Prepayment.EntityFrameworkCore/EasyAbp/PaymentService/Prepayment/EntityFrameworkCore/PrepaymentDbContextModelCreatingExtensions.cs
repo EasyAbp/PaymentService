@@ -1,3 +1,4 @@
+using EasyAbp.PaymentService.Prepayment.WithdrawalRecords;
 using EasyAbp.PaymentService.Prepayment.Transactions;
 using EasyAbp.PaymentService.Prepayment.Accounts;
 using System;
@@ -63,6 +64,16 @@ namespace EasyAbp.PaymentService.Prepayment.EntityFrameworkCore
                 b.Property(x => x.OriginalBalance).HasColumnType("decimal(20,8)");
                 b.HasIndex(x => x.AccountId);
                 b.HasIndex(x => x.AccountUserId);
+            });
+
+
+            builder.Entity<WithdrawalRecord>(b =>
+            {
+                b.ToTable(options.TablePrefix + "WithdrawalRecords", options.Schema);
+                b.ConfigureByConvention();
+
+                /* Configure more properties here */
+                b.Property(x => x.Amount).HasColumnType("decimal(20,8)");
             });
         }
     }

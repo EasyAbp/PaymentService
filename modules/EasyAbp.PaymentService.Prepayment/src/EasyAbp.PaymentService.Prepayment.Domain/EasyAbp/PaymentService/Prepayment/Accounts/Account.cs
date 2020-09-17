@@ -9,6 +9,8 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
     public class Account : FullAuditedAggregateRoot<Guid>, IMultiTenant
     {
         private const string PendingTopUpPaymentIdPropertyName = "PendingTopUpPaymentId";
+        private const string PendingWithdrawalRecordIdPropertyName = "PendingWithdrawalRecordId";
+        private const string PendingWithdrawalAmountPropertyName = "PendingWithdrawalAmount";
         
         public virtual Guid? TenantId { get; protected set; }
         
@@ -57,7 +59,7 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
             Balance = newBalance;
         }
         
-        public void ChangeLockedBalance(decimal changedLockedBalance)
+        public void ChangeLockedBalance(decimal changedLockedBalance, bool ignorePendingWithdrawalAmount = false)
         {
             var newLockedBalance = decimal.Add(LockedBalance, changedLockedBalance);
             
@@ -71,6 +73,17 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
             {
                 throw new AmountOverflowException(PrepaymentConsts.AccountMinLockedBalance,
                     PrepaymentConsts.AccountMaxLockedBalance);
+            }
+            
+            if (!ignorePendingWithdrawalAmount)
+            {
+                var pendingWithdrawalAmount = GetPendingWithdrawalAmount();
+                
+                if (newLockedBalance < pendingWithdrawalAmount)
+                {
+                    throw new LockedBalanceIsLessThenPendingWithdrawalAmountException(newLockedBalance,
+                        pendingWithdrawalAmount);
+                }
             }
 
             LockedBalance = newLockedBalance;
@@ -96,6 +109,81 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
             }
 
             return null;
+        }
+        
+        public void StartWithdrawal(Guid pendingWithdrawalRecordId, decimal amount)
+        {
+            if (GetPendingWithdrawalRecordId().HasValue || GetPendingWithdrawalAmount() != decimal.Zero)
+            {
+                throw new WithdrawalIsAlreadyInProgressException();
+            }
+            
+            ChangeLockedBalance(amount);
+
+            SetPendingWithdrawalRecordId(pendingWithdrawalRecordId);
+            SetPendingWithdrawalAmount(amount);
+        }
+        
+        public void CompleteWithdrawal()
+        {
+            var pendingAmount = GetPendingWithdrawalAmount();
+
+            ClearPendingWithdrawal();
+            
+            ChangeBalance(-pendingAmount);
+        }
+        
+        public void CancelWithdrawal()
+        {
+            ClearPendingWithdrawal();
+        }
+
+        private void ClearPendingWithdrawal()
+        {
+            var pendingAmount = GetPendingWithdrawalAmount();
+
+            if (!GetPendingWithdrawalRecordId().HasValue || pendingAmount == decimal.Zero)
+            {
+                throw new WithdrawalInProgressNotFoundException();
+            }
+            
+
+            ChangeLockedBalance(-pendingAmount, true);
+
+            SetPendingWithdrawalRecordId(null);
+            SetPendingWithdrawalAmount(0m);
+        }
+        
+        private void SetPendingWithdrawalRecordId(Guid? pendingWithdrawalRecordId)
+        {
+            if (pendingWithdrawalRecordId.HasValue)
+            {
+                this.SetProperty(PendingWithdrawalRecordIdPropertyName, pendingWithdrawalRecordId.ToString());
+            }
+            else
+            {
+                this.RemoveProperty(PendingWithdrawalRecordIdPropertyName);
+            }
+        }
+        
+        public Guid? GetPendingWithdrawalRecordId()
+        {
+            if (Guid.TryParse(this.GetProperty<string>(PendingWithdrawalRecordIdPropertyName), out var withdrawalRecordId))
+            {
+                return withdrawalRecordId;
+            }
+
+            return null;
+        }
+        
+        private void SetPendingWithdrawalAmount(decimal pendingWithdrawalAmount)
+        {
+            this.SetProperty(PendingWithdrawalAmountPropertyName, pendingWithdrawalAmount);
+        }
+        
+        public decimal GetPendingWithdrawalAmount()
+        {
+            return this.GetProperty<decimal>(PendingWithdrawalAmountPropertyName);
         }
     }
 }

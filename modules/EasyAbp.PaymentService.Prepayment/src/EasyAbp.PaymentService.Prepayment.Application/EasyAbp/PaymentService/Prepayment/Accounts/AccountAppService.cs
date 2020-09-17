@@ -8,10 +8,13 @@ using EasyAbp.PaymentService.Prepayment.Accounts.Dtos;
 using EasyAbp.PaymentService.Prepayment.Options;
 using EasyAbp.PaymentService.Prepayment.Options.AccountGroups;
 using EasyAbp.PaymentService.Prepayment.Transactions;
+using EasyAbp.PaymentService.Prepayment.WithdrawalRecords;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
+using Volo.Abp.Authorization;
 using Volo.Abp.EventBus.Distributed;
 using Volo.Abp.Users;
 
@@ -138,21 +141,45 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
                 throw new UnauthorizedTopUpException(account.Id);
             }
 
-            var configuration = _accountGroupConfigurationProvider.Get(account.AccountGroupName);
+            if (account.GetPendingTopUpPaymentId().HasValue)
+            {
+                throw new TopUpIsAlreadyInProgressException();
+            }
             
+            var configuration = _accountGroupConfigurationProvider.Get(account.AccountGroupName);
+
             await _distributedEventBus.PublishAsync(new CreatePaymentEto
             {
                 TenantId = CurrentTenant.Id,
                 UserId = CurrentUser.GetId(),
                 PaymentMethod = input.PaymentMethod,
                 Currency = configuration.Currency,
-                PaymentItems = new List<CreatePaymentItemEto>(new []{new CreatePaymentItemEto
+                PaymentItems = new List<CreatePaymentItemEto>(new[]
                 {
-                    ItemType = PrepaymentConsts.TopUpPaymentItemType,
-                    ItemKey = account.Id.ToString(),
-                    OriginalPaymentAmount = input.Amount
-                }})
+                    new CreatePaymentItemEto
+                    {
+                        ItemType = PrepaymentConsts.TopUpPaymentItemType,
+                        ItemKey = account.Id.ToString(),
+                        OriginalPaymentAmount = input.Amount
+                    }
+                })
             });
+        }
+
+        [Authorize(PrepaymentPermissions.Account.Withdraw)]
+        public virtual async Task WithdrawAsync(Guid id, WithdrawInput input)
+        {
+            var account = await _repository.GetAsync(id);
+
+            if (account.UserId != CurrentUser.GetId())
+            {
+                throw new AbpAuthorizationException();
+            }
+
+            var accountWithdrawalManager = ServiceProvider.GetRequiredService<IAccountWithdrawalManager>();
+
+            await accountWithdrawalManager.StartWithdrawalAsync(account, input.WithdrawalMethod, input.Amount,
+                input.ExtraProperties);
         }
     }
 }

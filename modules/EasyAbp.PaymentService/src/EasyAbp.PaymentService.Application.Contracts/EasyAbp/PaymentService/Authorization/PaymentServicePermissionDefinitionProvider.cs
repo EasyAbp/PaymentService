@@ -1,4 +1,4 @@
-﻿using EasyAbp.PaymentService.Localization;
+using EasyAbp.PaymentService.Localization;
 using Volo.Abp.Authorization.Permissions;
 using Volo.Abp.Localization;
 
@@ -19,6 +19,11 @@ namespace EasyAbp.PaymentService.Authorization
             refund.AddChild(PaymentServicePermissions.Refunds.Manage, L("Permission:Manage"));
             refund.AddChild(PaymentServicePermissions.Refunds.CrossStore, L("Permission:CrossStore"));
             refund.AddChild(PaymentServicePermissions.Refunds.Create, L("Permission:Create"));
+
+            var withdrawalRecordPermission = moduleGroup.AddPermission(PaymentServicePermissions.WithdrawalRecord.Default, L("Permission:WithdrawalRecord"));
+            withdrawalRecordPermission.AddChild(PaymentServicePermissions.WithdrawalRecord.Create, L("Permission:Create"));
+            withdrawalRecordPermission.AddChild(PaymentServicePermissions.WithdrawalRecord.Update, L("Permission:Update"));
+            withdrawalRecordPermission.AddChild(PaymentServicePermissions.WithdrawalRecord.Delete, L("Permission:Delete"));
         }
 
         private static LocalizableString L(string name)

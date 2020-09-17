@@ -1,3 +1,4 @@
+using EasyAbp.PaymentService.Prepayment.WithdrawalRecords;
 using EasyAbp.PaymentService.Prepayment.Transactions;
 using EasyAbp.PaymentService.Prepayment.Accounts;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +22,7 @@ namespace EasyAbp.PaymentService.Prepayment.EntityFrameworkCore
                  */
                 options.AddRepository<Account, AccountRepository>();
                 options.AddRepository<Transaction, TransactionRepository>();
+                options.AddRepository<WithdrawalRecord, WithdrawalRecordRepository>();
             });
         }
     }
