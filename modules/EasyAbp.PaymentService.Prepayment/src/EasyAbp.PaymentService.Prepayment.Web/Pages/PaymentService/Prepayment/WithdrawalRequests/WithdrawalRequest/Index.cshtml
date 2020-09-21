@@ -1,0 +1,53 @@
+@page
+@using EasyAbp.PaymentService.Prepayment.Permissions
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Layout
+@using EasyAbp.PaymentService.Prepayment.Web.Pages.PaymentService.Prepayment.WithdrawalRequests.WithdrawalRequest
+@using EasyAbp.PaymentService.Prepayment.Localization
+@using EasyAbp.PaymentService.Prepayment.Web.Menus
+@model IndexModel
+@inject IPageLayout PageLayout
+@inject IHtmlLocalizer<PrepaymentResource> L
+@inject IAuthorizationService Authorization
+@{
+    PageLayout.Content.Title = L["WithdrawalRequest"].Value;
+    PageLayout.Content.BreadCrumb.Add(L["Menu:WithdrawalRequest"].Value);
+    PageLayout.Content.MenuItemName = PrepaymentMenus.WithdrawalRequest;
+}
+
+@section scripts
+{
+    <abp-script src="/Pages/PaymentService/Prepayment/WithdrawalRequests/WithdrawalRequest/index.js" />
+}
+@section styles
+{
+    <abp-style src="/Pages/PaymentService/Prepayment/WithdrawalRequests/WithdrawalRequest/index.css"/>
+}
+
+<abp-card>
+    <abp-card-header>
+        <abp-row>
+            <abp-column size-md="_6">
+                <abp-card-title>@L["WithdrawalRequest"]</abp-card-title>
+            </abp-column>
+            <abp-column size-md="_6" class="text-right">
+            </abp-column>
+        </abp-row>
+    </abp-card-header>
+    <abp-card-body>
+        <abp-table striped-rows="true" id="WithdrawalRequestTable" class="nowrap">
+            <thead>
+            <tr>
+                <th>@L["Actions"]</th>
+                <th>@L["WithdrawalRequestAccountId"]</th>
+                <th>@L["WithdrawalRequestAccountUserId"]</th>
+                <th>@L["WithdrawalRequestAmount"]</th>
+                <th>@L["WithdrawalRequestReviewTime"]</th>
+                <th>@L["WithdrawalRequestReviewerUserId"]</th>
+                <th>@L["WithdrawalRequestIsApproved"]</th>
+            </tr>
+            </thead>
+        </abp-table>
+    </abp-card-body>
+</abp-card>

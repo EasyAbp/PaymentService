@@ -20,6 +20,10 @@ namespace EasyAbp.PaymentService.Prepayment.Permissions
 
             var withdrawalRecordPermission = myGroup.AddPermission(PrepaymentPermissions.WithdrawalRecord.Default, L("Permission:WithdrawalRecord"));
             withdrawalRecordPermission.AddChild(PrepaymentPermissions.WithdrawalRecord.Manage, L("Permission:Manage"));
+
+            var withdrawalRequestPermission = myGroup.AddPermission(PrepaymentPermissions.WithdrawalRequest.Default, L("Permission:WithdrawalRequest"));
+            withdrawalRequestPermission.AddChild(PrepaymentPermissions.WithdrawalRequest.Manage, L("Permission:Manage"));
+            withdrawalRequestPermission.AddChild(PrepaymentPermissions.WithdrawalRequest.Review, L("Permission:Review"));
         }
 
         private static LocalizableString L(string name)

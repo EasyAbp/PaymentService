@@ -39,6 +39,22 @@
     "WithdrawalRecordCompletionTime": "完成时间",
     "WithdrawalRecordCancellationTime": "取消时间",
     "WithdrawalRecordResultErrorCode": "错误代码",
-    "WithdrawalRecordResultErrorMessage": "错误信息"
+    "WithdrawalRecordResultErrorMessage": "错误信息",
+    "Permission:WithdrawalRequest": "提现申请",
+    "Menu:WithdrawalRequest": "提现申请",
+    "WithdrawalRequest": "提现申请",
+    "WithdrawalRequestAccountId": "账户 ID",
+    "WithdrawalRequestAccountUserId": "账户用户 ID",
+    "WithdrawalRequestAmount": "金额",
+    "WithdrawalRequestReviewTime": "审核时间",
+    "WithdrawalRequestReviewerUserId": "审核人用户 ID",
+    "WithdrawalRequestIsApproved": "是否批准",
+    "WithdrawalRequestApproveConfirmationMessage": "确认【批准】提现请求 {0}?",
+    "WithdrawalRequestRejectConfirmationMessage": "确认【拒绝】提现请求 {0}?",
+    "SuccessfullyApproved": "批准成功",
+    "SuccessfullyRejected": "拒绝成功",
+    "WithdrawalRequestHasBeenReviewed": "提现请求已经审核过了",
+    "Approve": "批准",
+    "Reject": "拒绝"
   }
 }

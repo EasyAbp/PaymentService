@@ -38,6 +38,22 @@
     "WithdrawalRecordCompletionTime": "Completion time",
     "WithdrawalRecordCancellationTime": "Cancellation time",
     "WithdrawalRecordResultErrorCode": "Result error code",
-    "WithdrawalRecordResultErrorMessage": "Result error message"
+    "WithdrawalRecordResultErrorMessage": "Result error message",
+    "Permission:WithdrawalRequest": "Withdrawal request",
+    "Menu:WithdrawalRequest": "Withdrawal request",
+    "WithdrawalRequest": "Withdrawal request",
+    "WithdrawalRequestAccountId": "Account ID",
+    "WithdrawalRequestAccountUserId": "Account user ID",
+    "WithdrawalRequestAmount": "Amount",
+    "WithdrawalRequestReviewTime": "Review time",
+    "WithdrawalRequestReviewerUserId": "Reviewer user ID",
+    "WithdrawalRequestIsApproved": "Approved",
+    "WithdrawalRequestApproveConfirmationMessage": "Are you sure to approve the withdrawal request {0}?",
+    "WithdrawalRequestRejectConfirmationMessage": "Are you sure to reject the withdrawal request {0}?",
+    "SuccessfullyApproved": "Successfully approved",
+    "SuccessfullyRejected": "Successfully rejected",
+    "WithdrawalRequestHasBeenReviewed": "The withdrawal request has been reviewed!",
+    "Approve": "Approve",
+    "Reject": "Reject"
   }
 }

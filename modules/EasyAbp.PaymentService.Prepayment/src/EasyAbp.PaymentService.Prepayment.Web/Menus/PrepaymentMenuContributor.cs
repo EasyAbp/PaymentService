@@ -23,10 +23,17 @@ namespace EasyAbp.PaymentService.Prepayment.Web.Menus
 
              var prepaymentManagementMenuItem = new ApplicationMenuItem(PrepaymentMenus.Prefix, l["Menu:PrepaymentManagement"]);
 
-            if (await context.IsGrantedAsync(PrepaymentPermissions.Account.Default))
+            if (await context.IsGrantedAsync(PrepaymentPermissions.Account.Manage))
             {
                 prepaymentManagementMenuItem.AddItem(
                     new ApplicationMenuItem(PrepaymentMenus.Account, l["Menu:Account"], "/PaymentService/Prepayment/Accounts/Account")
+                );
+            }
+            
+            if (await context.IsGrantedAsync(PrepaymentPermissions.WithdrawalRequest.Manage))
+            {
+                prepaymentManagementMenuItem.AddItem(
+                    new ApplicationMenuItem(PrepaymentMenus.WithdrawalRequest, l["Menu:WithdrawalRequest"], "/PaymentService/Prepayment/WithdrawalRequests/WithdrawalRequest")
                 );
             }
             

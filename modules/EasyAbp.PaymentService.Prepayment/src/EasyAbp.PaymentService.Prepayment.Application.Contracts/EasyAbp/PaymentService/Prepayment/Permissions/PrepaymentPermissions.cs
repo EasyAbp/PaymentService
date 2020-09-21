@@ -30,5 +30,12 @@ namespace EasyAbp.PaymentService.Prepayment.Permissions
             public const string Default = GroupName + ".WithdrawalRecord";
             public const string Manage = Default + ".Manage";
         }
+
+        public class WithdrawalRequest
+        {
+            public const string Default = GroupName + ".WithdrawalRequest";
+            public const string Manage = Default + ".Manage";
+            public const string Review = Default + ".Review";
+        }
     }
 }

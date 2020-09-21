@@ -39,6 +39,22 @@
     "WithdrawalRecordCompletionTime": "完成時間",
     "WithdrawalRecordCancellationTime": "取消時間",
     "WithdrawalRecordResultErrorCode": "錯誤代碼",
-    "WithdrawalRecordResultErrorMessage": "錯誤信息"
+    "WithdrawalRecordResultErrorMessage": "錯誤信息",
+    "Permission:WithdrawalRequest": "提現申請",
+    "Menu:WithdrawalRequest": "提現申請",
+    "WithdrawalRequest": "提現申請",
+    "WithdrawalRequestAccountId": "賬戶 ID",
+    "WithdrawalRequestAccountUserId": "賬戶用戶 ID",
+    "WithdrawalRequestAmount": "金額",
+    "WithdrawalRequestReviewTime": "審核時間",
+    "WithdrawalRequestReviewerUserId": "審核人用戶 ID",
+    "WithdrawalRequestIsApproved": "是否批准",
+    "WithdrawalRequestApproveConfirmationMessage": "確認【批准】提現請求 {0}?",
+    "WithdrawalRequestRejectConfirmationMessage": "確認【拒絕】提現請求 {0}?",
+    "SuccessfullyApproved": "批准成功",
+    "SuccessfullyRejected": "拒絕成功",
+    "WithdrawalRequestHasBeenReviewed": "提現請求已經審核過了",
+    "Approve": "批准",
+    "Reject": "拒絕"
   }
 }

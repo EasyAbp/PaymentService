@@ -4,6 +4,7 @@ using Volo.Abp.EntityFrameworkCore;
 using EasyAbp.PaymentService.Prepayment.Accounts;
 using EasyAbp.PaymentService.Prepayment.Transactions;
 using EasyAbp.PaymentService.Prepayment.WithdrawalRecords;
+using EasyAbp.PaymentService.Prepayment.WithdrawalRequests;
 
 namespace EasyAbp.PaymentService.Prepayment.EntityFrameworkCore
 {
@@ -16,6 +17,7 @@ namespace EasyAbp.PaymentService.Prepayment.EntityFrameworkCore
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<WithdrawalRecord> WithdrawalRecords { get; set; }
+        public DbSet<WithdrawalRequest> WithdrawalRequests { get; set; }
 
         public PrepaymentDbContext(DbContextOptions<PrepaymentDbContext> options) 
             : base(options)

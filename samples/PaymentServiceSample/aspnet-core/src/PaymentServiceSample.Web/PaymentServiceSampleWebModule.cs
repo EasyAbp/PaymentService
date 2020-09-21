@@ -6,6 +6,7 @@ using EasyAbp.PaymentService.Prepayment;
 using EasyAbp.PaymentService.Prepayment.Options;
 using EasyAbp.PaymentService.Prepayment.PaymentService;
 using EasyAbp.PaymentService.Prepayment.Web;
+using EasyAbp.PaymentService.Prepayment.WithdrawalRequests;
 using EasyAbp.PaymentService.Web;
 using EasyAbp.PaymentService.WeChatPay;
 using EasyAbp.PaymentService.WeChatPay.Web;
@@ -118,6 +119,12 @@ namespace PaymentServiceSample.Web
                 {
                     withdrawalMethod.AccountWithdrawalProviderType = typeof(NullAccountWithdrawalProvider);
                     withdrawalMethod.DailyMaximumWithdrawalAmountEachAccount = 1m;
+                });
+                
+                options.WithdrawalMethods.Configure<ManualWithdrawalMethod>(withdrawalMethod =>
+                {
+                    withdrawalMethod.AccountWithdrawalProviderType = typeof(ManualAccountWithdrawalProvider);
+                    withdrawalMethod.DailyMaximumWithdrawalAmountEachAccount = 5m;
                 });
             });
         }
