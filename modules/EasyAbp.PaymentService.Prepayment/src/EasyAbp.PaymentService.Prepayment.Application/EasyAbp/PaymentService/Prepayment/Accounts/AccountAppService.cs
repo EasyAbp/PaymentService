@@ -63,6 +63,7 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
             return base.CreateFilteredQuery(input).WhereIf(input.UserId.HasValue, x => x.UserId == input.UserId.Value);
         }
 
+        [Authorize]
         public override async Task<PagedResultDto<AccountDto>> GetListAsync(GetAccountListInput input)
         {
             if (input.UserId != CurrentUser.GetId())

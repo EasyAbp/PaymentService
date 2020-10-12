@@ -42,6 +42,7 @@ namespace EasyAbp.PaymentService.Prepayment.Transactions
             return dto;
         }
 
+        [Authorize]
         public override async Task<PagedResultDto<TransactionDto>> GetListAsync(GetTransactionListInput input)
         {
             var account = await _accountRepository.GetAsync(input.AccountId);

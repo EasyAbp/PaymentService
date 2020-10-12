@@ -51,6 +51,7 @@ namespace EasyAbp.PaymentService.Prepayment.WithdrawalRequests
             return dto;
         }
 
+        [Authorize]
         public override async Task<PagedResultDto<WithdrawalRequestDto>> GetListAsync(GetWithdrawalRequestListInput input)
         {
             var currentUserId = CurrentUser.GetId();
