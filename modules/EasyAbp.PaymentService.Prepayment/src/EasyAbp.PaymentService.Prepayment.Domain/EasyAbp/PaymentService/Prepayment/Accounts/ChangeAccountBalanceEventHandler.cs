@@ -5,6 +5,7 @@ using Volo.Abp.DependencyInjection;
 using Volo.Abp.EventBus.Distributed;
 using Volo.Abp.Guids;
 using Volo.Abp.MultiTenancy;
+using Volo.Abp.ObjectExtending;
 using Volo.Abp.Uow;
 
 namespace EasyAbp.PaymentService.Prepayment.Accounts
@@ -45,9 +46,10 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
             var transactionType = changedBalance > decimal.Zero ? TransactionType.Debit : TransactionType.Credit;
 
             var transaction = new Transaction(_guidGenerator.Create(), eventData.TenantId, account.Id, account.UserId,
-                null, transactionType, PrepaymentConsts.ChangeBalanceActionName,
-                PrepaymentConsts.ChangeBalancePaymentMethod, null, configuration.Currency, changedBalance,
-                account.Balance);
+                null, transactionType, eventData.ActionName, PrepaymentConsts.ChangeBalancePaymentMethod, null,
+                configuration.Currency, changedBalance, account.Balance);
+
+            eventData.MapExtraPropertiesTo(transaction, MappingPropertyDefinitionChecks.None);
 
             await _transactionRepository.InsertAsync(transaction, true);
             
