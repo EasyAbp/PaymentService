@@ -113,9 +113,11 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
             
             await _withdrawalRecordRepository.UpdateAsync(withdrawalRecord, true);
 
+            var accountChangedBalance = -1 * withdrawalRecord.Amount;
+
             var transaction = new Transaction(GuidGenerator.Create(), CurrentTenant.Id, account.Id, account.UserId,
                 null, TransactionType.Credit, PrepaymentConsts.WithdrawalActionName, withdrawalRecord.WithdrawalMethod,
-                null, accountGroupConfiguration.Currency, withdrawalRecord.Amount, originalBalance);
+                null, accountGroupConfiguration.Currency, accountChangedBalance, originalBalance);
 
             await _transactionRepository.InsertAsync(transaction, true);
             
