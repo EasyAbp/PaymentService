@@ -12,7 +12,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="3.1.5" />
     <ProjectReference Include="..\..\src\EasyAbp.PaymentService.Prepayment.EntityFrameworkCore\EasyAbp.PaymentService.Prepayment.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\EasyAbp.PaymentService.Prepayment.TestBase\EasyAbp.PaymentService.Prepayment.TestBase.csproj" />
-    <PackageReference Include="Volo.Abp.EntityFrameworkCore.Sqlite" Version="3.1.0" />
+    <PackageReference Include="Volo.Abp.EntityFrameworkCore.Sqlite" Version="3.2.1" />
   </ItemGroup>
 
 </Project>
