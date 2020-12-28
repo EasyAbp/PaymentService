@@ -17,6 +17,6 @@ namespace EasyAbp.PaymentService.Refunds
         
         public string StaffRemark { get; set; }
         
-        public Dictionary<string, object> ExtraProperties { get; set; }
+        public ExtraPropertyDictionary ExtraProperties { get; set; }
     }
 }

@@ -8,7 +8,7 @@ using Volo.Abp.Application.Dtos;
 namespace EasyAbp.PaymentService.Payments
 {
     [RemoteService(Name = "EasyAbpPaymentService")]
-    [Route("/api/paymentService/payment")]
+    [Route("/api/payment-service/payment")]
     public class PaymentController : PaymentServiceController, IPaymentAppService
     {
         private readonly IPaymentAppService _service;
@@ -32,7 +32,7 @@ namespace EasyAbp.PaymentService.Payments
         }
 
         [HttpGet]
-        [Route("paymentMethod")]
+        [Route("payment-method")]
         public virtual Task<ListResultDto<PaymentMethodDto>> GetListPaymentMethod()
         {
             return _service.GetListPaymentMethod();

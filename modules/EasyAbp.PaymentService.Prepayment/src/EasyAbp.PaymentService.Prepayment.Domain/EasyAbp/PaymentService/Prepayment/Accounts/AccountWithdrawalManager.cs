@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using EasyAbp.PaymentService.Prepayment.Options.AccountGroups;
 using EasyAbp.PaymentService.Prepayment.Options.WithdrawalMethods;
 using EasyAbp.PaymentService.Prepayment.Transactions;
 using EasyAbp.PaymentService.Prepayment.WithdrawalRecords;
 using JetBrains.Annotations;
+using Volo.Abp.Data;
 using Volo.Abp.Domain.Services;
 
 namespace EasyAbp.PaymentService.Prepayment.Accounts
@@ -32,7 +32,7 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
         }
 
         public virtual async Task StartWithdrawalAsync(Account account, string withdrawalMethod, decimal amount,
-            Dictionary<string, object> inputExtraProperties)
+            ExtraPropertyDictionary inputExtraProperties)
         {
             var withdrawalProvider = GetWithdrawalProvider(withdrawalMethod);
 

@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Volo.Abp.Data;
 
 namespace EasyAbp.PaymentService.Prepayment.Accounts
 {
     public interface IAccountWithdrawalProvider
     {
         Task OnStartWithdrawalAsync(Account account, string withdrawalMethod, decimal amount,
-            Dictionary<string, object> inputExtraProperties);
+            ExtraPropertyDictionary inputExtraProperties);
 
         Task OnCompleteWithdrawalAsync(Account account);
         

@@ -22,6 +22,6 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
         /// <summary>
         /// The value will be copied to Transaction.ExtraProperties.
         /// </summary>
-        public Dictionary<string, object> ExtraProperties { get; set; } = new Dictionary<string, object>();
+        public ExtraPropertyDictionary ExtraProperties { get; set; } = new ExtraPropertyDictionary();
     }
 }

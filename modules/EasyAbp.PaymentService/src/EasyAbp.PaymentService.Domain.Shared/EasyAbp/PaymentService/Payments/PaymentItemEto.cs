@@ -23,6 +23,6 @@ namespace EasyAbp.PaymentService.Payments
         
         public decimal PendingRefundAmount { get; set; }
         
-        public Dictionary<string, object> ExtraProperties { get; set; }
+        public ExtraPropertyDictionary ExtraProperties { get; set; }
     }
 }

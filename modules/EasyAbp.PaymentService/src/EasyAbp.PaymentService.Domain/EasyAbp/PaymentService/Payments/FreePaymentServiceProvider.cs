@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using EasyAbp.PaymentService.Refunds;
-using Volo.Abp.DependencyInjection;
-using Volo.Abp.Timing;
+using Volo.Abp.Data;
 
 namespace EasyAbp.PaymentService.Payments
 {
@@ -22,7 +20,7 @@ namespace EasyAbp.PaymentService.Payments
             _paymentRepository = paymentRepository;
         }
 
-        public override async Task OnPaymentStartedAsync(Payment payment, Dictionary<string, object> configurations)
+        public override async Task OnPaymentStartedAsync(Payment payment, ExtraPropertyDictionary configurations)
         {
             if (payment.ActualPaymentAmount != decimal.Zero)
             {

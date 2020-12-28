@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Localization;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
+using Volo.Abp.Data;
 using Volo.Abp.Users;
 
 namespace EasyAbp.PaymentService.Payments
@@ -120,12 +121,12 @@ namespace EasyAbp.PaymentService.Payments
             return await MapToGetOutputDtoAsync(payment);
         }
 
-        protected virtual Task<Dictionary<string, object>> GetPayeeConfigurationsAsync(Payment payment)
+        protected virtual Task<ExtraPropertyDictionary> GetPayeeConfigurationsAsync(Payment payment)
         {
             // Todo: use payee configurations provider.
             // Todo: get store side payee configurations.
             
-            var payeeConfigurations = new Dictionary<string, object>();
+            var payeeConfigurations = new ExtraPropertyDictionary();
             
             return Task.FromResult(payeeConfigurations);
         }

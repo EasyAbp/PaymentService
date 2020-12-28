@@ -58,7 +58,7 @@ namespace EasyAbp.PaymentService.WeChatPay
             _paymentRepository = paymentRepository;
         }
 
-        public override async Task OnPaymentStartedAsync(Payment payment, Dictionary<string, object> configurations)
+        public override async Task OnPaymentStartedAsync(Payment payment, ExtraPropertyDictionary configurations)
         {
             if (payment.Currency != "CNY")
             {

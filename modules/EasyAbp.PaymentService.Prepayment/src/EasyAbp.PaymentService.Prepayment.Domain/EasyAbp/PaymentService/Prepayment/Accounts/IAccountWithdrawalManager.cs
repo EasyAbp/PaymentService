@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using JetBrains.Annotations;
+using Volo.Abp.Data;
 using Volo.Abp.Domain.Services;
 
 namespace EasyAbp.PaymentService.Prepayment.Accounts
@@ -8,7 +8,7 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
     public interface IAccountWithdrawalManager : IDomainService
     {
         Task StartWithdrawalAsync(Account account, [NotNull] string withdrawalMethod, decimal amount,
-            Dictionary<string, object> inputExtraProperties);
+            ExtraPropertyDictionary inputExtraProperties);
         
         Task CompleteWithdrawalAsync(Account account);
 

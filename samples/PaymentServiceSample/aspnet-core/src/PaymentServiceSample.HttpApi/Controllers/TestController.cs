@@ -7,8 +7,8 @@ using EasyAbp.PaymentService.Payments.Dtos;
 using EasyAbp.PaymentService.Refunds;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Volo.Abp;
 using Volo.Abp.Application.Dtos;
+using Volo.Abp.Data;
 using Volo.Abp.EventBus.Distributed;
 using Volo.Abp.Users;
 
@@ -37,7 +37,7 @@ namespace PaymentServiceSample.Controllers
             await _distributedEventBus.PublishAsync(new CreatePaymentEto
             {
                 Currency = "CNY",
-                ExtraProperties = new Dictionary<string, object>(),
+                ExtraProperties = new ExtraPropertyDictionary(),
                 PaymentItems = new List<CreatePaymentItemEto>(new []
                 {
                     new CreatePaymentItemEto

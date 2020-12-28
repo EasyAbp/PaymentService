@@ -38,7 +38,7 @@ namespace EasyAbp.PaymentService.Payments
         
         public DateTime CreationTime { get; set; }
     
-        public Dictionary<string, object> ExtraProperties { get; set; }
+        public ExtraPropertyDictionary ExtraProperties { get; set; }
 
         public List<PaymentItemEto> PaymentItems { get; set; }
     }

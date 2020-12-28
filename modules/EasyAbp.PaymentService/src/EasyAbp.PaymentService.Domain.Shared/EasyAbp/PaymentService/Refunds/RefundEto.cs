@@ -32,7 +32,7 @@ namespace EasyAbp.PaymentService.Refunds
         
         public DateTime? CanceledTime { get; set; }
 
-        public Dictionary<string, object> ExtraProperties { get; set; }
+        public ExtraPropertyDictionary ExtraProperties { get; set; }
         
         public List<RefundItemEto> RefundItems { get; set; } = new List<RefundItemEto>();
     }

@@ -19,11 +19,11 @@ namespace EasyAbp.PaymentService.Refunds
         [CanBeNull]
         public virtual string StaffRemark { get; protected set; }
         
-        public virtual Dictionary<string, object> ExtraProperties { get; protected set; }
+        public virtual ExtraPropertyDictionary ExtraProperties { get; protected set; }
         
         protected RefundItem()
         {
-            ExtraProperties = new Dictionary<string, object>();
+            ExtraProperties = new ExtraPropertyDictionary();
             this.SetDefaultsForExtraProperties();
         }
 
@@ -39,7 +39,7 @@ namespace EasyAbp.PaymentService.Refunds
             CustomerRemark = customerRemark;
             StaffRemark = staffRemark;
             
-            ExtraProperties = new Dictionary<string, object>();
+            ExtraProperties = new ExtraPropertyDictionary();
             this.SetDefaultsForExtraProperties();
         }
     }

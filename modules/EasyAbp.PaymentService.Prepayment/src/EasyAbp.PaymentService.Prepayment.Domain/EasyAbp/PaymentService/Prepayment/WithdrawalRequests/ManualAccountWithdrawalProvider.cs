@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using EasyAbp.PaymentService.Prepayment.Accounts;
+using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Guids;
 using Volo.Abp.MultiTenancy;
@@ -25,7 +25,7 @@ namespace EasyAbp.PaymentService.Prepayment.WithdrawalRequests
         }
 
         public override async Task OnStartWithdrawalAsync(Account account, string withdrawalMethod, decimal amount,
-            Dictionary<string, object> inputExtraProperties)
+            ExtraPropertyDictionary inputExtraProperties)
         {
             var request = new WithdrawalRequest(_guidGenerator.Create(), _currentTenant.Id, account.Id, account.UserId, amount);
 

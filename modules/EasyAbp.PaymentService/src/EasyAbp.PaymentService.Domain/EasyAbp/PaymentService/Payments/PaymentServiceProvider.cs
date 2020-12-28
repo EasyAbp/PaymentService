@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using EasyAbp.PaymentService.Refunds;
+using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 
 namespace EasyAbp.PaymentService.Payments
 {
     public abstract class PaymentServiceProvider : IPaymentServiceProvider, ITransientDependency
     {
-        public virtual Task OnPaymentStartedAsync(Payment payment, Dictionary<string, object> configurations)
+        public virtual Task OnPaymentStartedAsync(Payment payment, ExtraPropertyDictionary configurations)
         {
             return Task.CompletedTask;
         }

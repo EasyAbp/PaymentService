@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using EasyAbp.PaymentService.Refunds;
+using Volo.Abp.Data;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Services;
 using Volo.Abp.EventBus.Distributed;
@@ -41,7 +40,7 @@ namespace EasyAbp.PaymentService.Payments
             _distributedEventBus = distributedEventBus;
         }
         
-        public virtual async Task StartPaymentAsync(Payment payment, Dictionary<string, object> configurations = null)
+        public virtual async Task StartPaymentAsync(Payment payment, ExtraPropertyDictionary configurations = null)
         {
             var provider = GetProvider(payment);
 

@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using EasyAbp.PaymentService.Prepayment.Accounts;
+using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 
 namespace PaymentServiceSample.Web
@@ -13,7 +13,7 @@ namespace PaymentServiceSample.Web
         }
 
         public override async Task OnStartWithdrawalAsync(Account account, string withdrawalMethod, decimal amount,
-            Dictionary<string, object> inputExtraProperties)
+            ExtraPropertyDictionary inputExtraProperties)
         {
             await AccountWithdrawalManager.CompleteWithdrawalAsync(account);
         }

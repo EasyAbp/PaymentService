@@ -18,6 +18,6 @@ namespace EasyAbp.PaymentService.Refunds
         [CanBeNull]
         public string StaffRemark { get; set; }
 
-        public Dictionary<string, object> ExtraProperties { get; set; } = new Dictionary<string, object>();
+        public ExtraPropertyDictionary ExtraProperties { get; set; } = new ExtraPropertyDictionary();
     }
 }

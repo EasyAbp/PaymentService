@@ -47,7 +47,7 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
             _accountGroupConfigurationProvider = accountGroupConfigurationProvider;
         }
 
-        public override async Task OnPaymentStartedAsync(Payment payment, Dictionary<string, object> configurations)
+        public override async Task OnPaymentStartedAsync(Payment payment, ExtraPropertyDictionary configurations)
         {
             if (payment.ActualPaymentAmount <= decimal.Zero)
             {

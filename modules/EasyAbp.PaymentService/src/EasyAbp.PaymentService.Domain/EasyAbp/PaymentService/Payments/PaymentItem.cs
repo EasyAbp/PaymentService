@@ -23,11 +23,11 @@ namespace EasyAbp.PaymentService.Payments
         
         public virtual decimal PendingRefundAmount { get; protected set; }
 
-        public virtual Dictionary<string, object> ExtraProperties { get; protected set; }
+        public virtual ExtraPropertyDictionary ExtraProperties { get; protected set; }
 
         protected PaymentItem()
         {
-            ExtraProperties = new Dictionary<string, object>();
+            ExtraProperties = new ExtraPropertyDictionary();
             this.SetDefaultsForExtraProperties();
         }
 
@@ -43,7 +43,7 @@ namespace EasyAbp.PaymentService.Payments
             OriginalPaymentAmount = originalPaymentAmount;
             ActualPaymentAmount = originalPaymentAmount;
 
-            ExtraProperties = new Dictionary<string, object>();
+            ExtraProperties = new ExtraPropertyDictionary();
             this.SetDefaultsForExtraProperties();
         }
         

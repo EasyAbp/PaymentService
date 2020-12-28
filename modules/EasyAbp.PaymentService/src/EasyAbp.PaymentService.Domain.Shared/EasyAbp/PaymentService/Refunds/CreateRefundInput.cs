@@ -20,7 +20,7 @@ namespace EasyAbp.PaymentService.Refunds
         public string StaffRemark { get; set; }
         
         // Todo: should not be a big object.
-        public Dictionary<string, object> ExtraProperties { get; set; } = new Dictionary<string, object>();
+        public ExtraPropertyDictionary ExtraProperties { get; set; } = new ExtraPropertyDictionary();
 
         public List<CreateRefundItemInput> RefundItems { get; set; } = new List<CreateRefundItemInput>();
     }

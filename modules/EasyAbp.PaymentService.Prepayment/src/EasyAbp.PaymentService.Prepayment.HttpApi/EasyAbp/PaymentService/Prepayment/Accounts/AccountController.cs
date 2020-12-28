@@ -8,7 +8,7 @@ using Volo.Abp.Application.Dtos;
 namespace EasyAbp.PaymentService.Prepayment.Accounts
 {
     [RemoteService(Name = "EasyAbpPaymentServicePrepayment")]
-    [Route("/api/paymentService/prepayment/account")]
+    [Route("/api/payment-service/prepayment/account")]
     public class AccountController : PrepaymentController, IAccountAppService
     {
         private readonly IAccountAppService _service;
@@ -26,14 +26,14 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
         }
 
         [HttpPost]
-        [Route("{id}/change/lockedBalance")]
+        [Route("{id}/change/locked-balance")]
         public virtual Task<AccountDto> ChangeLockedBalanceAsync(Guid id, ChangeLockedBalanceInput input)
         {
             return _service.ChangeLockedBalanceAsync(id, input);
         }
 
         [HttpPost]
-        [Route("{id}/topUp")]
+        [Route("{id}/top-up")]
         public virtual Task TopUpAsync(Guid id, TopUpInput input)
         {
             return _service.TopUpAsync(id, input);
