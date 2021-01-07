@@ -8,7 +8,6 @@ using EasyAbp.PaymentService.Prepayment.Accounts.Dtos;
 using EasyAbp.PaymentService.Prepayment.Options;
 using EasyAbp.PaymentService.Prepayment.Options.AccountGroups;
 using EasyAbp.PaymentService.Prepayment.Transactions;
-using EasyAbp.PaymentService.Prepayment.WithdrawalRecords;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -142,7 +141,7 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
                 throw new UnauthorizedTopUpException(account.Id);
             }
 
-            if (account.GetPendingTopUpPaymentId().HasValue)
+            if (account.PendingTopUpPaymentId.HasValue)
             {
                 throw new TopUpIsAlreadyInProgressException();
             }

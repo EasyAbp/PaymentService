@@ -75,7 +75,7 @@ namespace EasyAbp.PaymentService.Prepayment.WithdrawalRequests
 
             request.CheckReviewable();
             
-            if (account.GetPendingWithdrawalAmount() != request.Amount)
+            if (account.PendingWithdrawalAmount != request.Amount)
             {
                 throw new UnexpectedWithdrawalAmountException();
             }

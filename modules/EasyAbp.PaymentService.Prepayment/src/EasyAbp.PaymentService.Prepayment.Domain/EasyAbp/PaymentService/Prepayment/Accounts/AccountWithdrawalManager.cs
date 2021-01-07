@@ -90,7 +90,7 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
 
         public virtual async Task CompleteWithdrawalAsync(Account account)
         {
-            var withdrawalRecordId = account.GetPendingWithdrawalRecordId();
+            var withdrawalRecordId = account.PendingWithdrawalRecordId;
 
             if (!withdrawalRecordId.HasValue)
             {
@@ -128,7 +128,7 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
         public virtual async Task CancelWithdrawalAsync(Account account, string errorCode = null,
             string errorMessage = null)
         {
-            var withdrawalRecordId = account.GetPendingWithdrawalRecordId();
+            var withdrawalRecordId = account.PendingWithdrawalRecordId;
 
             if (!withdrawalRecordId.HasValue)
             {

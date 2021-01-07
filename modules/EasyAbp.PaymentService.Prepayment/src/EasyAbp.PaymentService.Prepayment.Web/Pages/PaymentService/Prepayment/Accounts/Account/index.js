@@ -53,6 +53,9 @@ $(function () {
             { data: "userId" },
             { data: "balance" },
             { data: "lockedBalance" },
+            { data: "pendingTopUpPaymentId" },
+            { data: "pendingWithdrawalRecordId" },
+            { data: "pendingWithdrawalAmount" },
         ]
     }));
 

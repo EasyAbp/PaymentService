@@ -8,10 +8,6 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
 {
     public class Account : FullAuditedAggregateRoot<Guid>, IMultiTenant
     {
-        private const string PendingTopUpPaymentIdPropertyName = "PendingTopUpPaymentId";
-        private const string PendingWithdrawalRecordIdPropertyName = "PendingWithdrawalRecordId";
-        private const string PendingWithdrawalAmountPropertyName = "PendingWithdrawalAmount";
-        
         public virtual Guid? TenantId { get; protected set; }
         
         [NotNull]
@@ -22,6 +18,12 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
         public virtual decimal Balance { get; protected set; }
         
         public virtual decimal LockedBalance { get; protected set; }
+        
+        public virtual Guid? PendingTopUpPaymentId { get; protected set; }
+        
+        public virtual Guid? PendingWithdrawalRecordId { get; protected set; }
+        
+        public virtual decimal PendingWithdrawalAmount { get; protected set; }
 
         protected Account()
         {
@@ -77,7 +79,7 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
             
             if (!ignorePendingWithdrawalAmount)
             {
-                var pendingWithdrawalAmount = GetPendingWithdrawalAmount();
+                var pendingWithdrawalAmount = PendingWithdrawalAmount;
                 
                 if (newLockedBalance < pendingWithdrawalAmount)
                 {
@@ -91,29 +93,12 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
 
         public void SetPendingTopUpPaymentId(Guid? pendingTopUpPaymentId)
         {
-            if (pendingTopUpPaymentId.HasValue)
-            {
-                this.SetProperty(PendingTopUpPaymentIdPropertyName, pendingTopUpPaymentId.ToString());
-            }
-            else
-            {
-                this.RemoveProperty(PendingTopUpPaymentIdPropertyName);
-            }
+            PendingTopUpPaymentId = pendingTopUpPaymentId;
         }
-        
-        public Guid? GetPendingTopUpPaymentId()
-        {
-            if (Guid.TryParse(this.GetProperty<string>(PendingTopUpPaymentIdPropertyName), out var paymentId))
-            {
-                return paymentId;
-            }
 
-            return null;
-        }
-        
         public void StartWithdrawal(Guid pendingWithdrawalRecordId, decimal amount)
         {
-            if (GetPendingWithdrawalRecordId().HasValue || GetPendingWithdrawalAmount() != decimal.Zero)
+            if (PendingWithdrawalRecordId.HasValue || PendingWithdrawalAmount != decimal.Zero)
             {
                 throw new WithdrawalIsAlreadyInProgressException();
             }
@@ -126,11 +111,9 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
         
         public void CompleteWithdrawal()
         {
-            var pendingAmount = GetPendingWithdrawalAmount();
-
             ClearPendingWithdrawal();
             
-            ChangeBalance(-pendingAmount);
+            ChangeBalance(-PendingWithdrawalAmount);
         }
         
         public void CancelWithdrawal()
@@ -140,15 +123,13 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
 
         private void ClearPendingWithdrawal()
         {
-            var pendingAmount = GetPendingWithdrawalAmount();
-
-            if (!GetPendingWithdrawalRecordId().HasValue || pendingAmount == decimal.Zero)
+            if (!PendingWithdrawalRecordId.HasValue || PendingWithdrawalAmount == decimal.Zero)
             {
                 throw new WithdrawalInProgressNotFoundException();
             }
             
 
-            ChangeLockedBalance(-pendingAmount, true);
+            ChangeLockedBalance(-PendingWithdrawalAmount, true);
 
             SetPendingWithdrawalRecordId(null);
             SetPendingWithdrawalAmount(0m);
@@ -156,34 +137,12 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
         
         private void SetPendingWithdrawalRecordId(Guid? pendingWithdrawalRecordId)
         {
-            if (pendingWithdrawalRecordId.HasValue)
-            {
-                this.SetProperty(PendingWithdrawalRecordIdPropertyName, pendingWithdrawalRecordId.ToString());
-            }
-            else
-            {
-                this.RemoveProperty(PendingWithdrawalRecordIdPropertyName);
-            }
-        }
-        
-        public Guid? GetPendingWithdrawalRecordId()
-        {
-            if (Guid.TryParse(this.GetProperty<string>(PendingWithdrawalRecordIdPropertyName), out var withdrawalRecordId))
-            {
-                return withdrawalRecordId;
-            }
-
-            return null;
+            PendingWithdrawalRecordId = pendingWithdrawalRecordId;
         }
         
         private void SetPendingWithdrawalAmount(decimal pendingWithdrawalAmount)
         {
-            this.SetProperty(PendingWithdrawalAmountPropertyName, pendingWithdrawalAmount);
-        }
-        
-        public decimal GetPendingWithdrawalAmount()
-        {
-            return this.GetProperty<decimal>(PendingWithdrawalAmountPropertyName);
+            PendingWithdrawalAmount = pendingWithdrawalAmount;
         }
     }
 }
