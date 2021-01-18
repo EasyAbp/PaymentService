@@ -34,11 +34,12 @@ namespace PaymentServiceSample.Controllers
         [HttpPost]
         public async Task<PaymentDto> CreateFreePaymentAsync()
         {
-            await _distributedEventBus.PublishAsync(new CreatePaymentEto
-            {
-                Currency = "CNY",
-                ExtraProperties = new ExtraPropertyDictionary(),
-                PaymentItems = new List<CreatePaymentItemEto>(new []
+            await _distributedEventBus.PublishAsync(new CreatePaymentEto(
+                CurrentTenant.Id,
+                CurrentUser.GetId(),
+                "Free",
+                "CNY",
+                new List<CreatePaymentItemEto>(new[]
                 {
                     new CreatePaymentItemEto
                     {
@@ -46,11 +47,7 @@ namespace PaymentServiceSample.Controllers
                         ItemKey = Guid.NewGuid().ToString(),
                         OriginalPaymentAmount = 0
                     }
-                }),
-                PaymentMethod = "Free",
-                TenantId = CurrentTenant.Id,
-                UserId = CurrentUser.GetId()
-            });
+                })));
             
             return (await _paymentAppService.GetListAsync(new PagedAndSortedResultRequestDto())).Items.FirstOrDefault();
         }
@@ -62,10 +59,7 @@ namespace PaymentServiceSample.Controllers
         {
             var payment = await _paymentAppService.GetAsync(paymentId);
 
-            await _distributedEventBus.PublishAsync(new RefundPaymentEto
-            {
-                TenantId = CurrentTenant.Id,
-                CreateRefundInput = new CreateRefundInput
+            await _distributedEventBus.PublishAsync(new RefundPaymentEto(CurrentTenant.Id, new CreateRefundInput
                 {
                     PaymentId = payment.Id,
                     DisplayReason = "Test0",
@@ -80,7 +74,7 @@ namespace PaymentServiceSample.Controllers
                             StaffRemark = "Test4"
                         }))
                 }
-            });
+            ));
 
             return await _paymentAppService.GetAsync(paymentId);
         }

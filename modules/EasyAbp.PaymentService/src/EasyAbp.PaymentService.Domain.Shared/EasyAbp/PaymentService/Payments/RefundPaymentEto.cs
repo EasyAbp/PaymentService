@@ -12,5 +12,13 @@ namespace EasyAbp.PaymentService.Payments
         public Guid? TenantId { get; set; }
         
         public CreateRefundInput CreateRefundInput { get; set; }
+
+        public RefundPaymentEto(
+            Guid? tenantId,
+            CreateRefundInput createRefundInput)
+        {
+            TenantId = tenantId;
+            CreateRefundInput = createRefundInput;
+        }
     }
 }

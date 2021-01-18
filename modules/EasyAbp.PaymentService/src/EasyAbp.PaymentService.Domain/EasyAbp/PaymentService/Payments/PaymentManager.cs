@@ -53,10 +53,9 @@ namespace EasyAbp.PaymentService.Payments
         {
             using var uow = _unitOfWorkManager.Begin(isTransactional: true);
 
-            uow.OnCompleted(async () => await _distributedEventBus.PublishAsync(new PaymentCompletedEto
-            {
-                Payment = _objectMapper.Map<Payment, PaymentEto>(payment)
-            }));
+            uow.OnCompleted(async () =>
+                await _distributedEventBus.PublishAsync(
+                    new PaymentCompletedEto(_objectMapper.Map<Payment, PaymentEto>(payment))));
             
             payment.CompletePayment(_clock.Now);
             
@@ -81,10 +80,9 @@ namespace EasyAbp.PaymentService.Payments
         {
             using var uow = _unitOfWorkManager.Begin(isTransactional: true);
 
-            uow.OnCompleted(async () => await _distributedEventBus.PublishAsync(new PaymentCanceledEto
-            {
-                Payment = _objectMapper.Map<Payment, PaymentEto>(payment)
-            }));
+            uow.OnCompleted(async () =>
+                await _distributedEventBus.PublishAsync(
+                    new PaymentCanceledEto(_objectMapper.Map<Payment, PaymentEto>(payment))));
             
             payment.CancelPayment(_clock.Now);
             
@@ -174,11 +172,8 @@ namespace EasyAbp.PaymentService.Payments
             var paymentEto = _objectMapper.Map<Payment, PaymentEto>(payment);
             var refundEto = _objectMapper.Map<Refund, RefundEto>(refund);
 
-            uow.OnCompleted(async () => await _distributedEventBus.PublishAsync(new PaymentRefundCompletedEto
-            {
-                Payment = paymentEto,
-                Refund = refundEto
-            }));
+            uow.OnCompleted(async () =>
+                await _distributedEventBus.PublishAsync(new PaymentRefundCompletedEto(paymentEto, refundEto)));
 
             await uow.CompleteAsync();
         }
@@ -187,11 +182,9 @@ namespace EasyAbp.PaymentService.Payments
         {
             using var uow = _unitOfWorkManager.Begin(isTransactional: true);
 
-            uow.OnCompleted(async () => await _distributedEventBus.PublishAsync(new PaymentRefundRollbackEto
-            {
-                Payment = _objectMapper.Map<Payment, PaymentEto>(payment),
-                Refund = _objectMapper.Map<Refund, RefundEto>(refund)
-            }));
+            uow.OnCompleted(async () =>
+                await _distributedEventBus.PublishAsync(new PaymentRefundRollbackEto(
+                    _objectMapper.Map<Payment, PaymentEto>(payment), _objectMapper.Map<Refund, RefundEto>(refund))));
 
             payment.RollbackRefund();
             

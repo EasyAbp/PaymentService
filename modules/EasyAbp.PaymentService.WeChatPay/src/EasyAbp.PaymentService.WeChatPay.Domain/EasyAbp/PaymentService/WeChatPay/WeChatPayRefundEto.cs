@@ -12,5 +12,14 @@ namespace EasyAbp.PaymentService.WeChatPay
         public Guid PaymentId { get; set; }
         
         public Refund Refund { get; set; }
+
+        public WeChatPayRefundEto(
+            Guid paymentId,
+            Refund refund)
+        {
+            TenantId = refund.TenantId;
+            PaymentId = paymentId;
+            Refund = refund;
+        }
     }
 }

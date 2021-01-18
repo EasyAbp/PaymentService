@@ -6,7 +6,7 @@ using Volo.Abp.MultiTenancy;
 namespace EasyAbp.PaymentService.Payments
 {
     [Serializable]
-    public class CreatePaymentEto : IMultiTenant, IHasExtraProperties
+    public class CreatePaymentEto : IHasExtraProperties, IMultiTenant
     {
         public Guid? TenantId { get; set; }
         
@@ -16,8 +16,24 @@ namespace EasyAbp.PaymentService.Payments
 
         public string Currency { get; set; }
         
-        public ExtraPropertyDictionary ExtraProperties { get; set; } = new ExtraPropertyDictionary();
+        public ExtraPropertyDictionary ExtraProperties { get; set; }
 
         public List<CreatePaymentItemEto> PaymentItems { get; set; }
+
+        public CreatePaymentEto(
+            Guid? tenantId,
+            Guid userId,
+            string paymentMethod,
+            string currency,
+            List<CreatePaymentItemEto> paymentItems)
+        {
+            TenantId = tenantId;
+            UserId = userId;
+            PaymentMethod = paymentMethod;
+            Currency = currency;
+            PaymentItems = paymentItems;
+
+            ExtraProperties = new ExtraPropertyDictionary();
+        }
     }
 }

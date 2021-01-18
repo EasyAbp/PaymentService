@@ -175,11 +175,7 @@ namespace EasyAbp.PaymentService.WeChatPay
 
             uow.OnCompleted(async () =>
             {
-                await _localEventBus.PublishAsync(new WeChatPayRefundEto
-                {
-                    PaymentId = payment.Id,
-                    Refund = refund
-                });
+                await _localEventBus.PublishAsync(new WeChatPayRefundEto(payment.Id, refund));
             });
 
             await uow.CompleteAsync();

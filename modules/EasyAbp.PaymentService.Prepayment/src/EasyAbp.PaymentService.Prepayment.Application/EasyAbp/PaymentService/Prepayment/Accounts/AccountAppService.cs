@@ -148,13 +148,12 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
             
             var configuration = _accountGroupConfigurationProvider.Get(account.AccountGroupName);
 
-            await _distributedEventBus.PublishAsync(new CreatePaymentEto
-            {
-                TenantId = CurrentTenant.Id,
-                UserId = CurrentUser.GetId(),
-                PaymentMethod = input.PaymentMethod,
-                Currency = configuration.Currency,
-                PaymentItems = new List<CreatePaymentItemEto>(new[]
+            await _distributedEventBus.PublishAsync(new CreatePaymentEto(
+                CurrentTenant.Id,
+                CurrentUser.GetId(),
+                input.PaymentMethod,
+                configuration.Currency,
+                new List<CreatePaymentItemEto>(new[]
                 {
                     new CreatePaymentItemEto
                     {
@@ -163,7 +162,7 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
                         OriginalPaymentAmount = input.Amount
                     }
                 })
-            });
+            ));
         }
 
         [Authorize(PrepaymentPermissions.Account.Withdraw)]
