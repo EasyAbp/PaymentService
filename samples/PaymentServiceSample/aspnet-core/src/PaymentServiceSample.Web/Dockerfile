@@ -36,8 +36,8 @@ COPY ["modules/EasyAbp.PaymentService.WeChatPay/src/EasyAbp.PaymentService.WeCha
 COPY ["modules/EasyAbp.PaymentService.Prepayment/src/EasyAbp.PaymentService.Prepayment.HttpApi/EasyAbp.PaymentService.Prepayment.HttpApi.csproj", "modules/EasyAbp.PaymentService.Prepayment/src/EasyAbp.PaymentService.Prepayment.HttpApi/"]
 COPY ["modules/EasyAbp.PaymentService.WeChatPay/src/EasyAbp.PaymentService.WeChatPay.Web/EasyAbp.PaymentService.WeChatPay.Web.csproj", "modules/EasyAbp.PaymentService.WeChatPay/src/EasyAbp.PaymentService.WeChatPay.Web/"]
 COPY ["modules/EasyAbp.PaymentService.Prepayment/src/EasyAbp.PaymentService.Prepayment.Web/EasyAbp.PaymentService.Prepayment.Web.csproj", "modules/EasyAbp.PaymentService.Prepayment/src/EasyAbp.PaymentService.Prepayment.Web/"]
-RUN dotnet restore "samples/PaymentServiceSample/aspnet-core/src/PaymentServiceSample.Web/PaymentServiceSample.Web.csproj"
 COPY Directory.Build.props .
+RUN dotnet restore "samples/PaymentServiceSample/aspnet-core/src/PaymentServiceSample.Web/PaymentServiceSample.Web.csproj"
 COPY . .
 WORKDIR "/src/samples/PaymentServiceSample/aspnet-core/src/PaymentServiceSample.Web"
 RUN dotnet build "PaymentServiceSample.Web.csproj" -c Release -o /app/build
