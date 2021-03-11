@@ -17,7 +17,7 @@ namespace EasyAbp.PaymentService.WeChatPay.PaymentRecords
 
         public virtual async Task<PaymentRecord> GetByPaymentId(Guid paymentId, CancellationToken cancellationToken = default)
         {
-            var entity = await WithDetails().FirstOrDefaultAsync(x => x.PaymentId == paymentId, cancellationToken);
+            var entity = await (await WithDetailsAsync()).FirstOrDefaultAsync(x => x.PaymentId == paymentId, cancellationToken);
             
             if (entity == null)
             {

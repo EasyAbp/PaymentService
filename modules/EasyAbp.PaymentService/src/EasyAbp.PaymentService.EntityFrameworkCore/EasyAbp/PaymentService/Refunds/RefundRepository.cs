@@ -16,9 +16,9 @@ namespace EasyAbp.PaymentService.Refunds
         {
         }
 
-        public override IQueryable<Refund> WithDetails()
+        public override async Task<IQueryable<Refund>> WithDetailsAsync()
         {
-            return base.WithDetails().Include(x => x.RefundItems);
+            return (await base.WithDetailsAsync()).Include(x => x.RefundItems);
         }
 
         public virtual async Task<Refund> FindByPaymentIdAsync(Guid paymentId, CancellationToken cancellationToken = default)

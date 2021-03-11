@@ -14,14 +14,14 @@ namespace EasyAbp.PaymentService.Payments
         {
         }
 
-        public override IQueryable<Payment> WithDetails()
+        public override async Task<IQueryable<Payment>> WithDetailsAsync()
         {
-            return base.WithDetails().Include(x => x.PaymentItems);
+            return (await base.WithDetailsAsync()).Include(x => x.PaymentItems);
         }
 
         public virtual async Task<Payment> FindPaymentInProgressByPaymentItem(string paymentItemType, string paymentItemKey)
         {
-            return await base.WithDetails()
+            return await (await base.WithDetailsAsync())
                 .Where(payment => !payment.CompletionTime.HasValue && !payment.CanceledTime.HasValue)
                 .FirstOrDefaultAsync(payment =>
                     payment.PaymentItems.Any(item =>
