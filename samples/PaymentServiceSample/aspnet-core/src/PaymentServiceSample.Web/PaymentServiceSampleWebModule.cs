@@ -43,6 +43,8 @@ using Volo.Abp.Identity.Web;
 using Volo.Abp.Localization;
 using Volo.Abp.Modularity;
 using Volo.Abp.PermissionManagement.Web;
+using Volo.Abp.SettingManagement.Web;
+using Volo.Abp.Swashbuckle;
 using Volo.Abp.TenantManagement.Web;
 using Volo.Abp.Threading;
 using Volo.Abp.UI.Navigation.Urls;
@@ -62,6 +64,9 @@ namespace PaymentServiceSample.Web
         typeof(AbpAspNetCoreMvcUiBasicThemeModule),
         typeof(AbpAspNetCoreAuthenticationJwtBearerModule),
         typeof(AbpTenantManagementWebModule),
+        typeof(AbpFeatureManagementWebModule),
+        typeof(AbpSettingManagementWebModule),
+        typeof(AbpSwashbuckleModule),
         typeof(AbpAspNetCoreSerilogModule),
         typeof(PaymentServiceWebModule),
         typeof(PaymentServicePrepaymentWebModule),
@@ -140,11 +145,11 @@ namespace PaymentServiceSample.Web
         private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration)
         {
             context.Services.AddAuthentication()
-                .AddIdentityServerAuthentication(options =>
+                .AddJwtBearer(options =>
                 {
                     options.Authority = configuration["AuthServer:Authority"];
-                    options.RequireHttpsMetadata = false;
-                    options.ApiName = "PaymentServiceSample";
+                    options.RequireHttpsMetadata = Convert.ToBoolean(configuration["AuthServer:RequireHttpsMetadata"]);
+                    options.Audience = "PaymentServiceSample";
                 });
         }
 
@@ -229,32 +234,41 @@ namespace PaymentServiceSample.Web
 
         private void ConfigureSwaggerServices(IServiceCollection services)
         {
-            // Register the Swagger services
-            services.AddSwaggerDocument(options =>
-            {
-                options.DocumentName = "EasyAbpPaymentService";
-                options.ApiGroupNames = new[] {"EasyAbpPaymentService"};
-                options.Title = "EasyAbp PaymentService API";
-            });
+            services.AddSwaggerGen(
+                options =>
+                {
+                    options.SwaggerDoc("v1", new OpenApiInfo { Title = "PaymentServiceSample API", Version = "v1" });
+                    options.DocInclusionPredicate((docName, description) => true);
+                    options.CustomSchemaIds(type => type.FullName);
+                }
+            );
             
-            services.AddSwaggerDocument(options =>
-            {
-                options.DocumentName = "EasyAbpPaymentServicePrepayment";
-                options.ApiGroupNames = new[] {"EasyAbpPaymentServicePrepayment"};
-                options.Title = "EasyAbp PaymentService Prepayment API";
-            });
-            
-            services.AddSwaggerDocument(options =>
-            {
-                options.DocumentName = "EasyAbpPaymentServiceWeChatPay";
-                options.ApiGroupNames = new[] {"EasyAbpPaymentServiceWeChatPay"};
-                options.Title = "EasyAbp PaymentService WeChatPay API";
-            });
-            
-            services.AddSwaggerDocument(options =>
-            {
-                options.Title = "PaymentServiceSample API";
-            });
+            // // Register the Swagger services
+            // services.AddSwaggerDocument(options =>
+            // {
+            //     options.DocumentName = "EasyAbpPaymentService";
+            //     options.ApiGroupNames = new[] {"EasyAbpPaymentService"};
+            //     options.Title = "EasyAbp PaymentService API";
+            // });
+            //
+            // services.AddSwaggerDocument(options =>
+            // {
+            //     options.DocumentName = "EasyAbpPaymentServicePrepayment";
+            //     options.ApiGroupNames = new[] {"EasyAbpPaymentServicePrepayment"};
+            //     options.Title = "EasyAbp PaymentService Prepayment API";
+            // });
+            //
+            // services.AddSwaggerDocument(options =>
+            // {
+            //     options.DocumentName = "EasyAbpPaymentServiceWeChatPay";
+            //     options.ApiGroupNames = new[] {"EasyAbpPaymentServiceWeChatPay"};
+            //     options.Title = "EasyAbp PaymentService WeChatPay API";
+            // });
+            //
+            // services.AddSwaggerDocument(options =>
+            // {
+            //     options.Title = "PaymentServiceSample API";
+            // });
         }
 
         public override void OnApplicationInitialization(ApplicationInitializationContext context)
@@ -262,17 +276,20 @@ namespace PaymentServiceSample.Web
             var app = context.GetApplicationBuilder();
             var env = context.GetEnvironment();
 
-            app.UseCorrelationId();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
+
+            app.UseAbpRequestLocalization();
+
+            if (!env.IsDevelopment())
             {
                 app.UseErrorPage();
             }
-            app.UseVirtualFiles();
+
+            app.UseCorrelationId();
+            app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthentication();
             app.UseJwtTokenMiddleware();
@@ -281,11 +298,15 @@ namespace PaymentServiceSample.Web
             {
                 app.UseMultiTenancy();
             }
+
+            app.UseUnitOfWork();
             app.UseIdentityServer();
             app.UseAuthorization();
-            app.UseAbpRequestLocalization();
-            app.UseOpenApi();
-            app.UseSwaggerUi3();
+            app.UseSwagger();
+            app.UseAbpSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "PaymentServiceSample API");
+            });
             app.UseAuditing();
             app.UseAbpSerilogEnrichers();
             app.UseConfiguredEndpoints();
