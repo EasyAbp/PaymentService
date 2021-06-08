@@ -72,10 +72,10 @@ namespace EasyAbp.PaymentService.Payments
         {
             var payment = await _repository.GetAsync(id);
 
-            if (payment.UserId != CurrentUser.GetId())
-            {
-                throw new UsingUnauthorizedPaymentException(CurrentUser.GetId(), payment.Id);
-            }
+            //if (payment.UserId != CurrentUser.GetId())
+            //{
+            //    throw new UsingUnauthorizedPaymentException(CurrentUser.GetId(), payment.Id);
+            //}
             
             var configurations = await GetPayeeConfigurationsAsync(payment);
             
