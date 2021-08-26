@@ -8,7 +8,6 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
 COPY ["samples/PaymentServiceSample/aspnet-core/src/PaymentServiceSample.Web/PaymentServiceSample.Web.csproj", "samples/PaymentServiceSample/aspnet-core/src/PaymentServiceSample.Web/"]
-COPY ["samples/PaymentServiceSample/aspnet-core/src/PaymentServiceSample.EntityFrameworkCore.DbMigrations/PaymentServiceSample.EntityFrameworkCore.DbMigrations.csproj", "samples/PaymentServiceSample/aspnet-core/src/PaymentServiceSample.EntityFrameworkCore.DbMigrations/"]
 COPY ["samples/PaymentServiceSample/aspnet-core/src/PaymentServiceSample.EntityFrameworkCore/PaymentServiceSample.EntityFrameworkCore.csproj", "samples/PaymentServiceSample/aspnet-core/src/PaymentServiceSample.EntityFrameworkCore/"]
 COPY ["modules/EasyAbp.PaymentService/src/EasyAbp.PaymentService.EntityFrameworkCore/EasyAbp.PaymentService.EntityFrameworkCore.csproj", "modules/EasyAbp.PaymentService/src/EasyAbp.PaymentService.EntityFrameworkCore/"]
 COPY ["modules/EasyAbp.PaymentService/src/EasyAbp.PaymentService.Domain/EasyAbp.PaymentService.Domain.csproj", "modules/EasyAbp.PaymentService/src/EasyAbp.PaymentService.Domain/"]

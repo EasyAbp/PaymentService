@@ -10,7 +10,7 @@ using Volo.Abp.Modularity;
 namespace PaymentServiceSample.EntityFrameworkCore
 {
     [DependsOn(
-        typeof(PaymentServiceSampleEntityFrameworkCoreDbMigrationsModule),
+        typeof(PaymentServiceSampleEntityFrameworkCoreModule),
         typeof(PaymentServiceSampleTestBaseModule)
         )]
     public class PaymentServiceSampleEntityFrameworkCoreTestModule : AbpModule
@@ -42,11 +42,11 @@ namespace PaymentServiceSample.EntityFrameworkCore
             var connection = new SqliteConnection("Data Source=:memory:");
             connection.Open();
 
-            var options = new DbContextOptionsBuilder<PaymentServiceSampleMigrationsDbContext>()
+            var options = new DbContextOptionsBuilder<PaymentServiceSampleDbContext>()
                 .UseSqlite(connection)
                 .Options;
 
-            using (var context = new PaymentServiceSampleMigrationsDbContext(options))
+            using (var context = new PaymentServiceSampleDbContext(options))
             {
                 context.GetService<IRelationalDatabaseCreator>().CreateTables();
             }

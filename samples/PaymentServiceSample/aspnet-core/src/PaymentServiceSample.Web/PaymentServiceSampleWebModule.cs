@@ -57,7 +57,7 @@ namespace PaymentServiceSample.Web
     [DependsOn(
         typeof(PaymentServiceSampleHttpApiModule),
         typeof(PaymentServiceSampleApplicationModule),
-        typeof(PaymentServiceSampleEntityFrameworkCoreDbMigrationsModule),
+        typeof(PaymentServiceSampleEntityFrameworkCoreModule),
         typeof(AbpAutofacModule),
         typeof(AbpIdentityWebModule),
         typeof(AbpAccountWebIdentityServerModule),

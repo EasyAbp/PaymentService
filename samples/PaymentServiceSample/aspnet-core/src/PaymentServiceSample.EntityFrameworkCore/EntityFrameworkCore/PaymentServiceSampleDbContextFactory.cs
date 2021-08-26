@@ -7,24 +7,24 @@ namespace PaymentServiceSample.EntityFrameworkCore
 {
     /* This class is needed for EF Core console commands
      * (like Add-Migration and Update-Database commands) */
-    public class PaymentServiceSampleMigrationsDbContextFactory : IDesignTimeDbContextFactory<PaymentServiceSampleMigrationsDbContext>
+    public class PaymentServiceSampleDbContextFactory : IDesignTimeDbContextFactory<PaymentServiceSampleDbContext>
     {
-        public PaymentServiceSampleMigrationsDbContext CreateDbContext(string[] args)
+        public PaymentServiceSampleDbContext CreateDbContext(string[] args)
         {
             PaymentServiceSampleEfCoreEntityExtensionMappings.Configure();
 
             var configuration = BuildConfiguration();
 
-            var builder = new DbContextOptionsBuilder<PaymentServiceSampleMigrationsDbContext>()
+            var builder = new DbContextOptionsBuilder<PaymentServiceSampleDbContext>()
                 .UseSqlServer(configuration.GetConnectionString("Default"));
 
-            return new PaymentServiceSampleMigrationsDbContext(builder.Options);
+            return new PaymentServiceSampleDbContext(builder.Options);
         }
 
         private static IConfigurationRoot BuildConfiguration()
         {
             var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
+                .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../PaymentServiceSample.DbMigrator/"))
                 .AddJsonFile("appsettings.json", optional: false);
 
             return builder.Build();

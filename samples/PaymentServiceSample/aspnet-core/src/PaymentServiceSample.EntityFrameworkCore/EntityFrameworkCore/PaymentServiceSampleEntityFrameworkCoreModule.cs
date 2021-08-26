@@ -50,7 +50,7 @@ namespace PaymentServiceSample.EntityFrameworkCore
             Configure<AbpDbContextOptions>(options =>
             {
                 /* The main point to change your DBMS.
-                 * See also PaymentServiceSampleMigrationsDbContextFactory for EF Core tooling. */
+                 * See also PaymentServiceSampleDbContextFactory for EF Core tooling. */
                 options.UseSqlServer();
             });
         }

@@ -7,7 +7,7 @@ namespace PaymentServiceSample.DbMigrator
 {
     [DependsOn(
         typeof(AbpAutofacModule),
-        typeof(PaymentServiceSampleEntityFrameworkCoreDbMigrationsModule),
+        typeof(PaymentServiceSampleEntityFrameworkCoreModule),
         typeof(PaymentServiceSampleApplicationContractsModule)
         )]
     public class PaymentServiceSampleDbMigratorModule : AbpModule
