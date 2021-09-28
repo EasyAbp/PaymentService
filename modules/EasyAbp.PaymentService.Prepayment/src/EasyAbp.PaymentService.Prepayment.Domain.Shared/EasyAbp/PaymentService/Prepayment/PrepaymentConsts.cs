@@ -2,7 +2,7 @@
 {
     public static class PrepaymentConsts
     {
-        public const decimal AccountMinBalance = -999999999999.99999999m;
+        public const decimal AccountMinBalance = decimal.Zero;
         
         public const decimal AccountMaxBalance = 999999999999.99999999m;
         

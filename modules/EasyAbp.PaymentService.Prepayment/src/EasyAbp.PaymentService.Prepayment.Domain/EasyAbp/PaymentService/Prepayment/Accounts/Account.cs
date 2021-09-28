@@ -47,17 +47,17 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
         {
             var newBalance = decimal.Add(Balance, changedBalance);
 
-            if (newBalance < LockedBalance)
-            {
-                throw new LockedBalanceIsGreaterThenBalanceException(LockedBalance, newBalance);
-            }
-            
             if (!newBalance.IsBetween(PrepaymentConsts.AccountMinBalance, PrepaymentConsts.AccountMaxBalance))
             {
                 throw new AmountOverflowException(PrepaymentConsts.AccountMinBalance,
                     PrepaymentConsts.AccountMaxBalance);
             }
             
+            if (newBalance < LockedBalance)
+            {
+                throw new LockedBalanceIsGreaterThenBalanceException(LockedBalance, newBalance);
+            }
+
             Balance = newBalance;
         }
         
