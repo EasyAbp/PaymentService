@@ -4,7 +4,7 @@ using EasyAbp.PaymentService.Payments;
 using Volo.Abp.Domain.Repositories;
 using Xunit;
 
-namespace EntityFrameworkCore.Payments
+namespace EasyAbp.PaymentService.EntityFrameworkCore.Payments
 {
     public class PaymentRepositoryTests : PaymentServiceEntityFrameworkCoreTestBase
     {

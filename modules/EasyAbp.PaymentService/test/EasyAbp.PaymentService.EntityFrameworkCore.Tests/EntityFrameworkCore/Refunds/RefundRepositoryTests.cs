@@ -4,7 +4,7 @@ using EasyAbp.PaymentService.Refunds;
 using Volo.Abp.Domain.Repositories;
 using Xunit;
 
-namespace EntityFrameworkCore.Refunds
+namespace EasyAbp.PaymentService.EntityFrameworkCore.Refunds
 {
     public class RefundRepositoryTests : PaymentServiceEntityFrameworkCoreTestBase
     {

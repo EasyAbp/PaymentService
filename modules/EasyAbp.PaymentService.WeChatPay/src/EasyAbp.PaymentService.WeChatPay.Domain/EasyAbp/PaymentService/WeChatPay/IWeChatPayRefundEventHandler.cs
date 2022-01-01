@@ -3,7 +3,7 @@ using Volo.Abp.EventBus.Distributed;
 
 namespace EasyAbp.PaymentService.WeChatPay
 {
-    public interface IWeChatPayRefundEventHandler : ILocalEventHandler<WeChatPayRefundEto>
+    public interface IWeChatPayRefundEventHandler : IDistributedEventHandler<WeChatPayRefundEto>
     {
         
     }

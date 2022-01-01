@@ -52,6 +52,7 @@ namespace EasyAbp.PaymentService.Prepayment.EntityFrameworkCore
                 /* Configure more properties here */
                 b.Property(x => x.Balance).HasColumnType("decimal(20,8)");
                 b.Property(x => x.LockedBalance).HasColumnType("decimal(20,8)");
+                b.Property(x => x.PendingWithdrawalAmount).HasColumnType("decimal(20,8)");
                 b.HasIndex(x => x.UserId);
             });
 

@@ -4,8 +4,9 @@ using Volo.Abp.AspNetCore.Mvc;
 
 namespace EasyAbp.PaymentService.WeChatPay
 {
+    [Area(PaymentServiceRemoteServiceConsts.ModuleName)]
     [ApiExplorerSettings(GroupName = "EasyAbpPaymentServiceWeChatPay")]
-    public abstract class WeChatPayController : AbpController
+    public abstract class WeChatPayController : AbpControllerBase
     {
         protected WeChatPayController()
         {

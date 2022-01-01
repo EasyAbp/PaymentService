@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using EasyAbp.PaymentService;
+using EasyAbp.PaymentService.Options;
 using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.Prepayment;
 using EasyAbp.PaymentService.Prepayment.Options;
@@ -107,6 +108,13 @@ namespace PaymentServiceSample.Web
 
         private void ConfigurePaymentServicePrepayment()
         {
+            Configure<PaymentServiceOptions>(options =>
+            {
+                options.Providers.Configure<FreePaymentServiceProvider>(FreePaymentServiceProvider.PaymentMethod);
+                options.Providers.Configure<PrepaymentPaymentServiceProvider>(PrepaymentPaymentServiceProvider.PaymentMethod);
+                options.Providers.Configure<WeChatPayPaymentServiceProvider>(WeChatPayPaymentServiceProvider.PaymentMethod);
+            });
+            
             Configure<PaymentServicePrepaymentOptions>(options =>
             {
                 options.AccountGroups.Configure<DefaultAccountGroup>(accountGroup =>
@@ -311,8 +319,6 @@ namespace PaymentServiceSample.Web
             app.UseAbpSerilogEnrichers();
             app.UseConfiguredEndpoints();
 
-            RegisterPaymentMethods(context);
-
             using (var scope = context.ServiceProvider.CreateScope())
             {
                 AsyncHelper.RunSync(async () =>
@@ -322,15 +328,6 @@ namespace PaymentServiceSample.Web
                         .SeedAsync();
                 });
             }
-        }
-
-        private static void RegisterPaymentMethods(IServiceProviderAccessor context)
-        {
-            var resolver = context.ServiceProvider.GetService<IPaymentServiceResolver>();
-
-            resolver.TryRegisterProvider(FreePaymentServiceProvider.PaymentMethod, typeof(FreePaymentServiceProvider));
-            resolver.TryRegisterProvider(PrepaymentPaymentServiceProvider.PaymentMethod, typeof(PrepaymentPaymentServiceProvider));
-            resolver.TryRegisterProvider(WeChatPayPaymentServiceProvider.PaymentMethod, typeof(WeChatPayPaymentServiceProvider));
         }
     }
 }

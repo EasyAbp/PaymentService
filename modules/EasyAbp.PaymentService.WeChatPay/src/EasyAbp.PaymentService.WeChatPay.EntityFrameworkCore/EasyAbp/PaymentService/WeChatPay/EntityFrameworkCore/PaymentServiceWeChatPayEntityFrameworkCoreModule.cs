@@ -14,7 +14,7 @@ namespace EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            context.Services.AddAbpDbContext<WeChatPayDbContext>(options =>
+            context.Services.AddAbpDbContext<PaymentServiceWeChatPayDbContext>(options =>
             {
                 /* Add custom repositories here. Example:
                  * options.AddRepository<Question, EfCoreQuestionRepository>();

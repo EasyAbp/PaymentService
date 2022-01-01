@@ -7,7 +7,7 @@ using EasyAbp.PaymentService.WeChatPay.PaymentRecords;
 namespace EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore
 {
     [ConnectionStringName(WeChatPayDbProperties.ConnectionStringName)]
-    public class WeChatPayDbContext : AbpDbContext<WeChatPayDbContext>, IWeChatPayDbContext
+    public class PaymentServiceWeChatPayDbContext : AbpDbContext<PaymentServiceWeChatPayDbContext>, IPaymentServiceWeChatPayDbContext
     {
         /* Add DbSet for each Aggregate Root here. Example:
          * public DbSet<Question> Questions { get; set; }
@@ -15,7 +15,7 @@ namespace EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore
         public DbSet<RefundRecord> RefundRecords { get; set; }
         public DbSet<PaymentRecord> PaymentRecords { get; set; }
 
-        public WeChatPayDbContext(DbContextOptions<WeChatPayDbContext> options) 
+        public PaymentServiceWeChatPayDbContext(DbContextOptions<PaymentServiceWeChatPayDbContext> options) 
             : base(options)
         {
 

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using EasyAbp.PaymentService.Refunds;
 using Volo.Abp.Data;
+using Volo.Abp.Uow;
 
 namespace EasyAbp.PaymentService.Payments
 {
@@ -20,11 +21,12 @@ namespace EasyAbp.PaymentService.Payments
             _paymentRepository = paymentRepository;
         }
 
+        [UnitOfWork(true)]
         public override async Task OnPaymentStartedAsync(Payment payment, ExtraPropertyDictionary configurations)
         {
             if (payment.ActualPaymentAmount != decimal.Zero)
             {
-                throw new PaymentAmountInvalidException(payment.ActualPaymentAmount, PaymentMethod);
+                throw new PaymentAmountInvalidException(payment.ActualPaymentAmount, payment.PaymentMethod);
             }
             
             // payment.SetPayeeAccount("None");

@@ -16,7 +16,7 @@ namespace EasyAbp.PaymentService.Prepayment.EntityFrameworkCore
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            context.Services.AddAbpDbContext<PrepaymentDbContext>(options =>
+            context.Services.AddAbpDbContext<PaymentServicePrepaymentDbContext>(options =>
             {
                 /* Add custom repositories here. Example:
                  * options.AddRepository<Question, EfCoreQuestionRepository>();

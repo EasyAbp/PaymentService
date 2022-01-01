@@ -30,7 +30,7 @@ namespace PaymentServiceSample.Controllers
         }
         
         [Authorize]
-        [Route("freePayment")]
+        [Route("free-payment")]
         [HttpPost]
         public async Task<PaymentDto> CreateFreePaymentAsync()
         {
@@ -47,9 +47,9 @@ namespace PaymentServiceSample.Controllers
                         ItemKey = Guid.NewGuid().ToString(),
                         OriginalPaymentAmount = 0
                     }
-                })));
+                })), false, false);
             
-            return (await _paymentAppService.GetListAsync(new PagedAndSortedResultRequestDto())).Items.FirstOrDefault();
+            return (await _paymentAppService.GetListAsync(new GetPaymentListInput())).Items.FirstOrDefault();
         }
         
         [Authorize]
@@ -74,7 +74,7 @@ namespace PaymentServiceSample.Controllers
                             StaffRemark = "Test4"
                         }))
                 }
-            ));
+            ), false, false);
 
             return await _paymentAppService.GetAsync(paymentId);
         }

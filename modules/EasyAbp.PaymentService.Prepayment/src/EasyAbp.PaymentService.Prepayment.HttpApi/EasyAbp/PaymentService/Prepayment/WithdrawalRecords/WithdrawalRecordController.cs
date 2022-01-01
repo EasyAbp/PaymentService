@@ -8,7 +8,7 @@ using Volo.Abp.Application.Dtos;
 
 namespace EasyAbp.PaymentService.Prepayment.WithdrawalRecords
 {
-    [RemoteService(Name = "EasyAbpPaymentServicePrepayment")]
+    [RemoteService(Name = PaymentServiceRemoteServiceConsts.RemoteServiceName)]
     [Route("/api/payment-service/prepayment/withdrawal-record")]
     public class WithdrawalRecordController : PrepaymentController, IWithdrawalRecordAppService
     {

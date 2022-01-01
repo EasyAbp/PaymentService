@@ -10,7 +10,7 @@ namespace EasyAbp.PaymentService.Payments
         IReadOnlyAppService< 
             PaymentDto, 
             Guid, 
-            PagedAndSortedResultRequestDto>
+            GetPaymentListInput>
     {
         Task<ListResultDto<PaymentMethodDto>> GetListPaymentMethod();
         

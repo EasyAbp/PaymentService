@@ -8,10 +8,10 @@ using Volo.Abp.EntityFrameworkCore;
 
 namespace EasyAbp.PaymentService.Prepayment.WithdrawalRecords
 {
-    public class WithdrawalRecordRepository : EfCoreRepository<IPrepaymentDbContext, WithdrawalRecord, Guid>,
+    public class WithdrawalRecordRepository : EfCoreRepository<IPaymentServicePrepaymentDbContext, WithdrawalRecord, Guid>,
         IWithdrawalRecordRepository
     {
-        public WithdrawalRecordRepository(IDbContextProvider<IPrepaymentDbContext> dbContextProvider) : base(
+        public WithdrawalRecordRepository(IDbContextProvider<IPaymentServicePrepaymentDbContext> dbContextProvider) : base(
             dbContextProvider)
         {
         }

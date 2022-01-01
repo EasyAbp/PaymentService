@@ -7,6 +7,7 @@ namespace EasyAbp.PaymentService.WeChatPay
 {
     [DependsOn(
         typeof(PaymentServiceWeChatPayDomainSharedModule),
+        typeof(PaymentServiceDomainSharedModule),
         typeof(AbpDddApplicationContractsModule),
         typeof(AbpAuthorizationModule)
         )]

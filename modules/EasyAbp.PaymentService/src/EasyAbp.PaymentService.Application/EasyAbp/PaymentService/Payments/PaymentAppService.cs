@@ -16,7 +16,7 @@ using Volo.Abp.Users;
 namespace EasyAbp.PaymentService.Payments
 {
     [Authorize]
-    public class PaymentAppService : ReadOnlyAppService<Payment, PaymentDto, Guid, PagedAndSortedResultRequestDto>,
+    public class PaymentAppService : ReadOnlyAppService<Payment, PaymentDto, Guid, GetPaymentListInput>,
         IPaymentAppService
     {
         protected override string GetPolicyName { get; set; } = PaymentServicePermissions.Payments.Default;
@@ -42,16 +42,49 @@ namespace EasyAbp.PaymentService.Payments
             _repository = repository;
         }
 
-        public override Task<PaymentDto> GetAsync(Guid id)
+        public override async Task<PaymentDto> GetAsync(Guid id)
         {
-            // Todo: Check permission.
-            return base.GetAsync(id);
+            await CheckGetPolicyAsync();
+
+            var entity = await GetEntityByIdAsync(id);
+
+            if (entity.UserId != CurrentUser.GetId())
+            {
+                await AuthorizationService.CheckAsync(PaymentServicePermissions.Payments.Manage);
+            }
+
+            return await MapToGetOutputDtoAsync(entity);
         }
 
-        public override Task<PagedResultDto<PaymentDto>> GetListAsync(PagedAndSortedResultRequestDto input)
+        public override async Task<PagedResultDto<PaymentDto>> GetListAsync(GetPaymentListInput input)
         {
-            // Todo: Check permission.
-            return base.GetListAsync(input);
+            await CheckGetListPolicyAsync();
+
+            if (!input.UserId.HasValue || input.UserId.Value != CurrentUser.GetId())
+            {
+                await AuthorizationService.CheckAsync(PaymentServicePermissions.Payments.Manage);
+            }
+            
+            var query = await CreateFilteredQueryAsync(input);
+
+            var totalCount = await AsyncExecuter.CountAsync(query);
+
+            query = ApplySorting(query, input);
+            query = ApplyPaging(query, input);
+
+            var entities = await AsyncExecuter.ToListAsync(query);
+            var entityDtos = await MapToGetListOutputDtosAsync(entities);
+
+            return new PagedResultDto<PaymentDto>(
+                totalCount,
+                entityDtos
+            );
+        }
+
+        protected override async Task<IQueryable<Payment>> CreateFilteredQueryAsync(GetPaymentListInput input)
+        {
+            return (await _repository.WithDetailsAsync())
+                .WhereIf(input.UserId.HasValue, x => x.UserId == input.UserId.Value);
         }
 
         [AllowAnonymous]

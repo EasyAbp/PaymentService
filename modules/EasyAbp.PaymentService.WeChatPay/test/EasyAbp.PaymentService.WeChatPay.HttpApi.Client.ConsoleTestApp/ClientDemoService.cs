@@ -64,7 +64,7 @@ public class ClientDemoService : ITransientDependency
         {
             httpClient.SetBearerToken(accessToken);
 
-            var url = _configuration["RemoteServices:WeChatPay:BaseUrl"] +
+            var url = _configuration["RemoteServices:EasyAbpPaymentService:BaseUrl"] +
                       "api/WeChatPay/sample/authorized";
 
             var responseMessage = await httpClient.GetAsync(url);
@@ -125,7 +125,7 @@ public class ClientDemoService : ITransientDependency
         {
             httpClient.SetBearerToken(tokenResponse.AccessToken);
 
-            var url = _configuration["RemoteServices:WeChatPay:BaseUrl"] +
+            var url = _configuration["RemoteServices:EasyAbpPaymentService:BaseUrl"] +
                       "api/WeChatPay/sample/authorized";
 
             var responseMessage = await httpClient.GetAsync(url);

@@ -1,16 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="..\..\..\..\common.props" />
-
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <RootNamespace />
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>EasyAbp.PaymentService</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\EasyAbp.PaymentService.Application\EasyAbp.PaymentService.Application.csproj" />
     <ProjectReference Include="..\EasyAbp.PaymentService.Domain.Tests\EasyAbp.PaymentService.Domain.Tests.csproj" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
   </ItemGroup>
 
 </Project>

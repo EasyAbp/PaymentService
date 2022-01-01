@@ -1,4 +1,6 @@
 ﻿using EasyAbp.PaymentService;
+using EasyAbp.PaymentService.Options;
+using EasyAbp.PaymentService.Payments;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
 using Volo.Abp.Authorization;
@@ -18,6 +20,11 @@ public class PaymentServiceTestBaseModule : AbpModule
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
         context.Services.AddAlwaysAllowAuthorization();
+        
+        Configure<PaymentServiceOptions>(options =>
+        {
+            options.Providers.Configure<FreePaymentServiceProvider>(FreePaymentServiceProvider.PaymentMethod);
+        });
     }
 
     public override void OnApplicationInitialization(ApplicationInitializationContext context)

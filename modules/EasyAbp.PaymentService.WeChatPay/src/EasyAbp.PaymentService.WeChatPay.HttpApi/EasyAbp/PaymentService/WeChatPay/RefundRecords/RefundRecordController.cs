@@ -7,7 +7,7 @@ using Volo.Abp.Application.Dtos;
 
 namespace EasyAbp.PaymentService.WeChatPay.RefundRecords
 {
-    [RemoteService(Name = "EasyAbpPaymentServiceWeChatPay")]
+    [RemoteService(Name = PaymentServiceRemoteServiceConsts.RemoteServiceName)]
     [Route("/api/payment-service/wechat-pay/refund-record")]
     public class RefundRecordController : WeChatPayController, IRefundRecordAppService
     {

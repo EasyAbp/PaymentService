@@ -9,9 +9,9 @@ using Volo.Abp.EntityFrameworkCore;
 
 namespace EasyAbp.PaymentService.WeChatPay.PaymentRecords
 {
-    public class PaymentRecordRepository : EfCoreRepository<IWeChatPayDbContext, PaymentRecord, Guid>, IPaymentRecordRepository
+    public class PaymentRecordRepository : EfCoreRepository<IPaymentServiceWeChatPayDbContext, PaymentRecord, Guid>, IPaymentRecordRepository
     {
-        public PaymentRecordRepository(IDbContextProvider<IWeChatPayDbContext> dbContextProvider) : base(dbContextProvider)
+        public PaymentRecordRepository(IDbContextProvider<IPaymentServiceWeChatPayDbContext> dbContextProvider) : base(dbContextProvider)
         {
         }
 

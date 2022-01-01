@@ -14,7 +14,7 @@ using Volo.Abp.Users;
 namespace EasyAbp.PaymentService.Prepayment.Web
 {
     [DependsOn(
-        typeof(PaymentServicePrepaymentHttpApiModule),
+        typeof(PaymentServicePrepaymentApplicationContractsModule),
         typeof(AbpAspNetCoreMvcUiThemeSharedModule),
         typeof(AbpAutoMapperModule),
         typeof(AbpUsersAbstractionModule)

@@ -16,7 +16,6 @@ namespace EasyAbp.PaymentService.Payments
     {
         private readonly IClock _clock;
         private readonly IObjectMapper _objectMapper;
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly IRefundRepository _refundRepository;
         private readonly IPaymentRepository _paymentRepository;
         private readonly IPaymentServiceResolver _paymentServiceResolver;
@@ -25,7 +24,6 @@ namespace EasyAbp.PaymentService.Payments
         public PaymentManager(
             IClock clock,
             IObjectMapper objectMapper,
-            IUnitOfWorkManager unitOfWorkManager,
             IRefundRepository refundRepository,
             IPaymentRepository paymentRepository,
             IPaymentServiceResolver paymentServiceResolver,
@@ -33,7 +31,6 @@ namespace EasyAbp.PaymentService.Payments
         {
             _clock = clock;
             _objectMapper = objectMapper;
-            _unitOfWorkManager = unitOfWorkManager;
             _refundRepository = refundRepository;
             _paymentRepository = paymentRepository;
             _paymentServiceResolver = paymentServiceResolver;
@@ -49,19 +46,15 @@ namespace EasyAbp.PaymentService.Payments
             await provider.OnPaymentStartedAsync(payment, configurations);
         }
 
+        [UnitOfWork(true)]
         public virtual async Task CompletePaymentAsync(Payment payment)
         {
-            using var uow = _unitOfWorkManager.Begin(isTransactional: true);
-
-            uow.OnCompleted(async () =>
-                await _distributedEventBus.PublishAsync(
-                    new PaymentCompletedEto(_objectMapper.Map<Payment, PaymentEto>(payment))));
+            await _distributedEventBus.PublishAsync(
+                    new PaymentCompletedEto(_objectMapper.Map<Payment, PaymentEto>(payment)));
             
             payment.CompletePayment(_clock.Now);
             
             await _paymentRepository.UpdateAsync(payment, true);
-
-            await uow.CompleteAsync();
         }
 
         public virtual async Task StartCancelAsync(Payment payment)
@@ -76,21 +69,18 @@ namespace EasyAbp.PaymentService.Payments
             await provider.OnCancelStartedAsync(payment);
         }
 
+        [UnitOfWork(true)]
         public virtual async Task CompleteCancelAsync(Payment payment)
         {
-            using var uow = _unitOfWorkManager.Begin(isTransactional: true);
-
-            uow.OnCompleted(async () =>
-                await _distributedEventBus.PublishAsync(
-                    new PaymentCanceledEto(_objectMapper.Map<Payment, PaymentEto>(payment))));
-            
             payment.CancelPayment(_clock.Now);
             
             await _paymentRepository.UpdateAsync(payment, true);
-
-            await uow.CompleteAsync();
+            
+            await _distributedEventBus.PublishAsync(
+                new PaymentCanceledEto(_objectMapper.Map<Payment, PaymentEto>(payment)));
         }
 
+        [UnitOfWork(true)]
         public virtual async Task StartRefundAsync(Payment payment, CreateRefundInput input)
         {
             var provider = GetProvider(payment);
@@ -157,10 +147,9 @@ namespace EasyAbp.PaymentService.Payments
             return refund;
         }
 
+        [UnitOfWork(true)]
         public virtual async Task CompleteRefundAsync(Payment payment, Refund refund)
         {
-            using var uow = _unitOfWorkManager.Begin(isTransactional: true);
-
             payment.CompleteRefund();
                 
             await _paymentRepository.UpdateAsync(payment, true);
@@ -172,20 +161,12 @@ namespace EasyAbp.PaymentService.Payments
             var paymentEto = _objectMapper.Map<Payment, PaymentEto>(payment);
             var refundEto = _objectMapper.Map<Refund, RefundEto>(refund);
 
-            uow.OnCompleted(async () =>
-                await _distributedEventBus.PublishAsync(new PaymentRefundCompletedEto(paymentEto, refundEto)));
-
-            await uow.CompleteAsync();
+            await _distributedEventBus.PublishAsync(new PaymentRefundCompletedEto(paymentEto, refundEto));
         }
 
+        [UnitOfWork(true)]
         public virtual async Task RollbackRefundAsync(Payment payment, Refund refund)
         {
-            using var uow = _unitOfWorkManager.Begin(isTransactional: true);
-
-            uow.OnCompleted(async () =>
-                await _distributedEventBus.PublishAsync(new PaymentRefundRollbackEto(
-                    _objectMapper.Map<Payment, PaymentEto>(payment), _objectMapper.Map<Refund, RefundEto>(refund))));
-
             payment.RollbackRefund();
             
             await _paymentRepository.UpdateAsync(payment, true);
@@ -193,8 +174,9 @@ namespace EasyAbp.PaymentService.Payments
             refund.CancelRefund(_clock.Now);
 
             await _refundRepository.UpdateAsync(refund, true);
-
-            await uow.CompleteAsync();
+            
+            await _distributedEventBus.PublishAsync(new PaymentRefundRollbackEto(
+                _objectMapper.Map<Payment, PaymentEto>(payment), _objectMapper.Map<Refund, RefundEto>(refund)));
         }
 
         protected virtual IPaymentServiceProvider GetProvider(IPayment payment)
@@ -202,7 +184,7 @@ namespace EasyAbp.PaymentService.Payments
             var providerType = _paymentServiceResolver.GetProviderTypeOrDefault(payment.PaymentMethod) ??
                                throw new UnknownPaymentMethodException(payment.PaymentMethod);
 
-            return ServiceProvider.GetService(providerType) as IPaymentServiceProvider ??
+            return LazyServiceProvider.LazyGetService(providerType) as IPaymentServiceProvider ??
                    throw new UnknownPaymentMethodException(payment.PaymentMethod);
         }
     }

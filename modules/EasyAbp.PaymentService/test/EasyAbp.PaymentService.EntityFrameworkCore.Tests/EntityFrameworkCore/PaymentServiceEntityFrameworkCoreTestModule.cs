@@ -1,12 +1,11 @@
-﻿using EasyAbp.PaymentService.EntityFrameworkCore;
-using Microsoft.Data.Sqlite;
+﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.Modularity;
 
-namespace EntityFrameworkCore
+namespace EasyAbp.PaymentService.EntityFrameworkCore
 {
     [DependsOn(
         typeof(PaymentServiceTestBaseModule),

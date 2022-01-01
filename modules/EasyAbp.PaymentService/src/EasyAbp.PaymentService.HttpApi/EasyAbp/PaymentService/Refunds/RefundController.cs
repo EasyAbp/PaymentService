@@ -7,7 +7,7 @@ using Volo.Abp.Application.Dtos;
 
 namespace EasyAbp.PaymentService.Refunds
 {
-    [RemoteService(Name = "EasyAbpPaymentService")]
+    [RemoteService(Name = PaymentServiceRemoteServiceConsts.RemoteServiceName)]
     [Route("/api/payment-service/refund")]
     public class RefundController : PaymentServiceController, IRefundAppService
     {
@@ -26,7 +26,7 @@ namespace EasyAbp.PaymentService.Refunds
         }
 
         [HttpGet]
-        public virtual Task<PagedResultDto<RefundDto>> GetListAsync(PagedAndSortedResultRequestDto input)
+        public virtual Task<PagedResultDto<RefundDto>> GetListAsync(GetRefundListInput input)
         {
             return _service.GetListAsync(input);
         }

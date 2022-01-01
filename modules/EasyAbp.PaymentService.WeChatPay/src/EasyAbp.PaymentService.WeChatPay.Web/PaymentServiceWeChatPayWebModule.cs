@@ -12,7 +12,7 @@ using Volo.Abp.VirtualFileSystem;
 namespace EasyAbp.PaymentService.WeChatPay.Web
 {
     [DependsOn(
-        typeof(PaymentServiceWeChatPayHttpApiModule),
+        typeof(PaymentServiceWeChatPayApplicationContractsModule),
         typeof(AbpAspNetCoreMvcUiThemeSharedModule),
         typeof(AbpAutoMapperModule)
         )]

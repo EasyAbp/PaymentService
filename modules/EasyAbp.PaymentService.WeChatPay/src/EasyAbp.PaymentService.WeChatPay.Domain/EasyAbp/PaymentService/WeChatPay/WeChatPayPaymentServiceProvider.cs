@@ -8,6 +8,7 @@ using EasyAbp.PaymentService.WeChatPay.PaymentRecords;
 using EasyAbp.PaymentService.WeChatPay.Settings;
 using Volo.Abp;
 using Volo.Abp.Data;
+using Volo.Abp.EventBus.Distributed;
 using Volo.Abp.EventBus.Local;
 using Volo.Abp.Guids;
 using Volo.Abp.MultiTenancy;
@@ -22,8 +23,7 @@ namespace EasyAbp.PaymentService.WeChatPay
         private readonly ISettingProvider _settingProvider;
         private readonly IGuidGenerator _guidGenerator;
         private readonly ICurrentTenant _currentTenant;
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
-        private readonly ILocalEventBus _localEventBus;
+        private readonly IDistributedEventBus _distributedEventBus;
         private readonly IWeChatPayFeeConverter _weChatPayFeeConverter;
         private readonly IPaymentManager _paymentManager;
         private readonly IPaymentRecordRepository _paymentRecordRepository;
@@ -37,8 +37,7 @@ namespace EasyAbp.PaymentService.WeChatPay
             ISettingProvider settingProvider,
             IGuidGenerator guidGenerator,
             ICurrentTenant currentTenant,
-            IUnitOfWorkManager unitOfWorkManager,
-            ILocalEventBus localEventBus,
+            IDistributedEventBus distributedEventBus,
             IWeChatPayFeeConverter weChatPayFeeConverter,
             IPaymentManager paymentManager,
             IPaymentRecordRepository paymentRecordRepository,
@@ -49,8 +48,7 @@ namespace EasyAbp.PaymentService.WeChatPay
             _settingProvider = settingProvider;
             _guidGenerator = guidGenerator;
             _currentTenant = currentTenant;
-            _unitOfWorkManager = unitOfWorkManager;
-            _localEventBus = localEventBus;
+            _distributedEventBus = distributedEventBus;
             _weChatPayFeeConverter = weChatPayFeeConverter;
             _paymentManager = paymentManager;
             _paymentRecordRepository = paymentRecordRepository;
@@ -58,6 +56,7 @@ namespace EasyAbp.PaymentService.WeChatPay
             _paymentRepository = paymentRepository;
         }
 
+        [UnitOfWork(true)]
         public override async Task OnPaymentStartedAsync(Payment payment, ExtraPropertyDictionary configurations)
         {
             if (payment.Currency != "CNY")
@@ -67,7 +66,7 @@ namespace EasyAbp.PaymentService.WeChatPay
 
             if (payment.ActualPaymentAmount <= decimal.Zero)
             {
-                throw new PaymentAmountInvalidException(payment.ActualPaymentAmount, PaymentMethod);
+                throw new PaymentAmountInvalidException(payment.ActualPaymentAmount, payment.PaymentMethod);
             }
 
             var payeeAccount = configurations.GetOrDefault("PayeeAccount") as string ??
@@ -138,6 +137,7 @@ namespace EasyAbp.PaymentService.WeChatPay
             await _paymentRepository.UpdateAsync(payment, true);
         }
 
+        [UnitOfWork(true)]
         public override async Task OnCancelStartedAsync(Payment payment)
         {
             await _paymentManager.CompleteCancelAsync(payment);
@@ -146,39 +146,19 @@ namespace EasyAbp.PaymentService.WeChatPay
             {
                 return;
             }
-            
-            var outTradeNo = payment.Id.ToString("N");
 
-            var orderQueryResult = await _serviceProviderPayService.CloseOrderAsync(
+            await _distributedEventBus.PublishAsync(new CloseWeChatPayOrderEto(
+                tenantId: payment.TenantId,
+                paymentId: payment.Id,
+                outTradeNo: payment.Id.ToString("N"),
                 appId: payment.GetProperty<string>("appid"),
-                mchId: payment.PayeeAccount,
-                subAppId: null,
-                subMchId: null,
-                outTradeNo: outTradeNo
-            );
-            
-            var dict = orderQueryResult.SelectSingleNode("xml").ToDictionary() ?? throw new NullReferenceException();
-            var resultCode = dict.GetOrDefault("result_code");
-            var errCode = dict.GetOrDefault("err_code");
-            var errCodeDes = dict.GetOrDefault("err_code_des");
-
-            // ignore the "ORDERCLOSED" status.
-            if (resultCode != "SUCCESS" && errCode != "ORDERCLOSED")
-            {
-                throw new WeChatPayBusinessErrorException(outTradeNo, errCode, errCodeDes);
-            }
+                mchId: payment.PayeeAccount));
         }
 
+        [UnitOfWork]
         public override async Task OnRefundStartedAsync(Payment payment, Refund refund)
         {
-            using var uow = _unitOfWorkManager.Begin(isTransactional: true);
-
-            uow.OnCompleted(async () =>
-            {
-                await _localEventBus.PublishAsync(new WeChatPayRefundEto(payment.Id, refund));
-            });
-
-            await uow.CompleteAsync();
+            await _distributedEventBus.PublishAsync(new WeChatPayRefundEto(payment.Id, refund));
         }
     }
 }

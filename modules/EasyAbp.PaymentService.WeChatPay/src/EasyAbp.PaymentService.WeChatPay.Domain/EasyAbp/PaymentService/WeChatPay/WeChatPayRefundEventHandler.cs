@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Xml;
 using EasyAbp.Abp.WeChat.Pay.Services.Pay;
 using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.Refunds;

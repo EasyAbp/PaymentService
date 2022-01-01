@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Http.Client;
 using Volo.Abp.Modularity;
+using Volo.Abp.VirtualFileSystem;
 
 namespace EasyAbp.PaymentService.Prepayment
 {
@@ -9,7 +10,7 @@ namespace EasyAbp.PaymentService.Prepayment
         typeof(AbpHttpClientModule))]
     public class PaymentServicePrepaymentHttpApiClientModule : AbpModule
     {
-        public const string RemoteServiceName = "EasyAbpPaymentServicePrepayment";
+        public const string RemoteServiceName = PaymentServiceRemoteServiceConsts.RemoteServiceName;
 
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
@@ -17,6 +18,11 @@ namespace EasyAbp.PaymentService.Prepayment
                 typeof(PaymentServicePrepaymentApplicationContractsModule).Assembly,
                 RemoteServiceName
             );
+            
+            Configure<AbpVirtualFileSystemOptions>(options =>
+            {
+                options.FileSets.AddEmbedded<PaymentServicePrepaymentApplicationContractsModule>();
+            });
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using EasyAbp.PaymentService.EntityFrameworkCore;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -10,9 +11,10 @@ namespace EasyAbp.PaymentService.Prepayment.EntityFrameworkCore
 {
     [DependsOn(
         typeof(PrepaymentTestBaseModule),
+        typeof(PaymentServiceEntityFrameworkCoreModule),
         typeof(PaymentServicePrepaymentEntityFrameworkCoreModule),
         typeof(AbpEntityFrameworkCoreSqliteModule)
-        )]
+    )]
     public class PrepaymentEntityFrameworkCoreTestModule : AbpModule
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
@@ -33,8 +35,12 @@ namespace EasyAbp.PaymentService.Prepayment.EntityFrameworkCore
             var connection = new SqliteConnection("Data Source=:memory:");
             connection.Open();
 
-            new PrepaymentDbContext(
-                new DbContextOptionsBuilder<PrepaymentDbContext>().UseSqlite(connection).Options
+            new PaymentServiceDbContext(
+                new DbContextOptionsBuilder<PaymentServiceDbContext>().UseSqlite(connection).Options
+            ).GetService<IRelationalDatabaseCreator>().CreateTables();
+            
+            new PaymentServicePrepaymentDbContext(
+                new DbContextOptionsBuilder<PaymentServicePrepaymentDbContext>().UseSqlite(connection).Options
             ).GetService<IRelationalDatabaseCreator>().CreateTables();
             
             return connection;

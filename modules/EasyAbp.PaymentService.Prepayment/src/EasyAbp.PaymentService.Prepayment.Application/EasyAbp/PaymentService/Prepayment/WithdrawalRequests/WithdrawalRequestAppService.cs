@@ -31,9 +31,9 @@ namespace EasyAbp.PaymentService.Prepayment.WithdrawalRequests
             _repository = repository;
         }
 
-        protected override IQueryable<WithdrawalRequest> CreateFilteredQuery(GetWithdrawalRequestListInput input)
+        protected override async Task<IQueryable<WithdrawalRequest>> CreateFilteredQueryAsync(GetWithdrawalRequestListInput input)
         {
-            return base.CreateFilteredQuery(input)
+            return (await base.CreateFilteredQueryAsync(input))
                 .WhereIf(input.PendingOnly, x => !x.ReviewTime.HasValue)
                 .WhereIf(input.AccountId.HasValue, x => x.AccountId == input.AccountId.Value)
                 .WhereIf(input.AccountUserId.HasValue, x => x.AccountUserId == input.AccountUserId.Value);

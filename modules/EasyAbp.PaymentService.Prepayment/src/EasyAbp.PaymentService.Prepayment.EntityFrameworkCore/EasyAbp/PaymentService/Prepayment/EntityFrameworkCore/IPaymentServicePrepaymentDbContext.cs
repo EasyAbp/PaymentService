@@ -9,7 +9,7 @@ using EasyAbp.PaymentService.Prepayment.WithdrawalRequests;
 namespace EasyAbp.PaymentService.Prepayment.EntityFrameworkCore
 {
     [ConnectionStringName(PrepaymentDbProperties.ConnectionStringName)]
-    public interface IPrepaymentDbContext : IEfCoreDbContext
+    public interface IPaymentServicePrepaymentDbContext : IEfCoreDbContext
     {
         /* Add DbSet for each Aggregate Root here. Example:
          * DbSet<Question> Questions { get; }

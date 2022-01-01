@@ -31,8 +31,8 @@ namespace EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore
             var connection = new SqliteConnection("Data Source=:memory:");
             connection.Open();
 
-            new WeChatPayDbContext(
-                new DbContextOptionsBuilder<WeChatPayDbContext>().UseSqlite(connection).Options
+            new PaymentServiceWeChatPayDbContext(
+                new DbContextOptionsBuilder<PaymentServiceWeChatPayDbContext>().UseSqlite(connection).Options
             ).GetService<IRelationalDatabaseCreator>().CreateTables();
             
             return connection;

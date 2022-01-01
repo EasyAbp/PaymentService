@@ -10,6 +10,7 @@ using EasyAbp.PaymentService.Refunds;
 using Volo.Abp.Data;
 using Volo.Abp.Guids;
 using Volo.Abp.MultiTenancy;
+using Volo.Abp.Uow;
 using Volo.Abp.Users;
 
 namespace EasyAbp.PaymentService.Prepayment.PaymentService
@@ -47,14 +48,15 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
             _accountGroupConfigurationProvider = accountGroupConfigurationProvider;
         }
 
+        [UnitOfWork(true)]
         public override async Task OnPaymentStartedAsync(Payment payment, ExtraPropertyDictionary configurations)
         {
             if (payment.ActualPaymentAmount <= decimal.Zero)
             {
-                throw new PaymentAmountInvalidException(payment.ActualPaymentAmount, PaymentMethod);
+                throw new PaymentAmountInvalidException(payment.ActualPaymentAmount, payment.PaymentMethod);
             }
             
-            if (!Guid.TryParse(configurations.GetOrDefault("AccountId") as string, out var accountId))
+            if (!Guid.TryParse(configurations.GetOrDefault("AccountId").ToString(), out var accountId))
             {
                 throw new ArgumentNullException("AccountId");
             }
@@ -110,6 +112,7 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
             await _paymentManager.CompleteCancelAsync(payment);
         }
 
+        [UnitOfWork(true)]
         public override async Task OnRefundStartedAsync(Payment payment, Refund refund)
         {
             if (!Guid.TryParse(payment.GetProperty<string>("AccountId"), out var accountId))
@@ -121,7 +124,7 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
 
             var configuration = _accountGroupConfigurationProvider.Get(account.AccountGroupName);
 
-            var accountChangedBalance = payment.ActualPaymentAmount;
+            var accountChangedBalance = refund.RefundAmount;
 
             var transaction = new Transaction(_guidGenerator.Create(), _currentTenant.Id, account.Id, account.UserId,
                 payment.Id, TransactionType.Debit, PrepaymentConsts.RefundActionName, payment.PaymentMethod,

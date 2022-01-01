@@ -9,7 +9,7 @@ namespace EasyAbp.PaymentService.Refunds
         IReadOnlyAppService< 
             RefundDto, 
             Guid, 
-            PagedAndSortedResultRequestDto>
+            GetRefundListInput>
     {
 
     }

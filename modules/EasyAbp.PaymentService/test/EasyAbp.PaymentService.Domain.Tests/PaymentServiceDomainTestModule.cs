@@ -1,4 +1,4 @@
-﻿using EntityFrameworkCore;
+﻿using EasyAbp.PaymentService.EntityFrameworkCore;
 using Volo.Abp.Modularity;
 
 /* Domain tests are configured to use the EF Core provider.
@@ -10,5 +10,4 @@ using Volo.Abp.Modularity;
 )]
 public class PaymentServiceDomainTestModule : AbpModule
 {
-        
 }

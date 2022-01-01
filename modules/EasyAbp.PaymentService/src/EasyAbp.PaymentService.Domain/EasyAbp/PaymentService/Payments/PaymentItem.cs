@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using JetBrains.Annotations;
 using Volo.Abp.Data;
 using Volo.Abp.Domain.Entities.Auditing;
@@ -49,9 +48,8 @@ namespace EasyAbp.PaymentService.Payments
         
         internal void SetPaymentDiscount(decimal paymentDiscount)
         {
-            // Todo: ActualPaymentAmount should greater than 0
-            PaymentDiscount = paymentDiscount;
-            ActualPaymentAmount = OriginalPaymentAmount - paymentDiscount;
+            PaymentDiscount = paymentDiscount.EnsureIsNonNegative();
+            ActualPaymentAmount = (OriginalPaymentAmount - paymentDiscount).EnsureIsNonNegative();
         }
 
         internal bool TryStartRefund(decimal refundAmount)

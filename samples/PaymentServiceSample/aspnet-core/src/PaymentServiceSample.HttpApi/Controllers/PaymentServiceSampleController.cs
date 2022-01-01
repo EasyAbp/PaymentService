@@ -5,7 +5,7 @@ namespace PaymentServiceSample.Controllers
 {
     /* Inherit your controllers from this class.
      */
-    public abstract class PaymentServiceSampleController : AbpController
+    public abstract class PaymentServiceSampleController : AbpControllerBase
     {
         protected PaymentServiceSampleController()
         {

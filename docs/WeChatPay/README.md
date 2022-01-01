@@ -1,7 +1,9 @@
 # PaymentService.WeChatPay
 
+[![ABP version](https://img.shields.io/badge/dynamic/xml?style=flat-square&color=yellow&label=abp&query=%2F%2FProject%2FPropertyGroup%2FAbpVersion&url=https%3A%2F%2Fraw.githubusercontent.com%2FEasyAbp%2FPaymentService%2Fmaster%2FDirectory.Build.props)](https://abp.io)
 [![NuGet](https://img.shields.io/nuget/v/EasyAbp.PaymentService.WeChatPay.Domain.Shared.svg?style=flat-square)](https://www.nuget.org/packages/EasyAbp.PaymentService.WeChatPay.Domain.Shared)
 [![NuGet Download](https://img.shields.io/nuget/dt/EasyAbp.PaymentService.WeChatPay.Domain.Shared.svg?style=flat-square)](https://www.nuget.org/packages/EasyAbp.PaymentService.WeChatPay.Domain.Shared)
+[![Discord online](https://badgen.net/discord/online-members/S6QaezrCRq?label=Discord)](https://discord.gg/S6QaezrCRq)
 [![GitHub stars](https://img.shields.io/github/stars/EasyAbp/PaymentService?style=social)](https://www.github.com/EasyAbp/PaymentService)
 
 WeChatPay implementation of the EasyAbp.PaymentService module.
@@ -36,12 +38,10 @@ We have launched an online demo for this module: [https://pay.samples.easyabp.io
 
 1. Register the WeChatPay payment method:
     ```csharp
-    public override void OnApplicationInitialization(ApplicationInitializationContext context)
+    Configure<PaymentServiceOptions>(options =>
     {
-        var resolver = context.ServiceProvider.GetRequiredService<IPaymentServiceResolver>();
-
-        resolver.TryRegisterProvider(WeChatPayPaymentServiceProvider.PaymentMethod, typeof(WeChatPayPaymentServiceProvider));
-    }
+        options.Providers.Configure<WeChatPayPaymentServiceProvider>(WeChatPayPaymentServiceProvider.PaymentMethod);
+    });
     ```
     
 2. Configure the [WeChatPay settings](https://github.com/EasyAbp/PaymentService/blob/master/modules/EasyAbp.PaymentService.WeChatPay/src/EasyAbp.PaymentService.WeChatPay.Domain/EasyAbp/PaymentService/WeChatPay/Settings/WeChatPaySettings.cs), you can try to use [SettingUI](https://github.com/EasyAbp/Abp.SettingUi) to finish this work.

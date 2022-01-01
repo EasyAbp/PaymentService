@@ -66,7 +66,7 @@ namespace EasyAbp.PaymentService.Prepayment
             {
                 httpClient.SetBearerToken(accessToken);
 
-                var url = _configuration["RemoteServices:Prepayment:BaseUrl"] +
+                var url = _configuration["RemoteServices:EasyAbpPaymentService:BaseUrl"] +
                           "api/Prepayment/sample/authorized";
 
                 var responseMessage = await httpClient.GetAsync(url);
@@ -127,7 +127,7 @@ namespace EasyAbp.PaymentService.Prepayment
             {
                 httpClient.SetBearerToken(tokenResponse.AccessToken);
 
-                var url = _configuration["RemoteServices:Prepayment:BaseUrl"] +
+                var url = _configuration["RemoteServices:EasyAbpPaymentService:BaseUrl"] +
                           "api/Prepayment/sample/authorized";
 
                 var responseMessage = await httpClient.GetAsync(url);

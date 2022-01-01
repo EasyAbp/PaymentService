@@ -57,9 +57,10 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
             return dto;
         }
 
-        protected override IQueryable<Account> CreateFilteredQuery(GetAccountListInput input)
+        protected override async Task<IQueryable<Account>> CreateFilteredQueryAsync(GetAccountListInput input)
         {
-            return base.CreateFilteredQuery(input).WhereIf(input.UserId.HasValue, x => x.UserId == input.UserId.Value);
+            return (await base.CreateFilteredQueryAsync(input))
+                .WhereIf(input.UserId.HasValue, x => x.UserId == input.UserId.Value);
         }
 
         [Authorize]

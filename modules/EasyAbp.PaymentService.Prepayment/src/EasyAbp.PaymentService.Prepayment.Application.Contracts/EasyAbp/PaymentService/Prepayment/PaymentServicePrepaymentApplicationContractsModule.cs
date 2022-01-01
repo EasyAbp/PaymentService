@@ -6,6 +6,7 @@ namespace EasyAbp.PaymentService.Prepayment
 {
     [DependsOn(
         typeof(PaymentServicePrepaymentDomainSharedModule),
+        typeof(PaymentServiceDomainSharedModule),
         typeof(AbpDddApplicationContractsModule),
         typeof(AbpAuthorizationModule)
         )]

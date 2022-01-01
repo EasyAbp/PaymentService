@@ -66,7 +66,7 @@ namespace EasyAbp.PaymentService
             {
                 httpClient.SetBearerToken(accessToken);
 
-                var url = _configuration["RemoteServices:PaymentService:BaseUrl"] +
+                var url = _configuration["RemoteServices:EasyAbpPaymentService:BaseUrl"] +
                           "api/PaymentService/sample/authorized";
 
                 var responseMessage = await httpClient.GetAsync(url);
@@ -127,7 +127,7 @@ namespace EasyAbp.PaymentService
             {
                 httpClient.SetBearerToken(tokenResponse.AccessToken);
 
-                var url = _configuration["RemoteServices:PaymentService:BaseUrl"] +
+                var url = _configuration["RemoteServices:EasyAbpPaymentService:BaseUrl"] +
                           "api/PaymentService/sample/authorized";
 
                 var responseMessage = await httpClient.GetAsync(url);

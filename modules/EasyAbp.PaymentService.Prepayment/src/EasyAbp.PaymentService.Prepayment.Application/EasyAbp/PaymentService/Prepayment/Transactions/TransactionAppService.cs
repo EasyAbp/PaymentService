@@ -55,9 +55,9 @@ namespace EasyAbp.PaymentService.Prepayment.Transactions
             return await base.GetListAsync(input);
         }
 
-        protected override IQueryable<Transaction> CreateFilteredQuery(GetTransactionListInput input)
+        protected override async Task<IQueryable<Transaction>> CreateFilteredQueryAsync(GetTransactionListInput input)
         {
-            return base.CreateFilteredQuery(input).Where(x => x.AccountId == input.AccountId);
+            return (await base.CreateFilteredQueryAsync(input)).Where(x => x.AccountId == input.AccountId);
         }
     }
 }

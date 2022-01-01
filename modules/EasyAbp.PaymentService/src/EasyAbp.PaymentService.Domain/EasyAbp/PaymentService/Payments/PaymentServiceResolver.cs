@@ -1,40 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.DependencyInjection;
+using EasyAbp.PaymentService.Options;
+using Microsoft.Extensions.Options;
 using Volo.Abp.DependencyInjection;
 
 namespace EasyAbp.PaymentService.Payments
 {
     public class PaymentServiceResolver : IPaymentServiceResolver, ISingletonDependency
     {
-        protected readonly Dictionary<string, Type> Providers = new Dictionary<string, Type>();
+        protected readonly Dictionary<string, Type> Providers = new();
         
-        private readonly IServiceProvider _serviceProvider;
-
-        public PaymentServiceResolver(IServiceProvider serviceProvider)
+        public PaymentServiceResolver(
+            IOptions<PaymentServiceOptions> options)
         {
-            _serviceProvider = serviceProvider;
-        }
-        
-        public virtual bool TryRegisterProvider(string paymentMethod, Type providerType)
-        {
-            if (Providers.ContainsKey(paymentMethod))
+            foreach (var provider in options.Value.Providers.GetConfigurations())
             {
-                return false;
+                Providers.Add(provider.ProviderName, provider.ProviderType);
             }
-
-            using (var scope = _serviceProvider.CreateScope())
-            {
-                if (scope.ServiceProvider.GetService(providerType) == null)
-                {
-                    return false;
-                }
-            }
-
-            Providers.Add(paymentMethod, providerType);
-
-            return true;
         }
 
         public virtual List<string> GetPaymentMethods()

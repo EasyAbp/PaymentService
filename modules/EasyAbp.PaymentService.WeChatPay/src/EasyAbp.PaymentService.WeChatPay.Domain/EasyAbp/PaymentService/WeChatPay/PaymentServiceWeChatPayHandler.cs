@@ -11,6 +11,7 @@ using Volo.Abp.DependencyInjection;
 using Volo.Abp.Guids;
 using Volo.Abp.MultiTenancy;
 using Volo.Abp.Timing;
+using Volo.Abp.Uow;
 
 namespace EasyAbp.PaymentService.WeChatPay
 {
@@ -35,6 +36,7 @@ namespace EasyAbp.PaymentService.WeChatPay
             _paymentRepository = paymentRepository;
         }
         
+        [UnitOfWork(true)]
         public virtual async Task HandleAsync(WeChatPayHandlerContext context)
         {
             var dict = context.WeChatRequestXmlData.SelectSingleNode("xml").ToDictionary() ??
