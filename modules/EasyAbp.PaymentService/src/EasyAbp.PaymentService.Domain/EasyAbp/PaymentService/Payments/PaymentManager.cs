@@ -49,12 +49,12 @@ namespace EasyAbp.PaymentService.Payments
         [UnitOfWork(true)]
         public virtual async Task CompletePaymentAsync(Payment payment)
         {
-            await _distributedEventBus.PublishAsync(
-                    new PaymentCompletedEto(_objectMapper.Map<Payment, PaymentEto>(payment)));
-            
             payment.CompletePayment(_clock.Now);
             
             await _paymentRepository.UpdateAsync(payment, true);
+            
+            await _distributedEventBus.PublishAsync(
+                new PaymentCompletedEto(_objectMapper.Map<Payment, PaymentEto>(payment)));
         }
 
         public virtual async Task StartCancelAsync(Payment payment)
