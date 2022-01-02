@@ -12,7 +12,7 @@ namespace EasyAbp.PaymentService.Payments
             Guid, 
             GetPaymentListInput>
     {
-        Task<ListResultDto<PaymentMethodDto>> GetListPaymentMethod();
+        Task<ListResultDto<PaymentMethodDto>> GetListPaymentMethodAsync();
         
         Task<PaymentDto> PayAsync(Guid id, PayInput input);
         

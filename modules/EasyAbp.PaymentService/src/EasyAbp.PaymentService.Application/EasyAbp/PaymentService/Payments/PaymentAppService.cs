@@ -88,7 +88,7 @@ namespace EasyAbp.PaymentService.Payments
         }
 
         [AllowAnonymous]
-        public virtual Task<ListResultDto<PaymentMethodDto>> GetListPaymentMethod()
+        public virtual Task<ListResultDto<PaymentMethodDto>> GetListPaymentMethodAsync()
         {
             var paymentMethods = _paymentServiceResolver.GetPaymentMethods().Select(paymentMethod =>
                 new PaymentMethodDto

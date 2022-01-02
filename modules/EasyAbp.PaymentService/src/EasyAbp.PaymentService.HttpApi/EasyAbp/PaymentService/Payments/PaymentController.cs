@@ -33,9 +33,9 @@ namespace EasyAbp.PaymentService.Payments
 
         [HttpGet]
         [Route("payment-method")]
-        public virtual Task<ListResultDto<PaymentMethodDto>> GetListPaymentMethod()
+        public virtual Task<ListResultDto<PaymentMethodDto>> GetListPaymentMethodAsync()
         {
-            return _service.GetListPaymentMethod();
+            return _service.GetListPaymentMethodAsync();
         }
 
         [HttpPost]
