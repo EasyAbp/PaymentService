@@ -21,7 +21,7 @@ namespace EasyAbp.PaymentService.Prepayment
             
             Configure<AbpVirtualFileSystemOptions>(options =>
             {
-                options.FileSets.AddEmbedded<PaymentServicePrepaymentApplicationContractsModule>();
+                options.FileSets.AddEmbedded<PaymentServicePrepaymentHttpApiClientModule>();
             });
         }
     }

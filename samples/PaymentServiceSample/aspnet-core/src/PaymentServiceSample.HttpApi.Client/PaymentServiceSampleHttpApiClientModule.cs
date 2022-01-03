@@ -36,7 +36,7 @@ namespace PaymentServiceSample
             
             Configure<AbpVirtualFileSystemOptions>(options =>
             {
-                options.FileSets.AddEmbedded<PaymentServiceSampleApplicationContractsModule>();
+                options.FileSets.AddEmbedded<PaymentServiceSampleHttpApiClientModule>();
             });
         }
     }
