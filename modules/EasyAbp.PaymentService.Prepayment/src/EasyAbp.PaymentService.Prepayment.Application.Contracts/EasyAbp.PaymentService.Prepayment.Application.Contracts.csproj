@@ -11,7 +11,7 @@
     <PackageReference Include="Volo.Abp.Ddd.Application.Contracts" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.Authorization" Version="$(AbpVersion)" />
     <ProjectReference Include="..\EasyAbp.PaymentService.Prepayment.Domain.Shared\EasyAbp.PaymentService.Prepayment.Domain.Shared.csproj" />
-    <ProjectReference Include="..\..\..\EasyAbp.PaymentService\src\EasyAbp.PaymentService.Domain.Shared\EasyAbp.PaymentService.Domain.Shared.csproj" />
+    <ProjectReference Include="..\..\..\EasyAbp.PaymentService\src\EasyAbp.PaymentService.Application.Contracts\EasyAbp.PaymentService.Application.Contracts.csproj" />
   </ItemGroup>
 
 </Project>
