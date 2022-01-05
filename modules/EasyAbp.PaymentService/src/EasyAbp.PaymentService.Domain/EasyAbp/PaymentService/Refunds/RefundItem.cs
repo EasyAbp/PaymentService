@@ -1,12 +1,12 @@
 using System;
-using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using Volo.Abp.Data;
 using Volo.Abp.Domain.Entities.Auditing;
-using Volo.Abp.MultiTenancy;
 
 namespace EasyAbp.PaymentService.Refunds
 {
+    [Serializable]
     public class RefundItem : FullAuditedEntity<Guid>, IRefundItem
     {
         public virtual Guid PaymentItemId { get; protected set; }
@@ -19,6 +19,7 @@ namespace EasyAbp.PaymentService.Refunds
         [CanBeNull]
         public virtual string StaffRemark { get; protected set; }
         
+        [JsonInclude]
         public virtual ExtraPropertyDictionary ExtraProperties { get; protected set; }
         
         protected RefundItem()

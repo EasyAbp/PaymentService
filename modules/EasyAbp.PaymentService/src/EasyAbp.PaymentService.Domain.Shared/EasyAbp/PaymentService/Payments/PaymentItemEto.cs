@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using Volo.Abp.Data;
+using Volo.Abp.ObjectExtending;
 
 namespace EasyAbp.PaymentService.Payments
 {
-    [Serializable]
-    public class PaymentItemEto : IPaymentItem
+    public class PaymentItemEto : ExtensibleObject, IPaymentItem
     {
         public Guid Id { get; set; }
         
@@ -22,7 +21,5 @@ namespace EasyAbp.PaymentService.Payments
         public decimal RefundAmount { get; set; }
         
         public decimal PendingRefundAmount { get; set; }
-        
-        public ExtraPropertyDictionary ExtraProperties { get; set; }
     }
 }

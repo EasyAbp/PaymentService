@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using Volo.Abp.Data;
 using Volo.Abp.MultiTenancy;
+using Volo.Abp.ObjectExtending;
 
 namespace EasyAbp.PaymentService.Prepayment.Accounts
 {
-    [Serializable]
-    public class ChangeAccountBalanceEto : IHasExtraProperties, IMultiTenant
+    public class ChangeAccountBalanceEto : ExtensibleObject, IHasExtraProperties, IMultiTenant
     {
         public Guid? TenantId { get; set; }
 
@@ -22,7 +21,7 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
         /// <summary>
         /// The value will be copied to Transaction.ExtraProperties.
         /// </summary>
-        public ExtraPropertyDictionary ExtraProperties { get; set; }
+        // public ExtraPropertyDictionary ExtraProperties { get; set; }
 
         public ChangeAccountBalanceEto(
             Guid? tenantId,

@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Volo.Abp.Data;
 using Volo.Abp.MultiTenancy;
+using Volo.Abp.ObjectExtending;
 
 namespace EasyAbp.PaymentService.Payments
 {
-    [Serializable]
-    public class PaymentEto : IPayment, IMultiTenant
+    public class PaymentEto : ExtensibleObject, IPayment, IMultiTenant
     {
         public Guid UserId { get; set; }
 
@@ -38,8 +37,6 @@ namespace EasyAbp.PaymentService.Payments
         
         public DateTime CreationTime { get; set; }
     
-        public ExtraPropertyDictionary ExtraProperties { get; set; }
-
         public List<PaymentItemEto> PaymentItems { get; set; }
     }
 }

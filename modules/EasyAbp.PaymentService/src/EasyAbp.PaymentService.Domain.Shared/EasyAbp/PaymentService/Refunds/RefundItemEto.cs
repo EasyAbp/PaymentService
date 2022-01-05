@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using Volo.Abp.Data;
+using Volo.Abp.ObjectExtending;
 
 namespace EasyAbp.PaymentService.Refunds
 {
     [Serializable]
-    public class RefundItemEto : IRefundItem, IHasExtraProperties
+    public class RefundItemEto : ExtensibleObject, IRefundItem
     {
         public Guid Id { get; set; }
 
@@ -16,7 +15,5 @@ namespace EasyAbp.PaymentService.Refunds
         public string CustomerRemark { get; set; }
         
         public string StaffRemark { get; set; }
-        
-        public ExtraPropertyDictionary ExtraProperties { get; set; }
     }
 }

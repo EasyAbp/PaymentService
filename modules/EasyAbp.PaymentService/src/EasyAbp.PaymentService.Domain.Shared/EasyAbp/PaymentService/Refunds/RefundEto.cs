@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Volo.Abp.Data;
 using Volo.Abp.MultiTenancy;
+using Volo.Abp.ObjectExtending;
 
 namespace EasyAbp.PaymentService.Refunds
 {
-    [Serializable]
-    public class RefundEto : IRefund, IMultiTenant
+    public class RefundEto : ExtensibleObject, IRefund, IMultiTenant
     {
         public Guid Id { get; set; }
 
@@ -32,8 +31,6 @@ namespace EasyAbp.PaymentService.Refunds
         
         public DateTime? CanceledTime { get; set; }
 
-        public ExtraPropertyDictionary ExtraProperties { get; set; }
-        
         public List<RefundItemEto> RefundItems { get; set; } = new List<RefundItemEto>();
     }
 }

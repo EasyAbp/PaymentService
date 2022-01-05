@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using Volo.Abp.Data;
 using Volo.Abp.MultiTenancy;
+using Volo.Abp.ObjectExtending;
 
 namespace EasyAbp.PaymentService.Payments
 {
-    [Serializable]
-    public class CreatePaymentEto : IHasExtraProperties, IMultiTenant
+    public class CreatePaymentEto : ExtensibleObject, IMultiTenant
     {
         public Guid? TenantId { get; set; }
         
@@ -16,8 +16,6 @@ namespace EasyAbp.PaymentService.Payments
 
         public string Currency { get; set; }
         
-        public ExtraPropertyDictionary ExtraProperties { get; set; }
-
         public List<CreatePaymentItemEto> PaymentItems { get; set; }
 
         public CreatePaymentEto(
