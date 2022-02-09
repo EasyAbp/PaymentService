@@ -30,7 +30,7 @@ namespace PaymentServiceSample
         {
             context.Services.PreConfigure<IMvcBuilder>(builder =>
             {
-                builder.PartManager.ApplicationParts.Add(new AssemblyPart(typeof(PaymentServiceSampleWebModule).Assembly));
+                builder.PartManager.ApplicationParts.Add(new CompiledRazorAssemblyPart(typeof(PaymentServiceSampleWebModule).Assembly));
             });
         }
 
