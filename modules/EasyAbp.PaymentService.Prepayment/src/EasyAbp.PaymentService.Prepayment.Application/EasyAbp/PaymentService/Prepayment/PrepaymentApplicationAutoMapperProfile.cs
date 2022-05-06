@@ -17,8 +17,8 @@ namespace EasyAbp.PaymentService.Prepayment
             /* You can configure your AutoMapper mapping configuration here.
              * Alternatively, you can split your mapping configurations
              * into multiple profile classes for a better organization. */
-            CreateMap<Account, AccountDto>();
-            CreateMap<Transaction, TransactionDto>();
+            CreateMap<Account, AccountDto>().MapExtraProperties();
+            CreateMap<Transaction, TransactionDto>().MapExtraProperties();
             CreateMap<WithdrawalRecord, WithdrawalRecordDto>();
             CreateMap<WithdrawalRequest, WithdrawalRequestDto>();
         }

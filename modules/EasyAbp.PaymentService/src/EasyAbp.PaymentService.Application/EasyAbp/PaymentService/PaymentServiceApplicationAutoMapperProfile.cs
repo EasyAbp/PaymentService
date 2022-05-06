@@ -15,10 +15,10 @@ namespace EasyAbp.PaymentService
             /* You can configure your AutoMapper mapping configuration here.
              * Alternatively, you can split your mapping configurations
              * into multiple profile classes for a better organization. */
-            CreateMap<Payment, PaymentDto>();
-            CreateMap<PaymentItem, PaymentItemDto>();
-            CreateMap<Refund, RefundDto>();
-            CreateMap<RefundItem, RefundItemDto>();
+            CreateMap<Payment, PaymentDto>().MapExtraProperties();
+            CreateMap<PaymentItem, PaymentItemDto>().MapExtraProperties();
+            CreateMap<Refund, RefundDto>().MapExtraProperties();
+            CreateMap<RefundItem, RefundItemDto>().MapExtraProperties();
         }
     }
 }
