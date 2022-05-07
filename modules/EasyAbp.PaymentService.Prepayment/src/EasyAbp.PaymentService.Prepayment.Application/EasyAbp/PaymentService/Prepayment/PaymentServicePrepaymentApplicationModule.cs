@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using EasyAbp.PaymentService.Prepayment.ObjectExtending;
+using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.AutoMapper;
 using Volo.Abp.Modularity;
 using Volo.Abp.Application;
@@ -13,6 +14,11 @@ namespace EasyAbp.PaymentService.Prepayment
         )]
     public class PaymentServicePrepaymentApplicationModule : AbpModule
     {
+        public override void PreConfigureServices(ServiceConfigurationContext context)
+        {
+            PaymentServicePrepaymentApplicationObjectExtensions.Configure();
+        }
+
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
             context.Services.AddAutoMapperObjectMapper<PaymentServicePrepaymentApplicationModule>();

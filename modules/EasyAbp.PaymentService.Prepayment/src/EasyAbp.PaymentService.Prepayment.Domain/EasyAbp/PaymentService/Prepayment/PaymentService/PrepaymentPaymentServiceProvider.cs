@@ -56,9 +56,9 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
                 throw new PaymentAmountInvalidException(payment.ActualPaymentAmount, payment.PaymentMethod);
             }
             
-            if (!Guid.TryParse(configurations.GetOrDefault("AccountId").ToString(), out var accountId))
+            if (!Guid.TryParse(configurations.GetOrDefault(PrepaymentConsts.PaymentAccountIdPropertyName).ToString(), out var accountId))
             {
-                throw new ArgumentNullException("AccountId");
+                throw new ArgumentNullException(PrepaymentConsts.PaymentAccountIdPropertyName);
             }
 
             var account = await _accountRepository.GetAsync(accountId);
@@ -68,7 +68,7 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
                 throw new UserIsNotAccountOwnerException(_currentUser.GetId(), accountId);
             }
 
-            payment.SetProperty("AccountId", accountId);
+            payment.SetProperty(PrepaymentConsts.PaymentAccountIdPropertyName, accountId);
 
             var accountGroupConfiguration = _accountGroupConfigurationProvider.Get(account.AccountGroupName);
 
@@ -115,12 +115,13 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
         [UnitOfWork(true)]
         public override async Task OnRefundStartedAsync(Payment payment, Refund refund)
         {
-            if (!Guid.TryParse(payment.GetProperty<string>("AccountId"), out var accountId))
+            var accountId = payment.GetProperty<Guid?>(PrepaymentConsts.PaymentAccountIdPropertyName);
+            if (accountId is null)
             {
-                throw new ArgumentNullException("AccountId");
+                throw new ArgumentNullException(PrepaymentConsts.PaymentAccountIdPropertyName);
             }
             
-            var account = await _accountRepository.GetAsync(accountId);
+            var account = await _accountRepository.GetAsync(accountId.Value);
 
             var configuration = _accountGroupConfigurationProvider.Get(account.AccountGroupName);
 

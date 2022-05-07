@@ -102,7 +102,7 @@ namespace EasyAbp.PaymentService.Prepayment.Payments
 
             var input = new PayInput();
             
-            input.SetProperty("AccountId", PrepaymentTestConsts.AccountId);
+            input.SetProperty(PrepaymentConsts.PaymentAccountIdPropertyName, PrepaymentTestConsts.AccountId);
 
             var account = await _accountRepository.GetAsync(PrepaymentTestConsts.AccountId);
             account.Balance.ShouldBeGreaterThanOrEqualTo(150m);
