@@ -1,4 +1,5 @@
-﻿using Volo.Abp.Modularity;
+﻿using EasyAbp.PaymentService.Prepayment.ObjectExtending;
+using Volo.Abp.Modularity;
 
 namespace EasyAbp.PaymentService.Prepayment
 {
@@ -8,6 +9,9 @@ namespace EasyAbp.PaymentService.Prepayment
     )]
     public class PaymentServicePrepaymentDomainModule : AbpModule
     {
-
+        public override void PreConfigureServices(ServiceConfigurationContext context)
+        {
+            PaymentServicePrepaymentDomainObjectExtensions.Configure();
+        }
     }
 }
