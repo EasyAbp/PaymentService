@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\EasyAbp.PaymentService\src\EasyAbp.PaymentService.Application\EasyAbp.PaymentService.Application.csproj" />
     <ProjectReference Include="..\..\src\EasyAbp.PaymentService.WeChatPay.Application\EasyAbp.PaymentService.WeChatPay.Application.csproj" />
     <ProjectReference Include="..\EasyAbp.PaymentService.WeChatPay.Domain.Tests\EasyAbp.PaymentService.WeChatPay.Domain.Tests.csproj" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
