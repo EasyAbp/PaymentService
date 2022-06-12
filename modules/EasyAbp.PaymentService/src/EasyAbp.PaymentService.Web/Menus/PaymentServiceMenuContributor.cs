@@ -24,7 +24,7 @@ namespace EasyAbp.PaymentService.Web
         {
             var l = context.GetLocalizer<PaymentServiceResource>();            //Add main menu items.
 
-            var paymentManagementMenuItem = new ApplicationMenuItem(PaymentServiceMenus.Prefix, l["Menu:PaymentService"]);
+            var paymentManagementMenuItem = new ApplicationMenuItem(PaymentServiceMenus.Prefix, l["Menu:PaymentService"], icon: "fa fa-credit-card");
 
             if (await context.IsGrantedAsync(PaymentServicePermissions.Payments.Manage))
             {
