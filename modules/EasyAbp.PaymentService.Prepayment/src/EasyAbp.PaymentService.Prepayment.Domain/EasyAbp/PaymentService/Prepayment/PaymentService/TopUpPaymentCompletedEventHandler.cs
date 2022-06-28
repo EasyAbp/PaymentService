@@ -52,7 +52,7 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
                 var configuration = _accountGroupConfigurationProvider.Get(account.AccountGroupName);
 
                 var transaction = new Transaction(_guidGenerator.Create(), _currentTenant.Id, account.Id,
-                    account.UserId, null, TransactionType.Debit, PrepaymentConsts.TopUpActionName,
+                    account.UserId, payment.Id, TransactionType.Debit, PrepaymentConsts.TopUpActionName,
                     payment.PaymentMethod, payment.ExternalTradingCode, configuration.Currency, changedBalance,
                     account.Balance);
 
