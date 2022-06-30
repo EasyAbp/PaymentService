@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper.Internal;
 using EasyAbp.Abp.WeChat.Pay.Services.Pay;

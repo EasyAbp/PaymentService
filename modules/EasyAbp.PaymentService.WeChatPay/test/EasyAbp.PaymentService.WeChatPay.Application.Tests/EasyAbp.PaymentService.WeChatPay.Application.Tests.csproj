@@ -9,7 +9,7 @@
     <ProjectReference Include="..\..\..\EasyAbp.PaymentService\src\EasyAbp.PaymentService.Application\EasyAbp.PaymentService.Application.csproj" />
     <ProjectReference Include="..\..\src\EasyAbp.PaymentService.WeChatPay.Application\EasyAbp.PaymentService.WeChatPay.Application.csproj" />
     <ProjectReference Include="..\EasyAbp.PaymentService.WeChatPay.Domain.Tests\EasyAbp.PaymentService.WeChatPay.Domain.Tests.csproj" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
   </ItemGroup>
 
 </Project>
