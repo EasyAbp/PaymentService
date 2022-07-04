@@ -1,4 +1,5 @@
-﻿using EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore;
+﻿using EasyAbp.PaymentService.EntityFrameworkCore;
+using EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore;
 using Volo.Abp.Modularity;
 
 /* Domain tests are configured to use the EF Core provider.
@@ -6,6 +7,7 @@ using Volo.Abp.Modularity;
      * database independent anyway.
      */
 [DependsOn(
+    typeof(PaymentServiceEntityFrameworkCoreTestModule),
     typeof(PaymentServiceWeChatPayEntityFrameworkCoreTestModule)
 )]
 public class PaymentServiceWeChatPayDomainTestModule : AbpModule

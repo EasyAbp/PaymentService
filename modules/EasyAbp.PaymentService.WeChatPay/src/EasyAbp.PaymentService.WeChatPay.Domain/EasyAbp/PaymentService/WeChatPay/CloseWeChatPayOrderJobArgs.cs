@@ -5,7 +5,7 @@ using Volo.Abp.MultiTenancy;
 
 namespace EasyAbp.PaymentService.WeChatPay
 {
-    public class CloseWeChatPayOrderEto : IMultiTenant
+    public class CloseWeChatPayOrderJobArgs : IMultiTenant
     {
         public Guid? TenantId { get; set; }
         
@@ -17,7 +17,7 @@ namespace EasyAbp.PaymentService.WeChatPay
         
         public string MchId { get; set; }
 
-        public CloseWeChatPayOrderEto(Guid? tenantId, Guid paymentId, string outTradeNo, string appId, string mchId)
+        public CloseWeChatPayOrderJobArgs(Guid? tenantId, Guid paymentId, string outTradeNo, string appId, string mchId)
         {
             TenantId = tenantId;
             PaymentId = paymentId;
