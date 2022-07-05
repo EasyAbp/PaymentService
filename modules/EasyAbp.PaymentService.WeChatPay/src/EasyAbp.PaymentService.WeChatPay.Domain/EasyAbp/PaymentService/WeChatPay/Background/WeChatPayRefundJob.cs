@@ -15,7 +15,7 @@ using Volo.Abp.Guids;
 using Volo.Abp.MultiTenancy;
 using Volo.Abp.Uow;
 
-namespace EasyAbp.PaymentService.WeChatPay
+namespace EasyAbp.PaymentService.WeChatPay.Background
 {
     public class WeChatPayRefundJob : IAsyncBackgroundJob<WeChatPayRefundJobArgs>, ITransientDependency
     {

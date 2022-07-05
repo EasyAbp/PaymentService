@@ -6,7 +6,7 @@ using Volo.Abp.BackgroundJobs;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.MultiTenancy;
 
-namespace EasyAbp.PaymentService.WeChatPay;
+namespace EasyAbp.PaymentService.WeChatPay.Background;
 
 public class CloseWeChatPayOrderJob : IAsyncBackgroundJob<CloseWeChatPayOrderJobArgs>, ITransientDependency
 {

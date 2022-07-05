@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Pay.Services.Pay;
 using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.Refunds;
+using EasyAbp.PaymentService.WeChatPay.Background;
 using EasyAbp.PaymentService.WeChatPay.PaymentRecords;
 using EasyAbp.PaymentService.WeChatPay.Settings;
 using Microsoft.Extensions.DependencyInjection;
@@ -162,42 +163,46 @@ namespace EasyAbp.PaymentService.WeChatPay
                 outTradeNo: payment.Id.ToString("N"),
                 appId: payment.GetProperty<string>("appid"),
                 mchId: payment.PayeeAccount);
-            
-            _unitOfWorkManager.Current.OnCompleted(async () =>
+
+            if (_backgroundJobManager.IsAvailable())
             {
-                if (_backgroundJobManager.IsAvailable())
-                {
-                    await _backgroundJobManager.EnqueueAsync(args);
-                }
-                else
+                // Enqueue an empty job to ensure the background job worker is alive.
+                await _backgroundJobManager.EnqueueAsync(new EmptyJobArgs(payment.TenantId));
+
+                _unitOfWorkManager.Current.OnCompleted(async () => { await _backgroundJobManager.EnqueueAsync(args); });
+            }
+            else
+            {
+                _unitOfWorkManager.Current.OnCompleted(async () =>
                 {
                     var job = _serviceProvider.GetRequiredService<CloseWeChatPayOrderJob>();
 
                     await job.ExecuteAsync(args);
-                }
-            });
+                });
+            }
         }
 
         [UnitOfWork]
-        public override Task OnRefundStartedAsync(Payment payment, Refund refund)
+        public override async Task OnRefundStartedAsync(Payment payment, Refund refund)
         {
             var args = new WeChatPayRefundJobArgs(payment.TenantId, payment.Id, refund.Id);
 
-            _unitOfWorkManager.Current.OnCompleted(async () =>
+            if (_backgroundJobManager.IsAvailable())
             {
-                if (_backgroundJobManager.IsAvailable())
-                {
-                    await _backgroundJobManager.EnqueueAsync(args);
-                }
-                else
+                // Enqueue an empty job to ensure the background job worker is alive.
+                await _backgroundJobManager.EnqueueAsync(new EmptyJobArgs(payment.TenantId));
+
+                _unitOfWorkManager.Current.OnCompleted(async () => { await _backgroundJobManager.EnqueueAsync(args); });
+            }
+            else
+            {
+                _unitOfWorkManager.Current.OnCompleted(async () =>
                 {
                     var job = _serviceProvider.GetRequiredService<WeChatPayRefundJob>();
 
                     await job.ExecuteAsync(args);
-                }
-            });
-
-            return Task.CompletedTask;
+                });
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Pay.Infrastructure;
 using EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve;
 using EasyAbp.PaymentService.Payments;
+using EasyAbp.PaymentService.WeChatPay.Background;
 using EasyAbp.PaymentService.WeChatPay.PaymentRecords;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.BackgroundJobs;
@@ -90,19 +91,22 @@ namespace EasyAbp.PaymentService.WeChatPay
                     payment.ActualPaymentAmount, PaymentServiceWeChatPayConsts.InvalidPaymentAutoRefundDisplayReason);
 
                 // Refund the invalid payment.
-                _unitOfWorkManager.Current.OnCompleted(async () =>
+                if (_backgroundJobManager.IsAvailable())
                 {
-                    if (_backgroundJobManager.IsAvailable())
-                    {
-                        await _backgroundJobManager.EnqueueAsync(args);
-                    }
-                    else
+                    // Enqueue an empty job to ensure the background job worker is alive.
+                    await _backgroundJobManager.EnqueueAsync(new EmptyJobArgs(payment.TenantId));
+
+                    _unitOfWorkManager.Current.OnCompleted(async () => { await _backgroundJobManager.EnqueueAsync(args); });
+                }
+                else
+                {
+                    _unitOfWorkManager.Current.OnCompleted(async () =>
                     {
                         var job = _serviceProvider.GetRequiredService<WeChatPayRefundJob>();
 
                         await job.ExecuteAsync(args);
-                    }
-                });
+                    });
+                }
             }
             
             context.IsSuccess = true;
