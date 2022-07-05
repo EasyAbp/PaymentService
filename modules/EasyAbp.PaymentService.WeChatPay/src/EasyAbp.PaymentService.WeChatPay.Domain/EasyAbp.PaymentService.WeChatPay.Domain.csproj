@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="EasyAbp.Abp.WeChat.Pay" Version="$(EasyAbpAbpWeChatModuleVersion)" />
+    <PackageReference Include="Volo.Abp.BackgroundJobs.Abstractions" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.Ddd.Domain" Version="$(AbpVersion)" />
     <ProjectReference Include="..\..\..\EasyAbp.PaymentService\src\EasyAbp.PaymentService.Domain\EasyAbp.PaymentService.Domain.csproj" />
     <ProjectReference Include="..\EasyAbp.PaymentService.WeChatPay.Domain.Shared\EasyAbp.PaymentService.WeChatPay.Domain.Shared.csproj" />

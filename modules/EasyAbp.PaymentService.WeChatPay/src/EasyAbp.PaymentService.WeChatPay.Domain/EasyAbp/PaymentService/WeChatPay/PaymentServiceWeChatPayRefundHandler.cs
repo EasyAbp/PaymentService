@@ -37,37 +37,39 @@ namespace EasyAbp.PaymentService.WeChatPay
             _refundRepository = refundRepository;
             _paymentRepository = paymentRepository;
         }
-        
+
         [UnitOfWork(true)]
         public virtual async Task HandleAsync(WeChatPayHandlerContext context)
         {
-            var dict = context.WeChatRequestXmlData.SelectSingleNode("xml").ToDictionary() ?? throw new NullReferenceException();
+            var dict = context.WeChatRequestXmlData.SelectSingleNode("xml").ToDictionary() ??
+                       throw new NullReferenceException();
 
             if (dict.GetOrDefault("return_code") != "SUCCESS")
             {
+                context.IsSuccess = true;
                 return;
             }
-            
+
             using var disabledDataFilter = _dataFilter.Disable<IMultiTenant>();
 
-            var record = await _refundRecordRepository.FindAsync(x => x.Id == Guid.Parse(dict.GetOrDefault("out_refund_no")));
+            var record = await _refundRecordRepository.FindByOutRefundNoAsync(dict.GetOrDefault("out_refund_no"));
 
-            if (record == null)
-            {
-                return;
-            }
-            
-            var payment = await _paymentRepository.FindAsync(record.PaymentId);
-            
-            var refund = await _refundRepository.FindByPaymentIdAsync(record.PaymentId);
-
-            if (payment == null || refund == null)
+            if (record is null)
             {
                 context.IsSuccess = false;
-
                 return;
             }
-            
+
+            var payment = await _paymentRepository.FindAsync(record.PaymentId);
+
+            var refund = await _refundRepository.FindByPaymentIdAsync(record.PaymentId);
+
+            if (payment is null)
+            {
+                context.IsSuccess = false;
+                return;
+            }
+
             record.SetInformationInNotify(
                 refundStatus: dict.GetOrDefault("refund_status"),
                 successTime: dict.GetOrDefault("success_time"),
@@ -78,16 +80,29 @@ namespace EasyAbp.PaymentService.WeChatPay
 
             await _refundRecordRepository.UpdateAsync(record, true);
 
-            if (dict.GetOrDefault("refund_status") == "SUCCESS")
+            if (refund is not null)
             {
-                await _paymentManager.CompleteRefundAsync(payment, refund);
-            }
-            else
-            {
-                await _paymentManager.RollbackRefundAsync(payment, refund);
+                if (dict.GetOrDefault("refund_status") == "SUCCESS")
+                {
+                    await HandleSuccessfulRefundAsync(payment, refund);
+                }
+                else
+                {
+                    await HandleFailedRefundAsync(payment, refund);
+                }
             }
 
             context.IsSuccess = true;
+        }
+
+        protected virtual async Task HandleSuccessfulRefundAsync(Payment payment, Refund refund)
+        {
+            await _paymentManager.CompleteRefundAsync(payment, refund);
+        }
+
+        protected virtual async Task HandleFailedRefundAsync(Payment payment, Refund refund)
+        {
+            await _paymentManager.RollbackRefundAsync(payment, refund);
         }
     }
 }

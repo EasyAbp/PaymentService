@@ -1,30 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AutoMapper.Internal;
 using EasyAbp.Abp.WeChat.Pay.Services.Pay;
+using Volo.Abp.BackgroundJobs;
 using Volo.Abp.DependencyInjection;
-using Volo.Abp.EventBus.Distributed;
+using Volo.Abp.MultiTenancy;
 
-namespace EasyAbp.PaymentService.WeChatPay;
+namespace EasyAbp.PaymentService.WeChatPay.Background;
 
-public class CloseWeChatPayOrderEventHandler : IDistributedEventHandler<CloseWeChatPayOrderEto>, ITransientDependency
+public class CloseWeChatPayOrderJob : IAsyncBackgroundJob<CloseWeChatPayOrderJobArgs>, ITransientDependency
 {
+    private readonly ICurrentTenant _currentTenant;
     private readonly ServiceProviderPayService _serviceProviderPayService;
 
-    public CloseWeChatPayOrderEventHandler(ServiceProviderPayService serviceProviderPayService)
+    public CloseWeChatPayOrderJob(
+        ICurrentTenant currentTenant,
+        ServiceProviderPayService serviceProviderPayService)
     {
+        _currentTenant = currentTenant;
         _serviceProviderPayService = serviceProviderPayService;
     }
     
-    public virtual async Task HandleEventAsync(CloseWeChatPayOrderEto eventData)
+    public virtual async Task ExecuteAsync(CloseWeChatPayOrderJobArgs args)
     {
+        using var change = _currentTenant.Change(args.TenantId);
+
         var orderQueryResult = await _serviceProviderPayService.CloseOrderAsync(
-            appId: eventData.AppId,
-            mchId: eventData.MchId,
+            appId: args.AppId,
+            mchId: args.MchId,
             subAppId: null,
             subMchId: null,
-            outTradeNo: eventData.OutTradeNo
+            outTradeNo: args.OutTradeNo
         );
             
         var dict = orderQueryResult.SelectSingleNode("xml").ToDictionary() ?? throw new NullReferenceException();
@@ -35,7 +41,7 @@ public class CloseWeChatPayOrderEventHandler : IDistributedEventHandler<CloseWeC
         // ignore the "ORDERCLOSED" status.
         if (resultCode != "SUCCESS" && errCode != "ORDERCLOSED")
         {
-            throw new WeChatPayBusinessErrorException(eventData.OutTradeNo, errCode, errCodeDes);
+            throw new WeChatPayBusinessErrorException(args.OutTradeNo, errCode, errCodeDes);
         }
     }
 }

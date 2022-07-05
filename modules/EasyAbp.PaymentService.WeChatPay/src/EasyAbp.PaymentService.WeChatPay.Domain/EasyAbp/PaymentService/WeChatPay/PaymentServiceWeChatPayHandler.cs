@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Xml;
 using EasyAbp.Abp.WeChat.Pay.Infrastructure;
 using EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve;
 using EasyAbp.PaymentService.Payments;
+using EasyAbp.PaymentService.WeChatPay.Background;
 using EasyAbp.PaymentService.WeChatPay.PaymentRecords;
+using Microsoft.Extensions.DependencyInjection;
+using Volo.Abp.BackgroundJobs;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
-using Volo.Abp.Guids;
 using Volo.Abp.MultiTenancy;
-using Volo.Abp.Timing;
 using Volo.Abp.Uow;
 
 namespace EasyAbp.PaymentService.WeChatPay
@@ -20,29 +20,39 @@ namespace EasyAbp.PaymentService.WeChatPay
         public WeChatHandlerType Type { get; } = WeChatHandlerType.Normal;
 
         private readonly IDataFilter _dataFilter;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IBackgroundJobManager _backgroundJobManager;
         private readonly IPaymentManager _paymentManager;
         private readonly IPaymentRecordRepository _paymentRecordRepository;
         private readonly IPaymentRepository _paymentRepository;
 
         public PaymentServiceWeChatPayHandler(
             IDataFilter dataFilter,
+            IServiceProvider serviceProvider,
+            IUnitOfWorkManager unitOfWorkManager,
+            IBackgroundJobManager backgroundJobManager,
             IPaymentManager paymentManager,
             IPaymentRecordRepository paymentRecordRepository,
             IPaymentRepository paymentRepository)
         {
             _dataFilter = dataFilter;
+            _serviceProvider = serviceProvider;
+            _unitOfWorkManager = unitOfWorkManager;
+            _backgroundJobManager = backgroundJobManager;
             _paymentManager = paymentManager;
             _paymentRecordRepository = paymentRecordRepository;
             _paymentRepository = paymentRepository;
         }
-        
+
         [UnitOfWork(true)]
         public virtual async Task HandleAsync(WeChatPayHandlerContext context)
         {
             var dict = context.WeChatRequestXmlData.SelectSingleNode("xml").ToDictionary() ??
                        throw new NullReferenceException();
 
-            if (dict.GetOrDefault("return_code") != "SUCCESS" || dict.GetOrDefault("device_info") != PaymentServiceWeChatPayConsts.DeviceInfo)
+            if (dict.GetOrDefault("return_code") != "SUCCESS" ||
+                dict.GetOrDefault("device_info") != PaymentServiceWeChatPayConsts.DeviceInfo)
             {
                 context.IsSuccess = false;
 
@@ -53,34 +63,62 @@ namespace EasyAbp.PaymentService.WeChatPay
 
             var paymentId = Guid.Parse(dict.GetOrDefault("out_trade_no") ??
                                        throw new XmlDocumentMissingRequiredElementException("out_trade_no"));
-            
+
+            await RecordPaymentResultAsync(dict, paymentId);
+
             var payment = await _paymentRepository.GetAsync(paymentId);
 
-            payment.SetExternalTradingCode(dict.GetOrDefault("transaction_id") ??
-                                           throw new XmlDocumentMissingRequiredElementException("transaction_id"));
-            
-            await _paymentRepository.UpdateAsync(payment, true);
-
-            await RecordPaymentResultAsync(dict, payment.Id);
-
-            if (dict.GetOrDefault("result_code") == "SUCCESS")
+            if (payment.IsInProgress())
             {
-                await _paymentManager.CompletePaymentAsync(payment);
+                payment.SetExternalTradingCode(dict.GetOrDefault("transaction_id") ??
+                                               throw new XmlDocumentMissingRequiredElementException("transaction_id"));
+
+                await _paymentRepository.UpdateAsync(payment, true);
+
+                if (dict.GetOrDefault("result_code") == "SUCCESS")
+                {
+                    await _paymentManager.CompletePaymentAsync(payment);
+                }
+                else
+                {
+                    await _paymentManager.StartCancelAsync(payment);
+                }
             }
-            else
+            else if (payment.IsCanceled())
             {
-                await _paymentManager.StartCancelAsync(payment);
+                var outRefundNo = payment.Id.ToString();
+                var args = new WeChatPayRefundJobArgs(payment.TenantId, payment.Id, outRefundNo,
+                    payment.ActualPaymentAmount, PaymentServiceWeChatPayConsts.InvalidPaymentAutoRefundDisplayReason);
+
+                // Refund the invalid payment.
+                if (_backgroundJobManager.IsAvailable())
+                {
+                    // Enqueue an empty job to ensure the background job worker is alive.
+                    await _backgroundJobManager.EnqueueAsync(new EmptyJobArgs(payment.TenantId));
+
+                    _unitOfWorkManager.Current.OnCompleted(async () => { await _backgroundJobManager.EnqueueAsync(args); });
+                }
+                else
+                {
+                    _unitOfWorkManager.Current.OnCompleted(async () =>
+                    {
+                        var job = _serviceProvider.GetRequiredService<WeChatPayRefundJob>();
+
+                        await job.ExecuteAsync(args);
+                    });
+                }
             }
             
             context.IsSuccess = true;
         }
-        
-        protected virtual async Task<PaymentRecord> RecordPaymentResultAsync(Dictionary<string, string> dict, Guid paymentId)
+
+        protected virtual async Task<PaymentRecord> RecordPaymentResultAsync(Dictionary<string, string> dict,
+            Guid paymentId)
         {
             var couponCount = ConvertToNullableInt32(dict.GetOrDefault("coupon_count"));
-            
-            var record = await _paymentRecordRepository.GetAsync(x => x.PaymentId == paymentId);
-            
+
+            var record = await _paymentRecordRepository.GetByPaymentId(paymentId);
+
             record.SetResult(
                 returnCode: dict.GetOrDefault("return_code"),
                 returnMsg: dict.GetOrDefault("return_msg"),
@@ -101,9 +139,15 @@ namespace EasyAbp.PaymentService.WeChatPay
                 cashFeeType: dict.GetOrDefault("cash_fee_type"),
                 couponFee: ConvertToNullableInt32(dict.GetOrDefault("coupon_fee")),
                 couponCount: couponCount,
-                couponTypes: couponCount != null ? dict.JoinNodesInnerTextAsString("coupon_type_", couponCount.Value) : null,
-                couponIds: couponCount != null ? dict.JoinNodesInnerTextAsString("coupon_id_", couponCount.Value) : null,
-                couponFees: couponCount != null ? dict.JoinNodesInnerTextAsString("coupon_fee_", couponCount.Value) : null,
+                couponTypes: couponCount != null
+                    ? dict.JoinNodesInnerTextAsString("coupon_type_", couponCount.Value)
+                    : null,
+                couponIds: couponCount != null
+                    ? dict.JoinNodesInnerTextAsString("coupon_id_", couponCount.Value)
+                    : null,
+                couponFees: couponCount != null
+                    ? dict.JoinNodesInnerTextAsString("coupon_fee_", couponCount.Value)
+                    : null,
                 transactionId: dict.GetOrDefault("transaction_id"),
                 outTradeNo: dict.GetOrDefault("out_trade_no"),
                 attach: dict.GetOrDefault("attach"),

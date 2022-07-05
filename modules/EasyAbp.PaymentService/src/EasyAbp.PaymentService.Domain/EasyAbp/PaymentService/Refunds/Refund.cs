@@ -92,5 +92,20 @@ namespace EasyAbp.PaymentService.Refunds
 
             CanceledTime = cancelTime;
         }
+        
+        public bool IsCanceled()
+        {
+            return CanceledTime.HasValue;
+        }
+        
+        public bool IsCompleted()
+        {
+            return CompletedTime.HasValue;
+        }
+        
+        public bool IsInProgress()
+        {
+            return !IsCanceled() && !IsCompleted();
+        }
     }
 }

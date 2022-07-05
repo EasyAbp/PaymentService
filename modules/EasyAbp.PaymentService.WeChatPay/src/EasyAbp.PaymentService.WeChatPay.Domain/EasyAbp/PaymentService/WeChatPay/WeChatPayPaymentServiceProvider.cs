@@ -4,9 +4,12 @@ using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Pay.Services.Pay;
 using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.Refunds;
+using EasyAbp.PaymentService.WeChatPay.Background;
 using EasyAbp.PaymentService.WeChatPay.PaymentRecords;
 using EasyAbp.PaymentService.WeChatPay.Settings;
+using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
+using Volo.Abp.BackgroundJobs;
 using Volo.Abp.Data;
 using Volo.Abp.EventBus.Distributed;
 using Volo.Abp.EventBus.Local;
@@ -21,9 +24,11 @@ namespace EasyAbp.PaymentService.WeChatPay
     {
         private readonly ServiceProviderPayService _serviceProviderPayService;
         private readonly ISettingProvider _settingProvider;
+        private readonly IServiceProvider _serviceProvider;
         private readonly IGuidGenerator _guidGenerator;
         private readonly ICurrentTenant _currentTenant;
-        private readonly IDistributedEventBus _distributedEventBus;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IBackgroundJobManager _backgroundJobManager;
         private readonly IWeChatPayFeeConverter _weChatPayFeeConverter;
         private readonly IPaymentManager _paymentManager;
         private readonly IPaymentRecordRepository _paymentRecordRepository;
@@ -31,13 +36,15 @@ namespace EasyAbp.PaymentService.WeChatPay
         private readonly IPaymentRepository _paymentRepository;
 
         public const string PaymentMethod = "WeChatPay";
-        
+
         public WeChatPayPaymentServiceProvider(
             ServiceProviderPayService serviceProviderPayService,
             ISettingProvider settingProvider,
+            IServiceProvider serviceProvider,
             IGuidGenerator guidGenerator,
             ICurrentTenant currentTenant,
-            IDistributedEventBus distributedEventBus,
+            IUnitOfWorkManager unitOfWorkManager,
+            IBackgroundJobManager backgroundJobManager,
             IWeChatPayFeeConverter weChatPayFeeConverter,
             IPaymentManager paymentManager,
             IPaymentRecordRepository paymentRecordRepository,
@@ -46,9 +53,11 @@ namespace EasyAbp.PaymentService.WeChatPay
         {
             _serviceProviderPayService = serviceProviderPayService;
             _settingProvider = settingProvider;
+            _serviceProvider = serviceProvider;
             _guidGenerator = guidGenerator;
             _currentTenant = currentTenant;
-            _distributedEventBus = distributedEventBus;
+            _unitOfWorkManager = unitOfWorkManager;
+            _backgroundJobManager = backgroundJobManager;
             _weChatPayFeeConverter = weChatPayFeeConverter;
             _paymentManager = paymentManager;
             _paymentRecordRepository = paymentRecordRepository;
@@ -73,13 +82,13 @@ namespace EasyAbp.PaymentService.WeChatPay
                                await _settingProvider.GetOrNullAsync(WeChatPaySettings.MchId);
 
             Check.NotNullOrWhiteSpace(payeeAccount, "PayeeAccount");
-            
+
             payment.SetPayeeAccount(payeeAccount);
 
             var appId = configurations.GetOrDefault("appid") as string;
-            
+
             var openId = await _paymentOpenIdProvider.FindUserOpenIdAsync(appId, payment.UserId);
-            
+
             var outTradeNo = payment.Id.ToString("N");
 
             var result = await _serviceProviderPayService.UnifiedOrderAsync(
@@ -98,7 +107,7 @@ namespace EasyAbp.PaymentService.WeChatPay
                 timeStart: null,
                 timeExpire: null,
                 goodsTag: configurations.GetOrDefault("goods_tag") as string,
-                notifyUrl: configurations.GetOrDefault("notify_url") as string 
+                notifyUrl: configurations.GetOrDefault("notify_url") as string
                            ?? await _settingProvider.GetOrNullAsync(WeChatPaySettings.NotifyUrl),
                 tradeType: configurations.GetOrDefault("trade_type") as string,
                 productId: null,
@@ -112,7 +121,8 @@ namespace EasyAbp.PaymentService.WeChatPay
 
             if (dict.GetOrDefault("return_code") != "SUCCESS")
             {
-                throw new UnifiedOrderFailedException(dict.GetOrDefault("return_code"), dict.GetOrDefault("return_msg"));
+                throw new UnifiedOrderFailedException(dict.GetOrDefault("return_code"),
+                    dict.GetOrDefault("return_msg"));
             }
 
             if (dict.GetOrDefault("result_code") != "SUCCESS")
@@ -126,14 +136,14 @@ namespace EasyAbp.PaymentService.WeChatPay
             }
 
             payment.SetProperty("appid", configurations.GetOrDefault("appid") as string);
-            
+
             payment.SetProperty("trade_type", dict.GetOrDefault("trade_type"));
             payment.SetProperty("prepay_id", dict.GetOrDefault("prepay_id"));
             payment.SetProperty("code_url", dict.GetOrDefault("code_url"));
-            
+
             await _paymentRecordRepository.InsertAsync(
                 new PaymentRecord(_guidGenerator.Create(), _currentTenant.Id, payment.Id), true);
-            
+
             await _paymentRepository.UpdateAsync(payment, true);
         }
 
@@ -147,18 +157,52 @@ namespace EasyAbp.PaymentService.WeChatPay
                 return;
             }
 
-            await _distributedEventBus.PublishAsync(new CloseWeChatPayOrderEto(
+            var args = new CloseWeChatPayOrderJobArgs(
                 tenantId: payment.TenantId,
                 paymentId: payment.Id,
                 outTradeNo: payment.Id.ToString("N"),
                 appId: payment.GetProperty<string>("appid"),
-                mchId: payment.PayeeAccount));
+                mchId: payment.PayeeAccount);
+
+            if (_backgroundJobManager.IsAvailable())
+            {
+                // Enqueue an empty job to ensure the background job worker is alive.
+                await _backgroundJobManager.EnqueueAsync(new EmptyJobArgs(payment.TenantId));
+
+                _unitOfWorkManager.Current.OnCompleted(async () => { await _backgroundJobManager.EnqueueAsync(args); });
+            }
+            else
+            {
+                _unitOfWorkManager.Current.OnCompleted(async () =>
+                {
+                    var job = _serviceProvider.GetRequiredService<CloseWeChatPayOrderJob>();
+
+                    await job.ExecuteAsync(args);
+                });
+            }
         }
 
         [UnitOfWork]
         public override async Task OnRefundStartedAsync(Payment payment, Refund refund)
         {
-            await _distributedEventBus.PublishAsync(new WeChatPayRefundEto(payment.Id, refund));
+            var args = new WeChatPayRefundJobArgs(payment.TenantId, payment.Id, refund.Id);
+
+            if (_backgroundJobManager.IsAvailable())
+            {
+                // Enqueue an empty job to ensure the background job worker is alive.
+                await _backgroundJobManager.EnqueueAsync(new EmptyJobArgs(payment.TenantId));
+
+                _unitOfWorkManager.Current.OnCompleted(async () => { await _backgroundJobManager.EnqueueAsync(args); });
+            }
+            else
+            {
+                _unitOfWorkManager.Current.OnCompleted(async () =>
+                {
+                    var job = _serviceProvider.GetRequiredService<WeChatPayRefundJob>();
+
+                    await job.ExecuteAsync(args);
+                });
+            }
         }
     }
 }
