@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using EasyAbp.PaymentService.Refunds;
 using Volo.Abp.MultiTenancy;
 
 namespace EasyAbp.PaymentService.WeChatPay

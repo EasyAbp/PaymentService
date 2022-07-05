@@ -86,7 +86,7 @@ namespace EasyAbp.PaymentService.WeChatPay
             else if (payment.IsCanceled())
             {
                 var outRefundNo = payment.Id.ToString();
-                var args = new WeChatPayRefundJobArgs(payment.Id, outRefundNo,
+                var args = new WeChatPayRefundJobArgs(payment.TenantId, payment.Id, outRefundNo,
                     payment.ActualPaymentAmount, PaymentServiceWeChatPayConsts.InvalidPaymentAutoRefundDisplayReason);
 
                 // Refund the invalid payment.

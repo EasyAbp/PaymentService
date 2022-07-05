@@ -57,9 +57,9 @@ namespace EasyAbp.PaymentService.WeChatPay
         [UnitOfWork(true)]
         public virtual async Task ExecuteAsync(WeChatPayRefundJobArgs args)
         {
-            var payment = await _paymentRepository.GetAsync(args.PaymentId);
+            using var change = _currentTenant.Change(args.TenantId);
 
-            using var change = _currentTenant.Change(payment.TenantId);
+            var payment = await _paymentRepository.GetAsync(args.PaymentId);
 
             // Try to lock the row in DB.
             await _paymentRepository.UpdateAsync(payment, true);

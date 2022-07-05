@@ -181,7 +181,7 @@ namespace EasyAbp.PaymentService.WeChatPay
         [UnitOfWork]
         public override Task OnRefundStartedAsync(Payment payment, Refund refund)
         {
-            var args = new WeChatPayRefundJobArgs(payment.Id, refund.Id);
+            var args = new WeChatPayRefundJobArgs(payment.TenantId, payment.Id, refund.Id);
 
             _unitOfWorkManager.Current.OnCompleted(async () =>
             {

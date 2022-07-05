@@ -4,20 +4,27 @@ using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Pay.Services.Pay;
 using Volo.Abp.BackgroundJobs;
 using Volo.Abp.DependencyInjection;
+using Volo.Abp.MultiTenancy;
 
 namespace EasyAbp.PaymentService.WeChatPay;
 
 public class CloseWeChatPayOrderJob : IAsyncBackgroundJob<CloseWeChatPayOrderJobArgs>, ITransientDependency
 {
+    private readonly ICurrentTenant _currentTenant;
     private readonly ServiceProviderPayService _serviceProviderPayService;
 
-    public CloseWeChatPayOrderJob(ServiceProviderPayService serviceProviderPayService)
+    public CloseWeChatPayOrderJob(
+        ICurrentTenant currentTenant,
+        ServiceProviderPayService serviceProviderPayService)
     {
+        _currentTenant = currentTenant;
         _serviceProviderPayService = serviceProviderPayService;
     }
     
     public virtual async Task ExecuteAsync(CloseWeChatPayOrderJobArgs args)
     {
+        using var change = _currentTenant.Change(args.TenantId);
+
         var orderQueryResult = await _serviceProviderPayService.CloseOrderAsync(
             appId: args.AppId,
             mchId: args.MchId,
