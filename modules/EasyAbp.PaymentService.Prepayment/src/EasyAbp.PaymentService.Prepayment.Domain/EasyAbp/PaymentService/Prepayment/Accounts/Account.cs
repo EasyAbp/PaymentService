@@ -111,9 +111,11 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
         
         public void CompleteWithdrawal()
         {
+            var balanceToChange = -PendingWithdrawalAmount;
+
             ClearPendingWithdrawal();
             
-            ChangeBalance(-PendingWithdrawalAmount);
+            ChangeBalance(balanceToChange);
         }
         
         public void CancelWithdrawal()

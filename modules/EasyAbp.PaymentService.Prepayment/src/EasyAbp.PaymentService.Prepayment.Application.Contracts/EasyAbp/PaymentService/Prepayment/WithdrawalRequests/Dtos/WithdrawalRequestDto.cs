@@ -4,7 +4,7 @@ using Volo.Abp.Application.Dtos;
 namespace EasyAbp.PaymentService.Prepayment.WithdrawalRequests.Dtos
 {
     [Serializable]
-    public class WithdrawalRequestDto : FullAuditedEntityDto<Guid>
+    public class WithdrawalRequestDto : ExtensibleFullAuditedEntityDto<Guid>
     {
         public Guid AccountId { get; set; }
 
