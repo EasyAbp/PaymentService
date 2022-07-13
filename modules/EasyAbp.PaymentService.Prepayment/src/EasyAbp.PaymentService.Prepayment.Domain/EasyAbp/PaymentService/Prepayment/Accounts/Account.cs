@@ -111,9 +111,11 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
         
         public void CompleteWithdrawal()
         {
+            decimal orginalPendingWithdrawalAmount = PendingWithdrawalAmount;
+
             ClearPendingWithdrawal();
             
-            ChangeBalance(-PendingWithdrawalAmount);
+            ChangeBalance(-orginalPendingWithdrawalAmount);
         }
         
         public void CancelWithdrawal()
