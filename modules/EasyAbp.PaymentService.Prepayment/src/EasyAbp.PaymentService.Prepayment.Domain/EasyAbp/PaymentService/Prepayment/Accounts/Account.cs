@@ -115,7 +115,7 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
 
             ClearPendingWithdrawal();
             
-            ChangeBalance(-balanceToChange);
+            ChangeBalance(balanceToChange);
         }
         
         public void CancelWithdrawal()
