@@ -20,7 +20,7 @@ namespace EasyAbp.PaymentService.Prepayment.Web.Pages.PaymentService.Prepayment.
                 return;
             }
             
-            var userLookupServiceProvider = ServiceProvider.GetRequiredService<IExternalUserLookupServiceProvider>();
+            var userLookupServiceProvider = LazyServiceProvider.LazyGetRequiredService<IExternalUserLookupServiceProvider>();
 
             var userData = await userLookupServiceProvider.FindByIdAsync(UserId.Value);
 

@@ -18,7 +18,7 @@ namespace EasyAbp.PaymentService.Prepayment.WithdrawalRecords
 
         public async Task<decimal> GetCompletedTotalAmountAsync(Guid accountId, DateTime beginTime, DateTime endTime)
         {
-            return await DbSet
+            return await (await GetDbSetAsync())
                 .Where(x => x.AccountId == accountId && x.CompletionTime >= beginTime && x.CompletionTime <= endTime)
                 .SumAsync(x => x.Amount);
         }

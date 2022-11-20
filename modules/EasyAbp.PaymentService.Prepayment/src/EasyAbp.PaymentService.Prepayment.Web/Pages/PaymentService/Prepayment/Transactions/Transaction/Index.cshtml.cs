@@ -18,8 +18,8 @@ namespace EasyAbp.PaymentService.Prepayment.Web.Pages.PaymentService.Prepayment.
 
         public virtual async Task OnGetAsync()
         {
-            var accountAppService = ServiceProvider.GetRequiredService<IAccountAppService>();
-            var userLookupServiceProvider = ServiceProvider.GetRequiredService<IExternalUserLookupServiceProvider>();
+            var accountAppService = LazyServiceProvider.LazyGetRequiredService<IAccountAppService>();
+            var userLookupServiceProvider = LazyServiceProvider.LazyGetRequiredService<IExternalUserLookupServiceProvider>();
 
             var account = await accountAppService.GetAsync(AccountId);
 

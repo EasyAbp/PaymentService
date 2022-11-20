@@ -23,7 +23,7 @@ namespace EasyAbp.PaymentService.Refunds
 
         public virtual async Task<Refund> FindByPaymentIdAsync(Guid paymentId, CancellationToken cancellationToken = default)
         {
-            return await WithDetails()
+            return await (await WithDetailsAsync())
                 .Where(x => x.PaymentId == paymentId && !x.CanceledTime.HasValue && !x.CompletedTime.HasValue)
                 .SingleOrDefaultAsync(cancellationToken);
         }
