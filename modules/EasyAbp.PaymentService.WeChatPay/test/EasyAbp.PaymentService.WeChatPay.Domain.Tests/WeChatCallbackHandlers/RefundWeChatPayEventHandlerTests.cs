@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Xml;
-using EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve;
+using EasyAbp.Abp.WeChat.Pay.Options;
+using EasyAbp.Abp.WeChat.Pay.RequestHandling;
 using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.Refunds;
 using EasyAbp.PaymentService.WeChatPay.RefundRecords;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using NSubstitute;
 using Shouldly;
 using Volo.Abp.Data;
@@ -15,17 +17,19 @@ using Xunit;
 
 namespace EasyAbp.PaymentService.WeChatPay.WeChatCallbackHandlers;
 
-public class PaymentServiceWeChatPayRefundHandlerTests : WeChatPayDomainTestBase
+public class RefundWeChatPayEventHandlerTests : WeChatPayDomainTestBase
 {
+    protected AbpWeChatPayOptions AbpWeChatPayOptions { get; set; }
     protected IPaymentRepository PaymentRepository { get; set; }
     protected IRefundRepository RefundRepository { get; set; }
     protected IRefundRecordRepository RefundRecordRepository { get; set; }
-    protected PaymentServiceWeChatPayRefundHandler PaymentServiceWeChatPayRefundHandler { get; set; }
+    protected RefundWeChatPayEventHandler RefundWeChatPayEventHandler { get; set; }
 
-    public PaymentServiceWeChatPayRefundHandlerTests()
+    public RefundWeChatPayEventHandlerTests()
     {
-        PaymentServiceWeChatPayRefundHandler =
-            ServiceProvider.GetRequiredService<PaymentServiceWeChatPayRefundHandler>();
+        AbpWeChatPayOptions = ServiceProvider.GetRequiredService<IOptions<AbpWeChatPayOptions>>().Value;
+        RefundWeChatPayEventHandler =
+            ServiceProvider.GetRequiredService<RefundWeChatPayEventHandler>();
     }
 
     protected override void AfterAddApplication(IServiceCollection services)
@@ -91,7 +95,7 @@ public class PaymentServiceWeChatPayRefundHandlerTests : WeChatPayDomainTestBase
                 new(Guid.NewGuid(), payment.PaymentItems[0].Id, 10m, null, null),
                 new(Guid.NewGuid(), payment.PaymentItems[1].Id, 20m, null, null)
             });
-        
+
         payment.StartRefund(refund);
 
         return refund;
@@ -123,6 +127,11 @@ public class PaymentServiceWeChatPayRefundHandlerTests : WeChatPayDomainTestBase
   <nonce_str><![CDATA[5K8264ILTKCH16CQ2502SI8ZNMTM67VS]]></nonce_str>
   <req_info><![CDATA[T87GAHG17TGAHG1TGHAHAHA1Y1CIOA9UGJH1GAHV871HAGAGQYQQPOOJMXNBCXBVNMNMAJAA]]></req_info>
   <return_msg><![CDATA[90]]></return_msg>
+</xml>");
+
+        var decryptedXmlDocument = new XmlDocument();
+        decryptedXmlDocument.LoadXml(@$"
+<root>
   <out_refund_no><![CDATA[{outRefundNo}]]></out_refund_no>
   <out_trade_no><![CDATA[{payment.Id:N}]]></out_trade_no>
   <refund_account><![CDATA[REFUND_SOURCE_RECHARGE_FUNDS]]></refund_account>
@@ -137,18 +146,16 @@ public class PaymentServiceWeChatPayRefundHandlerTests : WeChatPayDomainTestBase
   <total_fee><![CDATA[3960]]></total_fee>
   <transaction_id><![CDATA[4200000215201811190261405420]]></transaction_id>
   <cash_refund_fee><![CDATA[90]]></cash_refund_fee>
-</xml>
+</root>
 ");
         await WithUnitOfWorkAsync(async () =>
         {
-            var context = new WeChatPayHandlerContext
+            (await RefundWeChatPayEventHandler.HandleAsync(new WeChatPayEventModel
             {
+                Options = AbpWeChatPayOptions,
                 WeChatRequestXmlData = xmlDocument,
-                IsSuccess = true
-            };
-
-            await PaymentServiceWeChatPayRefundHandler.HandleAsync(context);
-            context.IsSuccess.ShouldBeTrue();
+                DecryptedXmlData = decryptedXmlDocument
+            })).Success.ShouldBeTrue();
         });
     }
 }

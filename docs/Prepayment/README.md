@@ -56,38 +56,23 @@ We have launched an online demo for this module: [https://pay.samples.easyabp.io
     ```
     > please refer to the `ConfigurePaymentServicePrepayment` method in the [Web module](https://github.com/EasyAbp/PaymentService/blob/master/samples/PaymentServiceSample/aspnet-core/src/PaymentServiceSample.Web/PaymentServiceSampleWebModule.cs) of the sample app.
 
-3. Access the API `/api/paymentService/prepayment/account` (with the request param `UserId`), then the account will be created automatically.
+3. Use the API `/api/payment-service/prepayment/account` (with the request param `UserId`), then the account will be created automatically.
 
 4. Top up your account:
 
-    1. Use the API `/api/paymentService/prepayment/account/topUp` to start top-up.
+    1. Use the API `/api/payment-service/prepayment/account/top-up` to start top-up.
     
-    2. Use the API `/api/paymentService/prepayment/account/{id}` to get the `ExtraProperties.PendingTopUpPaymentId`.
+    2. Use the API `/api/payment-service/prepayment/account/{id}` to get the `ExtraProperties.PendingTopUpPaymentId`.
     
-    3. Use the API `/api/paymentService/payment/{id}/pay` to finish the payment. (for example you can use WeChatPay to top up your prepayment account, please refer to the document of the payment method you want)
+    3. Use the API `/api/payment-service/payment/{id}/pay` to finish the payment. (for example you can use WeChatPay to top up your prepayment account, please refer to the document of the payment method you want)
     
-    4. If you want to cancel an ongoing payment, please use the API `/api/paymentService/payment/{id}/cancel`.
+    4. If you want to cancel an ongoing payment, please use the API `/api/payment-service/payment/{id}/cancel`.
 
     > Or just change the balance directly with the management pages if you have the account management permission.
 
 5. Pay with prepayment account.
-    1. Users can use the API `/api/paymentService/payment/{id}/pay` to finish the payment, please put the necessary params in the `ExtraProperties`:
-    
-        ```
-        {
-            "extraProperties": {
-                "AccountId": "82D49C17-9282-4822-9EE9-A0685529D707" // Id of the prepayment account that you use to pay
-            }
-        }
-        ```
-
-    > Skip the following steps if you are using the [EasyAbp.EShop](https://github.com/EasyAbp/EShop).
-
-    <details>
-    <summary>See more steps</summary>
-
-    2. Create a payment with the payment method `Prepayment`.
-        > Other modules or apps that depend on PaymentService module should create payments via distributed events.
+    1. Create a payment with the payment method `Prepayment`.
+       > Other modules or apps should create payments via distributed events. Skip this step if you are using the [EasyAbp.EShop](https://github.com/EasyAbp/EShop).
 
         <details>
         <summary>See sample code</summary>
@@ -107,8 +92,23 @@ We have launched an online demo for this module: [https://pay.samples.easyabp.io
             }).ToList()
         });
         ```
-        > please refer to the [usage in EShop](https://github.com/EasyAbp/EShop/blob/dev/modules/EasyAbp.EShop.Payments/src/EasyAbp.EShop.Payments.Application/EasyAbp/EShop/Payments/Payments/PaymentAppService.cs)
+       > please refer to the [usage in EShop](https://github.com/EasyAbp/EShop/blob/dev/modules/EasyAbp.EShop.Payments/src/EasyAbp.EShop.Payments.Application/EasyAbp/EShop/Payments/Payments/PaymentAppService.cs)
         </details>
+
+    2. Use the API `/api/payment-service/payment/{id}/pay` to finish the payment, please put the necessary params in the `ExtraProperties`:
+    
+        ```
+        {
+            "extraProperties": {
+                "AccountId": "82D49C17-9282-4822-9EE9-A0685529D707" // Id of the prepayment account that you use to pay
+            }
+        }
+        ```
+
+    > Skip the following steps if you are using the [EasyAbp.EShop](https://github.com/EasyAbp/EShop).
+
+    <details>
+    <summary>See more steps</summary>
 
     3. Handle the payment created distributed event to get and remember the `PaymentId`.
         <details>

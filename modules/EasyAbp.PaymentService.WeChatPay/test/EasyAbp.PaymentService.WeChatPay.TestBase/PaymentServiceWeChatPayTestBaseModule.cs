@@ -1,4 +1,5 @@
-﻿using EasyAbp.PaymentService.WeChatPay;
+﻿using EasyAbp.Abp.WeChat.Pay.Options;
+using EasyAbp.PaymentService.WeChatPay;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
 using Volo.Abp.Authorization;
@@ -18,6 +19,12 @@ public class PaymentServiceWeChatPayTestBaseModule : AbpModule
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
         context.Services.AddAlwaysAllowAuthorization();
+        
+        Configure<AbpWeChatPayOptions>(options =>
+        {
+            options.MchId = "10000100";
+            options.ApiKey = "";
+        });
     }
 
     public override void OnApplicationInitialization(ApplicationInitializationContext context)

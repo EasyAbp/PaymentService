@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using EasyAbp.Abp.WeChat.Pay.Infrastructure;
-using EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve;
+using EasyAbp.Abp.WeChat.Common.RequestHandling;
+using EasyAbp.Abp.WeChat.Pay.RequestHandling;
 using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.WeChatPay.Background;
 using EasyAbp.PaymentService.WeChatPay.PaymentRecords;
@@ -15,9 +15,9 @@ using Volo.Abp.Uow;
 
 namespace EasyAbp.PaymentService.WeChatPay
 {
-    public class PaymentServiceWeChatPayHandler : IWeChatPayHandler, ITransientDependency
+    public class PaidWeChatPayEventHandler : IWeChatPayEventHandler, ITransientDependency
     {
-        public WeChatHandlerType Type { get; } = WeChatHandlerType.Normal;
+        public WeChatHandlerType Type => WeChatHandlerType.Paid;
 
         private readonly IDataFilter _dataFilter;
         private readonly IServiceProvider _serviceProvider;
@@ -27,7 +27,7 @@ namespace EasyAbp.PaymentService.WeChatPay
         private readonly IPaymentRecordRepository _paymentRecordRepository;
         private readonly IPaymentRepository _paymentRepository;
 
-        public PaymentServiceWeChatPayHandler(
+        public PaidWeChatPayEventHandler(
             IDataFilter dataFilter,
             IServiceProvider serviceProvider,
             IUnitOfWorkManager unitOfWorkManager,
@@ -46,17 +46,23 @@ namespace EasyAbp.PaymentService.WeChatPay
         }
 
         [UnitOfWork(true)]
-        public virtual async Task HandleAsync(WeChatPayHandlerContext context)
+        public virtual async Task<WeChatRequestHandlingResult> HandleAsync(WeChatPayEventModel model)
         {
-            var dict = context.WeChatRequestXmlData.SelectSingleNode("xml").ToDictionary() ??
+            var dict = model.WeChatRequestXmlData.SelectSingleNode("xml").ToDictionary() ??
                        throw new NullReferenceException();
 
-            if (dict.GetOrDefault("return_code") != "SUCCESS" ||
-                dict.GetOrDefault("device_info") != PaymentServiceWeChatPayConsts.DeviceInfo)
-            {
-                context.IsSuccess = false;
+            var returnCode = dict.GetOrDefault("return_code");
+            var deviceInfo = dict.GetOrDefault("device_info");
 
-                return;
+            if (returnCode != "SUCCESS")
+            {
+                return new WeChatRequestHandlingResult(false, $"Unexpected return_code:{returnCode}");
+            }
+
+            if (deviceInfo != PaymentServiceWeChatPayConsts.DeviceInfo)
+            {
+                // skip handling
+                return new WeChatRequestHandlingResult(true);
             }
 
             using var disabledDataFilter = _dataFilter.Disable<IMultiTenant>();
@@ -96,7 +102,10 @@ namespace EasyAbp.PaymentService.WeChatPay
                     // Enqueue an empty job to ensure the background job worker is alive.
                     await _backgroundJobManager.EnqueueAsync(new EmptyJobArgs(payment.TenantId));
 
-                    _unitOfWorkManager.Current.OnCompleted(async () => { await _backgroundJobManager.EnqueueAsync(args); });
+                    _unitOfWorkManager.Current.OnCompleted(async () =>
+                    {
+                        await _backgroundJobManager.EnqueueAsync(args);
+                    });
                 }
                 else
                 {
@@ -108,8 +117,8 @@ namespace EasyAbp.PaymentService.WeChatPay
                     });
                 }
             }
-            
-            context.IsSuccess = true;
+
+            return new WeChatRequestHandlingResult(true);
         }
 
         protected virtual async Task<PaymentRecord> RecordPaymentResultAsync(Dictionary<string, string> dict,

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EasyAbp.Abp.WeChat.Pay.Services;
 using EasyAbp.Abp.WeChat.Pay.Services.Pay;
+using EasyAbp.Abp.WeChat.Pay.Settings;
 using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.Refunds;
 using EasyAbp.PaymentService.WeChatPay.Background;
@@ -11,8 +13,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
 using Volo.Abp.BackgroundJobs;
 using Volo.Abp.Data;
-using Volo.Abp.EventBus.Distributed;
-using Volo.Abp.EventBus.Local;
 using Volo.Abp.Guids;
 using Volo.Abp.MultiTenancy;
 using Volo.Abp.Settings;
@@ -22,7 +22,6 @@ namespace EasyAbp.PaymentService.WeChatPay
 {
     public class WeChatPayPaymentServiceProvider : PaymentServiceProvider
     {
-        private readonly ServiceProviderPayService _serviceProviderPayService;
         private readonly ISettingProvider _settingProvider;
         private readonly IServiceProvider _serviceProvider;
         private readonly IGuidGenerator _guidGenerator;
@@ -34,11 +33,11 @@ namespace EasyAbp.PaymentService.WeChatPay
         private readonly IPaymentRecordRepository _paymentRecordRepository;
         private readonly IPaymentOpenIdProvider _paymentOpenIdProvider;
         private readonly IPaymentRepository _paymentRepository;
+        private readonly IAbpWeChatPayServiceFactory _abpWeChatPayServiceFactory;
 
         public const string PaymentMethod = "WeChatPay";
 
         public WeChatPayPaymentServiceProvider(
-            ServiceProviderPayService serviceProviderPayService,
             ISettingProvider settingProvider,
             IServiceProvider serviceProvider,
             IGuidGenerator guidGenerator,
@@ -49,9 +48,9 @@ namespace EasyAbp.PaymentService.WeChatPay
             IPaymentManager paymentManager,
             IPaymentRecordRepository paymentRecordRepository,
             IPaymentOpenIdProvider paymentOpenIdProvider,
-            IPaymentRepository paymentRepository)
+            IPaymentRepository paymentRepository,
+            IAbpWeChatPayServiceFactory abpWeChatPayServiceFactory)
         {
-            _serviceProviderPayService = serviceProviderPayService;
             _settingProvider = settingProvider;
             _serviceProvider = serviceProvider;
             _guidGenerator = guidGenerator;
@@ -63,6 +62,7 @@ namespace EasyAbp.PaymentService.WeChatPay
             _paymentRecordRepository = paymentRecordRepository;
             _paymentOpenIdProvider = paymentOpenIdProvider;
             _paymentRepository = paymentRepository;
+            _abpWeChatPayServiceFactory = abpWeChatPayServiceFactory;
         }
 
         [UnitOfWork(true)]
@@ -78,12 +78,13 @@ namespace EasyAbp.PaymentService.WeChatPay
                 throw new PaymentAmountInvalidException(payment.ActualPaymentAmount, payment.PaymentMethod);
             }
 
-            var payeeAccount = configurations.GetOrDefault("PayeeAccount") as string ??
-                               await _settingProvider.GetOrNullAsync(WeChatPaySettings.MchId);
+            var mchId = configurations.GetOrDefault("mch_id") as string ??
+                        configurations.GetOrDefault("PayeeAccount") as string ??
+                        await _settingProvider.GetOrNullAsync(AbpWeChatPaySettings.MchId);
 
-            Check.NotNullOrWhiteSpace(payeeAccount, "PayeeAccount");
+            Check.NotNullOrWhiteSpace(mchId, "PayeeAccount");
 
-            payment.SetPayeeAccount(payeeAccount);
+            payment.SetPayeeAccount(mchId);
 
             var appId = configurations.GetOrDefault("appid") as string;
 
@@ -91,10 +92,13 @@ namespace EasyAbp.PaymentService.WeChatPay
 
             var outTradeNo = payment.Id.ToString("N");
 
-            var result = await _serviceProviderPayService.UnifiedOrderAsync(
+            var serviceProviderPayService =
+                await _abpWeChatPayServiceFactory.CreateAsync<ServiceProviderPayWeService>(mchId);
+
+            var result = await serviceProviderPayService.UnifiedOrderAsync(
                 appId: appId,
                 subAppId: null,
-                mchId: payment.PayeeAccount,
+                mchId: mchId,
                 subMchId: null,
                 deviceInfo: PaymentServiceWeChatPayConsts.DeviceInfo,
                 body: configurations.GetOrDefault("body") as string ?? "EasyAbpPaymentService",
@@ -108,7 +112,7 @@ namespace EasyAbp.PaymentService.WeChatPay
                 timeExpire: null,
                 goodsTag: configurations.GetOrDefault("goods_tag") as string,
                 notifyUrl: configurations.GetOrDefault("notify_url") as string
-                           ?? await _settingProvider.GetOrNullAsync(WeChatPaySettings.NotifyUrl),
+                           ?? await _settingProvider.GetOrNullAsync(AbpWeChatPaySettings.NotifyUrl),
                 tradeType: configurations.GetOrDefault("trade_type") as string,
                 productId: null,
                 limitPay: configurations.GetOrDefault("limit_pay") as string,

@@ -1,4 +1,4 @@
-﻿using EasyAbp.Abp.WeChat.Pay.HttpApi;
+﻿using EasyAbp.Abp.WeChat.Pay;
 using Localization.Resources.AbpUi;
 using EasyAbp.PaymentService.WeChatPay.Localization;
 using Volo.Abp.AspNetCore.Mvc;

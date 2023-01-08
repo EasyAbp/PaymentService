@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EasyAbp.Abp.WeChat.Pay.Services;
 using EasyAbp.Abp.WeChat.Pay.Services.Pay;
 using Volo.Abp.BackgroundJobs;
 using Volo.Abp.DependencyInjection;
@@ -11,28 +12,31 @@ namespace EasyAbp.PaymentService.WeChatPay.Background;
 public class CloseWeChatPayOrderJob : IAsyncBackgroundJob<CloseWeChatPayOrderJobArgs>, ITransientDependency
 {
     private readonly ICurrentTenant _currentTenant;
-    private readonly ServiceProviderPayService _serviceProviderPayService;
+    private readonly IAbpWeChatPayServiceFactory _abpWeChatPayServiceFactory;
 
     public CloseWeChatPayOrderJob(
         ICurrentTenant currentTenant,
-        ServiceProviderPayService serviceProviderPayService)
+        IAbpWeChatPayServiceFactory abpWeChatPayServiceFactory)
     {
         _currentTenant = currentTenant;
-        _serviceProviderPayService = serviceProviderPayService;
+        _abpWeChatPayServiceFactory = abpWeChatPayServiceFactory;
     }
-    
+
     public virtual async Task ExecuteAsync(CloseWeChatPayOrderJobArgs args)
     {
         using var change = _currentTenant.Change(args.TenantId);
 
-        var orderQueryResult = await _serviceProviderPayService.CloseOrderAsync(
+        var serviceProviderPayService =
+            await _abpWeChatPayServiceFactory.CreateAsync<ServiceProviderPayWeService>(args.MchId);
+
+        var orderQueryResult = await serviceProviderPayService.CloseOrderAsync(
             appId: args.AppId,
             mchId: args.MchId,
             subAppId: null,
             subMchId: null,
             outTradeNo: args.OutTradeNo
         );
-            
+
         var dict = orderQueryResult.SelectSingleNode("xml").ToDictionary() ?? throw new NullReferenceException();
         var resultCode = dict.GetOrDefault("result_code");
         var errCode = dict.GetOrDefault("err_code");

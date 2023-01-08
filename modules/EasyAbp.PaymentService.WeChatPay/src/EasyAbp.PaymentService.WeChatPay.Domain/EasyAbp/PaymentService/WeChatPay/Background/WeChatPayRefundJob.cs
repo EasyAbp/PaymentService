@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EasyAbp.Abp.WeChat.Pay.Services;
 using EasyAbp.Abp.WeChat.Pay.Services.Pay;
 using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.Refunds;
@@ -28,7 +29,7 @@ namespace EasyAbp.PaymentService.WeChatPay.Background
         private readonly IPaymentRecordRepository _paymentRecordRepository;
         private readonly IRefundRecordRepository _refundRecordRepository;
         private readonly IWeChatPayFeeConverter _weChatPayFeeConverter;
-        private readonly ServiceProviderPayService _serviceProviderPayService;
+        private readonly IAbpWeChatPayServiceFactory _abpWeChatPayServiceFactory;
 
         public WeChatPayRefundJob(
             IGuidGenerator guidGenerator,
@@ -40,7 +41,7 @@ namespace EasyAbp.PaymentService.WeChatPay.Background
             IPaymentRecordRepository paymentRecordRepository,
             IRefundRecordRepository refundRecordRepository,
             IWeChatPayFeeConverter weChatPayFeeConverter,
-            ServiceProviderPayService serviceProviderPayService)
+            IAbpWeChatPayServiceFactory abpWeChatPayServiceFactory)
         {
             _guidGenerator = guidGenerator;
             _currentTenant = currentTenant;
@@ -51,7 +52,7 @@ namespace EasyAbp.PaymentService.WeChatPay.Background
             _paymentRecordRepository = paymentRecordRepository;
             _refundRecordRepository = refundRecordRepository;
             _weChatPayFeeConverter = weChatPayFeeConverter;
-            _serviceProviderPayService = serviceProviderPayService;
+            _abpWeChatPayServiceFactory = abpWeChatPayServiceFactory;
         }
 
         [UnitOfWork(true)]
@@ -167,9 +168,14 @@ namespace EasyAbp.PaymentService.WeChatPay.Background
             PaymentRecord paymentRecord, decimal refundAmount, [NotNull] string outRefundNo,
             [CanBeNull] string displayReason)
         {
-            var result = await _serviceProviderPayService.RefundAsync(
+            var mchId = payment.PayeeAccount;
+
+            var serviceProviderPayService =
+                await _abpWeChatPayServiceFactory.CreateAsync<ServiceProviderPayWeService>(mchId);
+            
+            var result = await serviceProviderPayService.RefundAsync(
                 appId: payment.GetProperty<string>("appid"),
-                mchId: payment.PayeeAccount,
+                mchId: mchId,
                 subAppId: null,
                 subMchId: null,
                 transactionId: paymentRecord.TransactionId,
