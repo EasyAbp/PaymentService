@@ -7,14 +7,5 @@
         /* Add constants for setting names. Example:
          * public const string MySettingName = GroupName + ".MySettingName";
          */
-        
-        public const string MchId = GroupName + ".MchId";
-        public const string ApiKey = GroupName + ".ApiKey";
-        public const string IsSandBox = GroupName + ".IsSandBox";
-        public const string NotifyUrl = GroupName + ".NotifyUrl";
-        public const string RefundNotifyUrl = GroupName + ".RefundNotifyUrl";
-        public const string CertificateBlobContainerName = GroupName + ".CertificateBlobContainerName";
-        public const string CertificateBlobName = GroupName + ".CertificateBlobName";
-        public const string CertificateSecret = GroupName + ".CertificateSecret";
     }
 }

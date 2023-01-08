@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using EasyAbp.Abp.WeChat.Pay.Infrastructure;
-using EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve;
+using EasyAbp.Abp.WeChat.Common.RequestHandling;
+using EasyAbp.Abp.WeChat.Pay.RequestHandling;
 using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.Refunds;
 using EasyAbp.PaymentService.WeChatPay.RefundRecords;
@@ -13,10 +13,9 @@ using Volo.Abp.Uow;
 
 namespace EasyAbp.PaymentService.WeChatPay
 {
-    [ExposeServices(typeof(IWeChatPayHandler), IncludeSelf = true)]
-    public class PaymentServiceWeChatPayRefundHandler : IWeChatPayHandler, ITransientDependency
+    public class RefundWeChatPayEventHandler : IWeChatPayEventHandler, ITransientDependency
     {
-        public WeChatHandlerType Type { get; } = WeChatHandlerType.Refund;
+        public WeChatHandlerType Type => WeChatHandlerType.Refund;
 
         private readonly IDataFilter _dataFilter;
         private readonly IPaymentManager _paymentManager;
@@ -24,7 +23,7 @@ namespace EasyAbp.PaymentService.WeChatPay
         private readonly IRefundRepository _refundRepository;
         private readonly IPaymentRepository _paymentRepository;
 
-        public PaymentServiceWeChatPayRefundHandler(
+        public RefundWeChatPayEventHandler(
             IDataFilter dataFilter,
             IPaymentManager paymentManager,
             IRefundRecordRepository refundRecordRepository,
@@ -39,25 +38,30 @@ namespace EasyAbp.PaymentService.WeChatPay
         }
 
         [UnitOfWork(true)]
-        public virtual async Task HandleAsync(WeChatPayHandlerContext context)
+        public virtual async Task<WeChatRequestHandlingResult> HandleAsync(WeChatPayEventModel model)
         {
-            var dict = context.WeChatRequestXmlData.SelectSingleNode("xml").ToDictionary() ??
+            var outerDict = model.WeChatRequestXmlData.SelectSingleNode("xml").ToDictionary() ??
                        throw new NullReferenceException();
 
-            if (dict.GetOrDefault("return_code") != "SUCCESS")
+            var dict = model.DecryptedXmlData.SelectSingleNode("root").ToDictionary() ??
+                       throw new NullReferenceException();
+
+            var returnCode = outerDict.GetOrDefault("return_code");
+            var outRefundNo = dict.GetOrDefault("out_refund_no");
+
+            if (returnCode != "SUCCESS")
             {
-                context.IsSuccess = true;
-                return;
+                return new WeChatRequestHandlingResult(false, $"Unexpected return_code:{returnCode}");
             }
 
             using var disabledDataFilter = _dataFilter.Disable<IMultiTenant>();
 
-            var record = await _refundRecordRepository.FindByOutRefundNoAsync(dict.GetOrDefault("out_refund_no"));
+            var record = await _refundRecordRepository.FindByOutRefundNoAsync(outRefundNo);
 
             if (record is null)
             {
-                context.IsSuccess = false;
-                return;
+                // skip handling
+                return new WeChatRequestHandlingResult(true);
             }
 
             var payment = await _paymentRepository.FindAsync(record.PaymentId);
@@ -66,8 +70,7 @@ namespace EasyAbp.PaymentService.WeChatPay
 
             if (payment is null)
             {
-                context.IsSuccess = false;
-                return;
+                return new WeChatRequestHandlingResult(false, $"Payment entity not found, id: {record.PaymentId}");
             }
 
             record.SetInformationInNotify(
@@ -92,7 +95,7 @@ namespace EasyAbp.PaymentService.WeChatPay
                 }
             }
 
-            context.IsSuccess = true;
+            return new WeChatRequestHandlingResult(true);
         }
 
         protected virtual async Task HandleSuccessfulRefundAsync(Payment payment, Refund refund)

@@ -48,24 +48,8 @@ We have launched an online demo for this module: [https://pay.samples.easyabp.io
     > See the [demo](https://github.com/EasyAbp/PaymentService/blob/master/samples/PaymentServiceSample/aspnet-core/src/PaymentServiceSample.Web/appsettings.json), it is also according to the [document](https://github.com/EasyAbp/Abp.WeChat/blob/master/doc/WeChatPay.md) of the EasyAbp.Abp.WeChat module.
 
 3. Pay with WeChatPay.
-    1. Users can use the API `/api/paymentService/payment/{id}/pay` to finish the payment, please put the necessary params in the `ExtraProperties`:
-    
-        ```
-        {
-            "extraProperties": {
-                "trade_type": "JSAPI",
-                "appid": "wx81a2956875268fk8"   // You can specify an appid or get it from the input from the client.
-            }
-        }
-        ```
-
-    > Skip the following steps if you are using the [EasyAbp.EShop](https://github.com/EasyAbp/EShop).
-
-    <details>
-    <summary>See more steps</summary>
-
-    2. Create a payment with the payment method `WeChatPay`.
-        > Other modules or apps that depend on PaymentService module should create payments via distributed events.
+    1. Create a payment with the payment method `WeChatPay`.
+       > Other modules or apps should create payments via distributed events. Skip this step if you are using the [EasyAbp.EShop](https://github.com/EasyAbp/EShop).
 
         <details>
         <summary>See sample code</summary>
@@ -85,8 +69,25 @@ We have launched an online demo for this module: [https://pay.samples.easyabp.io
             }).ToList()
         });
         ```
-        > please refer to the [usage in EShop](https://github.com/EasyAbp/EShop/blob/dev/modules/EasyAbp.EShop.Payments/src/EasyAbp.EShop.Payments.Application/EasyAbp/EShop/Payments/Payments/PaymentAppService.cs)
+       > please refer to the [usage in EShop](https://github.com/EasyAbp/EShop/blob/dev/modules/EasyAbp.EShop.Payments/src/EasyAbp.EShop.Payments.Application/EasyAbp/EShop/Payments/Payments/PaymentAppService.cs)
         </details>
+
+    2. Users can use the API `/api/payment-service/payment/{id}/pay` (POST) to finish the payment, please put the necessary params in the `ExtraProperties`:
+    
+        ```
+        {
+            "extraProperties": {
+                "trade_type": "JSAPI",
+                "appid": "wx81a2956875268fk8" // You can specify an appid or get it from the input from the client.
+                "mch_id": "10000100" // If it's null, use the default settings/options value you configured in the Abp.WeChat.Pay module.
+            }
+        }
+        ```
+
+    > Skip the following steps if you are using the [EasyAbp.EShop](https://github.com/EasyAbp/EShop).
+
+    <details>
+    <summary>See more steps</summary>
 
     3. Handle the payment created distributed event to get and remember the `PaymentId`.
         <details>

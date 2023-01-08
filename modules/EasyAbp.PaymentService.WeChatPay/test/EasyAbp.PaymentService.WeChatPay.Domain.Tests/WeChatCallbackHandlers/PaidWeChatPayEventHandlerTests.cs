@@ -2,31 +2,37 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Xml;
-using EasyAbp.Abp.WeChat.Pay.Infrastructure.OptionResolve;
+using EasyAbp.Abp.WeChat.Pay.Options;
+using EasyAbp.Abp.WeChat.Pay.RequestHandling;
+using EasyAbp.Abp.WeChat.Pay.Services;
 using EasyAbp.Abp.WeChat.Pay.Services.Pay;
 using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.WeChatPay.PaymentRecords;
 using EasyAbp.PaymentService.WeChatPay.RefundRecords;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using NSubstitute;
 using Shouldly;
 using Volo.Abp.Data;
+using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
 using Xunit;
 
 namespace EasyAbp.PaymentService.WeChatPay.WeChatCallbackHandlers;
 
-public class PaymentServiceWeChatPayHandlerTests : WeChatPayDomainTestBase
+public class PaidWeChatPayEventHandlerTests : WeChatPayDomainTestBase
 {
+    protected AbpWeChatPayOptions AbpWeChatPayOptions { get; set; }
     protected IPaymentRepository PaymentRepository { get; set; }
     protected IPaymentRecordRepository PaymentRecordRepository { get; set; }
-    protected ServiceProviderPayService ServiceProviderPayService { get; set; }
     protected IRefundRecordRepository RefundRecordRepository { get; set; }
-    protected PaymentServiceWeChatPayHandler PaymentServiceWeChatPayHandler { get; set; }
+    protected PaidWeChatPayEventHandler PaidWeChatPayEventHandler { get; set; }
+    protected IAbpWeChatPayServiceFactory AbpWeChatPayServiceFactory { get; set; }
 
-    public PaymentServiceWeChatPayHandlerTests()
+    public PaidWeChatPayEventHandlerTests()
     {
-        PaymentServiceWeChatPayHandler = ServiceProvider.GetRequiredService<PaymentServiceWeChatPayHandler>();
+        AbpWeChatPayOptions = ServiceProvider.GetRequiredService<IOptions<AbpWeChatPayOptions>>().Value;
+        PaidWeChatPayEventHandler = ServiceProvider.GetRequiredService<PaidWeChatPayEventHandler>();
         RefundRecordRepository = ServiceProvider.GetRequiredService<IRefundRecordRepository>();
     }
 
@@ -38,8 +44,8 @@ public class PaymentServiceWeChatPayHandlerTests : WeChatPayDomainTestBase
         PaymentRecordRepository = Substitute.For<IPaymentRecordRepository>();
         services.AddTransient(_ => PaymentRecordRepository);
 
-        ServiceProviderPayService = Substitute.For<ServiceProviderPayService>();
-        services.AddTransient(_ => ServiceProviderPayService);
+        AbpWeChatPayServiceFactory = Substitute.For<IAbpWeChatPayServiceFactory>();
+        services.AddTransient(_ => AbpWeChatPayServiceFactory);
     }
 
     [Fact]
@@ -90,6 +96,8 @@ public class PaymentServiceWeChatPayHandlerTests : WeChatPayDomainTestBase
         payment.SetProperty("trade_type", "JSAPI");
         payment.SetProperty("prepay_id", "123456");
         payment.SetProperty("code_url", "123456");
+        
+        payment.SetPayeeAccount("10000100");
 
         return payment;
     }
@@ -143,20 +151,25 @@ public class PaymentServiceWeChatPayHandlerTests : WeChatPayDomainTestBase
 </xml>
 ");
 
-        ServiceProviderPayService
+        var serviceProviderPayWeService =
+            Substitute.For<ServiceProviderPayWeService>(AbpWeChatPayOptions,
+                new AbpLazyServiceProvider(ServiceProvider));
+
+        AbpWeChatPayServiceFactory.CreateAsync<ServiceProviderPayWeService>()
+            .ReturnsForAnyArgs(serviceProviderPayWeService);
+
+        serviceProviderPayWeService
             .RefundAsync(null, null, null, null, null, null, null, 0, 0, null, null, null, null)
             .ReturnsForAnyArgs(_ => xmlDocumentRefund);
 
         await WithUnitOfWorkAsync(async () =>
         {
-            var context = new WeChatPayHandlerContext
+            (await PaidWeChatPayEventHandler.HandleAsync(new WeChatPayEventModel
             {
+                Options = AbpWeChatPayOptions,
                 WeChatRequestXmlData = xmlDocument,
-                IsSuccess = true
-            };
-
-            await PaymentServiceWeChatPayHandler.HandleAsync(context);
-            context.IsSuccess.ShouldBeTrue();
+                DecryptedXmlData = null
+            })).Success.ShouldBeTrue();
         });
     }
 }
