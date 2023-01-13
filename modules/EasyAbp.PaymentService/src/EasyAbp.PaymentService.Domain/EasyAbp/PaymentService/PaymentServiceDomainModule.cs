@@ -33,7 +33,7 @@ namespace EasyAbp.PaymentService
 
             Configure<AbpAutoMapperOptions>(options =>
             {
-                options.AddProfile<PaymentServiceDomainAutoMapperProfile>(validate: true);
+                options.AddProfile<PaymentServiceDomainAutoMapperProfile>(validate: false); // todo: https://github.com/abpframework/abp/issues/15404
             });
         }
     }

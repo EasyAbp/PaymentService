@@ -24,7 +24,7 @@ namespace EasyAbp.PaymentService.WeChatPay
             context.Services.AddAutoMapperObjectMapper<PaymentServiceWeChatPayApplicationModule>();
             Configure<AbpAutoMapperOptions>(options =>
             {
-                options.AddMaps<PaymentServiceWeChatPayApplicationModule>(validate: true);
+                options.AddMaps<PaymentServiceWeChatPayApplicationModule>(validate: false); // todo: https://github.com/abpframework/abp/issues/15404
             });
         }
     }

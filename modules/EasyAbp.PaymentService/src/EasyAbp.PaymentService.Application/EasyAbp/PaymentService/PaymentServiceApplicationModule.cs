@@ -18,7 +18,7 @@ namespace EasyAbp.PaymentService
             context.Services.AddAutoMapperObjectMapper<PaymentServiceApplicationModule>();
             Configure<AbpAutoMapperOptions>(options =>
             {
-                options.AddMaps<PaymentServiceApplicationModule>(validate: true);
+                options.AddMaps<PaymentServiceApplicationModule>(validate: false); // todo: https://github.com/abpframework/abp/issues/15404
             });
         }
     }

@@ -24,7 +24,7 @@ namespace EasyAbp.PaymentService.Prepayment
             context.Services.AddAutoMapperObjectMapper<PaymentServicePrepaymentApplicationModule>();
             Configure<AbpAutoMapperOptions>(options =>
             {
-                options.AddMaps<PaymentServicePrepaymentApplicationModule>(validate: true);
+                options.AddMaps<PaymentServicePrepaymentApplicationModule>(validate: false); // todo: https://github.com/abpframework/abp/issues/15404
             });
         }
     }
