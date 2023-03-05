@@ -43,8 +43,8 @@ jobs:
       - name: remove unused packages
         run: |
           cd ${GITHUB_WORKSPACE}/nugetPackages
-          rm -f -v !(EasyAbp.*)
-          rm -f -v !(*.${{ steps.getVersion.outputs.first_match }}.nupkg)
+          rm -f !(EasyAbp.*)
+          rm -f !(*.${{ steps.getVersion.outputs.first_match }}.nupkg)
           rm -f *.Blazor.Host.*
           rm -f *.Blazor.Server.Host.*
           rm -f *.Host.Shared.*
