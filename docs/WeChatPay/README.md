@@ -44,7 +44,7 @@ We have launched an online demo for this module: [https://pay.samples.easyabp.io
     });
     ```
     
-2. Configure the [WeChatPay settings](https://github.com/EasyAbp/PaymentService/blob/master/modules/EasyAbp.PaymentService.WeChatPay/src/EasyAbp.PaymentService.WeChatPay.Domain/EasyAbp/PaymentService/WeChatPay/Settings/WeChatPaySettings.cs), you can try to use [SettingUI](https://github.com/EasyAbp/Abp.SettingUi) to finish this work.
+2. Configure the [WeChatPay settings](https://github.com/EasyAbp/Abp.WeChat/blob/master/docs/WeChatPay.md#12-%E6%A8%A1%E5%9D%97%E7%9A%84%E9%85%8D%E7%BD%AE), you can try to use [SettingUI](https://github.com/EasyAbp/Abp.SettingUi) to finish this work.
     > See the [demo](https://github.com/EasyAbp/PaymentService/blob/master/samples/PaymentServiceSample/aspnet-core/src/PaymentServiceSample.Web/appsettings.json), it is also according to the [document](https://github.com/EasyAbp/Abp.WeChat/blob/master/doc/WeChatPay.md) of the EasyAbp.Abp.WeChat module.
 
 3. Pay with WeChatPay.
