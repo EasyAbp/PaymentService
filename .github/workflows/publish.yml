@@ -38,11 +38,11 @@ jobs:
         run: dotnet test -c Release --no-restore --no-build
 
       - name: dotnet pack
-        run: dotnet pack -c Release --no-build --property:PublishDir=${{env.DOTNET_ROOT}}/dest
+        run: dotnet pack -c Release --no-build --property PackageOutputPath=${GITHUB_WORKSPACE}/nugetPackages/
 
       - name: remove unused packages
         run: |
-          cd ${{env.DOTNET_ROOT}}/dest
+          cd ${GITHUB_WORKSPACE}/nugetPackages
           del * -Exclude EasyAbp.*
           del * -Exclude *.${{ steps.getVersion.outputs.first_match }}.nupkg
           del *.Blazor.Host.*
@@ -61,13 +61,13 @@ jobs:
       - name: dotnet nuget push to GitHub
         uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
         with:
-          nupkg-path:  '${{env.DOTNET_ROOT}}/dest/*.nupkg'
+          nupkg-path:  '${GITHUB_WORKSPACE}/nugetPackages/*.nupkg'
           repo-owner:  'EasyAbp'
           gh-user:  'EasyAbp'
           token:  ${{ secrets.GITHUB_TOKEN }}
 
       - name: dotnet nuget push to NuGet
-        run: dotnet nuget push ${{env.DOTNET_ROOT}}/dest/*.nupkg -k ${{secrets.NUGET_API_KEY}} -s https://api.nuget.org/v3/index.json --skip-duplicate
+        run: dotnet nuget push ${GITHUB_WORKSPACE}/nugetPackages/*.nupkg -k ${{secrets.NUGET_API_KEY}} -s https://api.nuget.org/v3/index.json --skip-duplicate
 
       - name: determine if the tag exists
         uses: mukunku/tag-exists-action@v1.0.0
