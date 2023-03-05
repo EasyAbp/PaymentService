@@ -6,7 +6,7 @@ on:
       - main
 jobs:
   publish:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: NuGet/setup-nuget@v1
@@ -42,7 +42,7 @@ jobs:
 
       - name: remove unused packages
         run: |
-          cd dest
+          cd ${{env.DOTNET_ROOT}}/dest
           del * -Exclude EasyAbp.*
           del * -Exclude *.${{ steps.getVersion.outputs.first_match }}.nupkg
           del *.Blazor.Host.*
@@ -61,13 +61,13 @@ jobs:
       - name: dotnet nuget push to GitHub
         uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
         with:
-          nupkg-path:  'dest\*.nupkg'
+          nupkg-path:  '${{env.DOTNET_ROOT}}/dest/*.nupkg'
           repo-owner:  'EasyAbp'
           gh-user:  'EasyAbp'
           token:  ${{ secrets.GITHUB_TOKEN }}
 
       - name: dotnet nuget push to NuGet
-        run: dotnet nuget push dest\*.nupkg -k ${{secrets.NUGET_API_KEY}} -s https://api.nuget.org/v3/index.json --skip-duplicate
+        run: dotnet nuget push ${{env.DOTNET_ROOT}}/dest/*.nupkg -k ${{secrets.NUGET_API_KEY}} -s https://api.nuget.org/v3/index.json --skip-duplicate
 
       - name: determine if the tag exists
         uses: mukunku/tag-exists-action@v1.0.0
