@@ -114,6 +114,7 @@ namespace EasyAbp.PaymentService.Payments
             
             foreach (var property in input.ExtraProperties)
             {
+                // todo: we should validate the extra properties in PayInput, see: https://github.com/abpframework/abp/discussions/15583
                 configurations.AddIfNotContains(new KeyValuePair<string, object>(property.Key, property.Value));
             }
 
@@ -157,7 +158,7 @@ namespace EasyAbp.PaymentService.Payments
         protected virtual Task<ExtraPropertyDictionary> GetPayeeConfigurationsAsync(Payment payment)
         {
             // Todo: use payee configurations provider.
-            // Todo: get store side payee configurations.
+            // Todo: (EShop) get store side payee configurations. e.g. set `mch_id` for WeChatPay
             
             var payeeConfigurations = new ExtraPropertyDictionary();
             

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EasyAbp.Abp.WeChat.Pay.Options;
 using EasyAbp.Abp.WeChat.Pay.Services;
 using EasyAbp.Abp.WeChat.Pay.Services.Pay;
 using EasyAbp.PaymentService.Payments;
@@ -29,6 +30,7 @@ namespace EasyAbp.PaymentService.WeChatPay.Background
         private readonly IPaymentRecordRepository _paymentRecordRepository;
         private readonly IRefundRecordRepository _refundRecordRepository;
         private readonly IWeChatPayFeeConverter _weChatPayFeeConverter;
+        private readonly IAbpWeChatPayOptionsProvider _abpWeChatPayOptionsProvider;
         private readonly IAbpWeChatPayServiceFactory _abpWeChatPayServiceFactory;
 
         public WeChatPayRefundJob(
@@ -41,6 +43,7 @@ namespace EasyAbp.PaymentService.WeChatPay.Background
             IPaymentRecordRepository paymentRecordRepository,
             IRefundRecordRepository refundRecordRepository,
             IWeChatPayFeeConverter weChatPayFeeConverter,
+            IAbpWeChatPayOptionsProvider abpWeChatPayOptionsProvider,
             IAbpWeChatPayServiceFactory abpWeChatPayServiceFactory)
         {
             _guidGenerator = guidGenerator;
@@ -52,6 +55,7 @@ namespace EasyAbp.PaymentService.WeChatPay.Background
             _paymentRecordRepository = paymentRecordRepository;
             _refundRecordRepository = refundRecordRepository;
             _weChatPayFeeConverter = weChatPayFeeConverter;
+            _abpWeChatPayOptionsProvider = abpWeChatPayOptionsProvider;
             _abpWeChatPayServiceFactory = abpWeChatPayServiceFactory;
         }
 
@@ -169,6 +173,7 @@ namespace EasyAbp.PaymentService.WeChatPay.Background
             [CanBeNull] string displayReason)
         {
             var mchId = payment.PayeeAccount;
+            var options = await _abpWeChatPayOptionsProvider.GetAsync(mchId);
 
             var serviceProviderPayService =
                 await _abpWeChatPayServiceFactory.CreateAsync<ServiceProviderPayWeService>(mchId);
@@ -186,7 +191,7 @@ namespace EasyAbp.PaymentService.WeChatPay.Background
                 refundFeeType: null,
                 refundDesc: displayReason,
                 refundAccount: null,
-                notifyUrl: null
+                notifyUrl: options.RefundNotifyUrl
             );
 
             var dict = new Dictionary<string, string>(result.SelectSingleNode("xml").ToDictionary() ??
