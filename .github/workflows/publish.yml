@@ -43,20 +43,20 @@ jobs:
       - name: remove unused packages
         run: |
           cd ${GITHUB_WORKSPACE}/nugetPackages
-          del * -Exclude EasyAbp.*
-          del * -Exclude *.${{ steps.getVersion.outputs.first_match }}.nupkg
-          del *.Blazor.Host.*
-          del *.Blazor.Server.Host.*
-          del *.Host.Shared.*
-          del *.HttpApi.Host.*
-          del *.IdentityServer.*
-          del *.AuthServer.*
-          del *.Web.Host.*
-          del *.Web.Unified.*
-          del *.HttpApi.Client.ConsoleTestApp.*
-          del *.Tests.*
-          del *.TestBase.*
-          dir -name
+          rm * -Exclude EasyAbp.*
+          rm * -Exclude *.${{ steps.getVersion.outputs.first_match }}.nupkg
+          rm *.Blazor.Host.*
+          rm *.Blazor.Server.Host.*
+          rm *.Host.Shared.*
+          rm *.HttpApi.Host.*
+          rm *.IdentityServer.*
+          rm *.AuthServer.*
+          rm *.Web.Host.*
+          rm *.Web.Unified.*
+          rm *.HttpApi.Client.ConsoleTestApp.*
+          rm *.Tests.*
+          rm *.TestBase.*
+          ls
 
       - name: dotnet nuget push to GitHub
         uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
