@@ -38,11 +38,11 @@ jobs:
         run: dotnet test -c Release --no-restore --no-build
 
       - name: dotnet pack
-        run: dotnet pack -c Release --no-build --property PackageOutputPath=${{env.GITHUB_WORKSPACE}}/nugetPackages/
+        run: dotnet pack -c Release --no-build --property PackageOutputPath=${{ github.workspace }}/nugetPackages/
 
       - name: remove unused packages
         run: |
-          cd ${{env.GITHUB_WORKSPACE}}/nugetPackages
+          cd ${{ github.workspace }}/nugetPackages
           shopt -s extglob
           rm -f !(EasyAbp.*)
           rm -f !(*.${{ steps.getVersion.outputs.first_match }}.nupkg)
@@ -62,13 +62,13 @@ jobs:
       - name: dotnet nuget push to GitHub
         uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
         with:
-          nupkg-path:  '${{env.GITHUB_WORKSPACE}}/nugetPackages/*.nupkg'
+          nupkg-path:  '${{ github.workspace }}/nugetPackages/*.nupkg'
           repo-owner:  'EasyAbp'
           gh-user:  'EasyAbp'
           token:  ${{ secrets.GITHUB_TOKEN }}
 
       - name: dotnet nuget push to NuGet
-        run: dotnet nuget push ${{env.GITHUB_WORKSPACE}}/nugetPackages/*.nupkg -k ${{secrets.NUGET_API_KEY}} -s https://api.nuget.org/v3/index.json --skip-duplicate
+        run: dotnet nuget push ${{ github.workspace }}/nugetPackages/*.nupkg -k ${{secrets.NUGET_API_KEY}} -s https://api.nuget.org/v3/index.json --skip-duplicate
 
       - name: determine if the tag exists
         uses: mukunku/tag-exists-action@v1.0.0
