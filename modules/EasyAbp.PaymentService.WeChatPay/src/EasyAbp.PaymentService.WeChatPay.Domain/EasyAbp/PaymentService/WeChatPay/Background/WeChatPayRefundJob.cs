@@ -84,6 +84,10 @@ namespace EasyAbp.PaymentService.WeChatPay.Background
                 {
                     throw new RefundIsInUnexpectedStageException(refund.Id);
                 }
+
+                args.RefundAmount = refund.RefundAmount;
+                args.OutRefundNo = refund.Id.ToString();
+                args.DisplayReason = refund.DisplayReason;
             }
 
             var paymentRecord = await _paymentRecordRepository.GetByPaymentId(payment.Id);
@@ -177,7 +181,7 @@ namespace EasyAbp.PaymentService.WeChatPay.Background
 
             var serviceProviderPayService =
                 await _abpWeChatPayServiceFactory.CreateAsync<ServiceProviderPayWeService>(mchId);
-            
+
             var result = await serviceProviderPayService.RefundAsync(
                 appId: payment.GetProperty<string>("appid"),
                 mchId: mchId,
