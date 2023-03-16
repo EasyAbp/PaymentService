@@ -7,14 +7,18 @@ namespace EasyAbp.PaymentService.WeChatPay.Background;
 public class CloseWeChatPayOrderJobArgs : IMultiTenant
 {
     public Guid? TenantId { get; set; }
-        
+
     public Guid PaymentId { get; set; }
-        
+
     public string OutTradeNo { get; set; }
-        
+
     public string AppId { get; set; }
-        
+
     public string MchId { get; set; }
+
+    protected CloseWeChatPayOrderJobArgs()
+    {
+    }
 
     public CloseWeChatPayOrderJobArgs(Guid? tenantId, Guid paymentId, string outTradeNo, string appId, string mchId)
     {

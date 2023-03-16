@@ -8,6 +8,10 @@ public class EmptyJobArgs : IMultiTenant
 {
     public Guid? TenantId { get; set; }
 
+    protected EmptyJobArgs()
+    {
+    }
+
     public EmptyJobArgs(Guid? tenantId)
     {
         TenantId = tenantId;

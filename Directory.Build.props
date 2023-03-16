@@ -2,7 +2,7 @@
   <PropertyGroup>
 
     <AbpVersion>7.0.0</AbpVersion>
-    <EasyAbpAbpWeChatModuleVersion>2.3.3</EasyAbpAbpWeChatModuleVersion>
+    <EasyAbpAbpWeChatModuleVersion>2.3.4</EasyAbpAbpWeChatModuleVersion>
 
   </PropertyGroup>
 </Project>
