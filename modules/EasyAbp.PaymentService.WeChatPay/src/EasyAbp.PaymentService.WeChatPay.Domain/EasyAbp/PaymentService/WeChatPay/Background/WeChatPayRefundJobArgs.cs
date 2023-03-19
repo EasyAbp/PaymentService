@@ -21,7 +21,7 @@ public class WeChatPayRefundJobArgs : IMultiTenant
 
     public string DisplayReason { get; set; }
 
-    protected WeChatPayRefundJobArgs()
+    public WeChatPayRefundJobArgs()
     {
     }
 

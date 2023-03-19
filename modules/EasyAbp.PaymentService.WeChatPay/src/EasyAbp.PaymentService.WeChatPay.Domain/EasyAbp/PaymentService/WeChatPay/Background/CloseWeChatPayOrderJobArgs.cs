@@ -16,7 +16,7 @@ public class CloseWeChatPayOrderJobArgs : IMultiTenant
 
     public string MchId { get; set; }
 
-    protected CloseWeChatPayOrderJobArgs()
+    public CloseWeChatPayOrderJobArgs()
     {
     }
 
