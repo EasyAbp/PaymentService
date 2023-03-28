@@ -8,9 +8,9 @@ namespace EasyAbp.PaymentService.Payments.Dtos
     public class PaymentDto : ExtensibleFullAuditedEntityDto<Guid>, IPayment
     {
         public Guid UserId { get; set; }
-        
+
         public string PaymentMethod { get; set; }
-        
+
         public string PayeeAccount { get; set; }
 
         public string ExternalTradingCode { get; set; }
@@ -24,13 +24,14 @@ namespace EasyAbp.PaymentService.Payments.Dtos
         public decimal ActualPaymentAmount { get; set; }
 
         public decimal RefundAmount { get; set; }
-        
+
         public decimal PendingRefundAmount { get; set; }
 
         public DateTime? CompletionTime { get; set; }
-        
+
         public DateTime? CanceledTime { get; set; }
 
+        IEnumerable<IPaymentItem> IPayment.PaymentItems => PaymentItems;
         public List<PaymentItemDto> PaymentItems { get; set; }
     }
 }
