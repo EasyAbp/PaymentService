@@ -10,35 +10,36 @@ namespace EasyAbp.PaymentService.Payments
     public class Payment : FullAuditedAggregateRoot<Guid>, IPayment
     {
         public virtual Guid? TenantId { get; protected set; }
-        
+
         public virtual Guid UserId { get; protected set; }
-        
+
         [NotNull]
         public virtual string PaymentMethod { get; protected set; }
-        
+
         [CanBeNull]
         public virtual string PayeeAccount { get; protected set; }
-        
+
         [CanBeNull]
         public virtual string ExternalTradingCode { get; protected set; }
-        
+
         [NotNull]
         public virtual string Currency { get; protected set; }
-        
+
         public virtual decimal OriginalPaymentAmount { get; protected set; }
 
         public virtual decimal PaymentDiscount { get; protected set; }
-        
+
         public virtual decimal ActualPaymentAmount { get; protected set; }
-        
+
         public virtual decimal RefundAmount { get; protected set; }
-        
+
         public virtual decimal PendingRefundAmount { get; protected set; }
-        
+
         public virtual DateTime? CompletionTime { get; protected set; }
-        
+
         public virtual DateTime? CanceledTime { get; protected set; }
-        
+
+        IEnumerable<IPaymentItem> IPayment.PaymentItems => PaymentItems;
         public virtual List<PaymentItem> PaymentItems { get; protected set; }
 
         protected Payment()
@@ -82,7 +83,7 @@ namespace EasyAbp.PaymentService.Payments
             CheckIsInProgress();
 
             paymentItem.SetPaymentDiscount(paymentDiscount);
-            
+
             PaymentDiscount = PaymentItems.Sum(item => item.PaymentDiscount).EnsureIsNonNegative();
             ActualPaymentAmount = (OriginalPaymentAmount - paymentDiscount).EnsureIsNonNegative();
         }
@@ -93,14 +94,14 @@ namespace EasyAbp.PaymentService.Payments
 
             CompletionTime = completionTime;
         }
-        
+
         public void CancelPayment(DateTime canceledTime)
         {
             CheckIsInProgress();
 
             CanceledTime = canceledTime;
         }
-        
+
         public void StartRefund(Refund refund)
         {
             if (IsCanceled() || !IsCompleted())
@@ -116,21 +117,21 @@ namespace EasyAbp.PaymentService.Payments
             var refundAmount = refund.RefundAmount.EnsureIsNonNegative();
 
             if (ActualPaymentAmount < RefundAmount + refundAmount || refund.RefundItems.Any(item =>
-                !PaymentItems.First(x => x.Id == item.PaymentItemId).TryStartRefund(item.RefundAmount)))
+                    !PaymentItems.First(x => x.Id == item.PaymentItemId).TryStartRefund(item.RefundAmount)))
             {
                 throw new InvalidRefundAmountException(Id, refundAmount);
             }
 
             PendingRefundAmount = refundAmount;
         }
-        
+
         public void CompleteRefund()
         {
             if (IsCanceled() || !IsCompleted() || PendingRefundAmount.EnsureIsNonNegative() <= decimal.Zero)
             {
                 throw new PaymentIsInUnexpectedStageException(Id);
             }
-            
+
             foreach (var paymentItem in PaymentItems)
             {
                 paymentItem.TryCompleteRefund();
@@ -140,14 +141,14 @@ namespace EasyAbp.PaymentService.Payments
 
             PendingRefundAmount = decimal.Zero;
         }
-        
+
         public void RollbackRefund()
         {
             if (IsCanceled() || !IsCompleted())
             {
                 throw new PaymentIsInUnexpectedStageException(Id);
             }
-            
+
             foreach (var paymentItem in PaymentItems)
             {
                 paymentItem.TryRollbackRefund();
@@ -160,12 +161,12 @@ namespace EasyAbp.PaymentService.Payments
         {
             return CanceledTime.HasValue;
         }
-        
+
         public bool IsCompleted()
         {
             return CompletionTime.HasValue;
         }
-        
+
         public bool IsInProgress()
         {
             return !IsCanceled() && !IsCompleted();

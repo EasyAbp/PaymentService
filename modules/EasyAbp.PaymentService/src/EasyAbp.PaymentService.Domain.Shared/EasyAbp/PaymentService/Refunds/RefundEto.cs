@@ -12,25 +12,26 @@ namespace EasyAbp.PaymentService.Refunds
         public Guid? TenantId { get; set; }
 
         public Guid PaymentId { get; set; }
-        
+
         public string RefundPaymentMethod { get; set; }
-        
+
         public string ExternalTradingCode { get; set; }
-        
+
         public string Currency { get; set; }
-        
+
         public decimal RefundAmount { get; set; }
-        
+
         public string DisplayReason { get; set; }
 
         public string CustomerRemark { get; set; }
-        
+
         public string StaffRemark { get; set; }
-        
+
         public DateTime? CompletedTime { get; set; }
-        
+
         public DateTime? CanceledTime { get; set; }
 
-        public List<RefundItemEto> RefundItems { get; set; } = new List<RefundItemEto>();
+        IEnumerable<IRefundItem> IRefund.RefundItems => RefundItems;
+        public List<RefundItemEto> RefundItems { get; set; } = new();
     }
 }
