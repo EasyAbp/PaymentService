@@ -6,6 +6,8 @@ namespace EasyAbp.PaymentService.Payments
 {
     public interface IPayment : IHasExtraProperties
     {
+        Guid Id { get; }
+
         Guid UserId { get; }
 
         string PaymentMethod { get; }

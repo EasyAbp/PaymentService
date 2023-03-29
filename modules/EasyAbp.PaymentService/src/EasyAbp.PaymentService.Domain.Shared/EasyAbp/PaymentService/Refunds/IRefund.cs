@@ -6,6 +6,8 @@ namespace EasyAbp.PaymentService.Refunds
 {
     public interface IRefund : IHasExtraProperties
     {
+        Guid Id { get; }
+
         Guid PaymentId { get; }
 
         string RefundPaymentMethod { get; }
