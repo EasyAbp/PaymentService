@@ -53,7 +53,7 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
 
             await _transactionRepository.InsertAsync(transaction, true);
             
-            account.ChangeBalance(changedBalance);
+            account.ChangeBalance(configuration, changedBalance);
 
             await _accountRepository.UpdateAsync(account, true);
         }

@@ -63,7 +63,7 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
                     throw new CurrencyNotSupportedException(payment.Currency);
                 }
                 
-                account.ChangeBalance(changedBalance);
+                account.ChangeBalance(configuration, changedBalance);
                 account.SetPendingTopUpPaymentId(null);
 
                 await _accountRepository.UpdateAsync(account, true);
