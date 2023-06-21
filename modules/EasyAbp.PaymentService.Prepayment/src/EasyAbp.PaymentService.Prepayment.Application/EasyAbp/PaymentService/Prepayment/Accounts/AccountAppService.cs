@@ -30,7 +30,7 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
         private readonly IDistributedEventBus _distributedEventBus;
         private readonly ITransactionRepository _transactionRepository;
         private readonly IAccountRepository _repository;
-        
+
         public AccountAppService(
             IAccountGroupConfigurationProvider accountGroupConfigurationProvider,
             IOptions<PaymentServicePrepaymentOptions> options,
@@ -79,7 +79,7 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
             }
 
             var allAccountGroupNames = _options.AccountGroups.GetAutoCreationAccountGroupNames();
-                
+
             var missingAccountGroupNames =
                 allAccountGroupNames.Except(result.Items.Select(x => x.AccountGroupName)).ToArray();
 
@@ -112,11 +112,11 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
                 account.Balance);
 
             await _transactionRepository.InsertAsync(transaction, true);
-            
-            account.ChangeBalance(input.ChangedBalance);
+
+            account.ChangeBalance(configuration, input.ChangedBalance);
 
             await _repository.UpdateAsync(account, true);
-            
+
             return await MapToGetOutputDtoAsync(account);
         }
 
@@ -125,10 +125,12 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
         {
             var account = await _repository.GetAsync(id);
 
-            account.ChangeLockedBalance(input.ChangedLockedBalance);
+            var configuration = _accountGroupConfigurationProvider.Get(account.AccountGroupName);
+
+            account.ChangeLockedBalance(configuration, input.ChangedLockedBalance);
 
             await _repository.UpdateAsync(account, true);
-            
+
             return await MapToGetOutputDtoAsync(account);
         }
 
@@ -146,7 +148,7 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
             {
                 throw new TopUpIsAlreadyInProgressException();
             }
-            
+
             var configuration = _accountGroupConfigurationProvider.Get(account.AccountGroupName);
 
             await _distributedEventBus.PublishAsync(new CreatePaymentEto(

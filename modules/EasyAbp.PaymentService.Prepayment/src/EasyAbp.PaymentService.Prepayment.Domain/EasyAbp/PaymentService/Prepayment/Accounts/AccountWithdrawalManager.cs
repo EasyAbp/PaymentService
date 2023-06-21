@@ -34,6 +34,8 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
         public virtual async Task StartWithdrawalAsync(Account account, string withdrawalMethod, decimal amount,
             ExtraPropertyDictionary inputExtraProperties)
         {
+            var accountGroupConfiguration = _accountGroupConfigurationProvider.Get(account.AccountGroupName);
+
             var withdrawalProvider = GetWithdrawalProvider(withdrawalMethod);
 
             await CheckDailyWithdrawalAmountAsync(account, withdrawalMethod, amount);
@@ -45,7 +47,7 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
                 withdrawalMethod,
                 amount);
 
-            account.StartWithdrawal(withdrawalRecord.Id, withdrawalRecord.Amount);
+            account.StartWithdrawal(accountGroupConfiguration, withdrawalRecord.Id, withdrawalRecord.Amount);
 
             await _withdrawalRecordRepository.InsertAsync(withdrawalRecord, true);
 
@@ -84,8 +86,8 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
                 _withdrawalMethodConfigurationProvider.Get(withdrawalMethodName)?.AccountWithdrawalProviderType ??
                 throw new UnknownWithdrawalMethodException(withdrawalMethodName);
 
-            return ServiceProvider.GetService(providerType) as IAccountWithdrawalProvider ??
-                                     throw new UnknownWithdrawalMethodException(withdrawalMethodName);
+            return LazyServiceProvider.LazyGetService(providerType) as IAccountWithdrawalProvider ??
+                   throw new UnknownWithdrawalMethodException(withdrawalMethodName);
         }
 
         public virtual async Task CompleteWithdrawalAsync(Account account)
@@ -96,21 +98,21 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
             {
                 throw new WithdrawalInProgressNotFoundException();
             }
-            
+
             var withdrawalRecord = await _withdrawalRecordRepository.GetAsync(withdrawalRecordId.Value);
 
             var accountGroupConfiguration = _accountGroupConfigurationProvider.Get(account.AccountGroupName);
-            
+
             var withdrawalProvider = GetWithdrawalProvider(withdrawalRecord.WithdrawalMethod);
 
             var originalBalance = account.Balance;
 
-            account.CompleteWithdrawal();
-            
+            account.CompleteWithdrawal(accountGroupConfiguration);
+
             withdrawalRecord.Complete(Clock.Now);
 
             await _accountRepository.UpdateAsync(account, true);
-            
+
             await _withdrawalRecordRepository.UpdateAsync(withdrawalRecord, true);
 
             var accountChangedBalance = -1 * withdrawalRecord.Amount;
@@ -120,14 +122,15 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
                 null, accountGroupConfiguration.Currency, accountChangedBalance, originalBalance);
 
             await _transactionRepository.InsertAsync(transaction, true);
-            
-            await withdrawalProvider.OnCompleteWithdrawalAsync(account);
 
+            await withdrawalProvider.OnCompleteWithdrawalAsync(account);
         }
 
         public virtual async Task CancelWithdrawalAsync(Account account, string errorCode = null,
             string errorMessage = null)
         {
+            var accountGroupConfiguration = _accountGroupConfigurationProvider.Get(account.AccountGroupName);
+
             var withdrawalRecordId = account.PendingWithdrawalRecordId;
 
             if (!withdrawalRecordId.HasValue)
@@ -139,7 +142,7 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
 
             var withdrawalProvider = GetWithdrawalProvider(withdrawalRecord.WithdrawalMethod);
 
-            account.CancelWithdrawal();
+            account.CancelWithdrawal(accountGroupConfiguration);
 
             withdrawalRecord.Cancel(Clock.Now, errorCode, errorMessage);
 

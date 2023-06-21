@@ -98,7 +98,7 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
 
             await _transactionRepository.InsertAsync(transaction, true);
 
-            account.ChangeBalance(accountChangedBalance);
+            account.ChangeBalance(accountGroupConfiguration, accountChangedBalance);
             
             await _accountRepository.UpdateAsync(account, true);
             
@@ -133,7 +133,7 @@ namespace EasyAbp.PaymentService.Prepayment.PaymentService
 
             await _transactionRepository.InsertAsync(transaction, true);
 
-            account.ChangeBalance(accountChangedBalance);
+            account.ChangeBalance(configuration, accountChangedBalance);
             
             await _accountRepository.UpdateAsync(account, true);
             

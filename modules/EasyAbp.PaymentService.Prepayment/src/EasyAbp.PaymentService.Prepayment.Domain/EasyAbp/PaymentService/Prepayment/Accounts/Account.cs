@@ -1,4 +1,5 @@
 using System;
+using EasyAbp.PaymentService.Prepayment.Options.AccountGroups;
 using JetBrains.Annotations;
 using Volo.Abp.Data;
 using Volo.Abp.Domain.Entities.Auditing;
@@ -9,20 +10,20 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
     public class Account : FullAuditedAggregateRoot<Guid>, IMultiTenant
     {
         public virtual Guid? TenantId { get; protected set; }
-        
+
         [NotNull]
         public virtual string AccountGroupName { get; protected set; }
-        
+
         public virtual Guid UserId { get; protected set; }
-        
+
         public virtual decimal Balance { get; protected set; }
-        
+
         public virtual decimal LockedBalance { get; protected set; }
-        
+
         public virtual Guid? PendingTopUpPaymentId { get; protected set; }
-        
+
         public virtual Guid? PendingWithdrawalRecordId { get; protected set; }
-        
+
         public virtual decimal PendingWithdrawalAmount { get; protected set; }
 
         protected Account()
@@ -43,44 +44,26 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
             LockedBalance = lockedBalance;
         }
 
-        public void ChangeBalance(decimal changedBalance)
+        public void ChangeBalance(AccountGroupConfiguration config, decimal changedBalance)
         {
             var newBalance = decimal.Add(Balance, changedBalance);
 
-            if (!newBalance.IsBetween(PrepaymentConsts.AccountMinBalance, PrepaymentConsts.AccountMaxBalance))
-            {
-                throw new AmountOverflowException(PrepaymentConsts.AccountMinBalance,
-                    PrepaymentConsts.AccountMaxBalance);
-            }
-            
-            if (newBalance < LockedBalance)
-            {
-                throw new LockedBalanceIsGreaterThenBalanceException(LockedBalance, newBalance);
-            }
+            CheckBalanceValue(config, newBalance, LockedBalance);
 
             Balance = newBalance;
         }
-        
-        public void ChangeLockedBalance(decimal changedLockedBalance, bool ignorePendingWithdrawalAmount = false)
+
+        public void ChangeLockedBalance(AccountGroupConfiguration config, decimal changedLockedBalance,
+            bool ignorePendingWithdrawalAmount = false)
         {
             var newLockedBalance = decimal.Add(LockedBalance, changedLockedBalance);
-            
-            if (Balance < newLockedBalance)
-            {
-                throw new LockedBalanceIsGreaterThenBalanceException(newLockedBalance, Balance);
-            }
 
-            if (!newLockedBalance.IsBetween(PrepaymentConsts.AccountMinLockedBalance,
-                PrepaymentConsts.AccountMaxLockedBalance))
-            {
-                throw new AmountOverflowException(PrepaymentConsts.AccountMinLockedBalance,
-                    PrepaymentConsts.AccountMaxLockedBalance);
-            }
-            
+            CheckBalanceValue(config, Balance, newLockedBalance);
+
             if (!ignorePendingWithdrawalAmount)
             {
                 var pendingWithdrawalAmount = PendingWithdrawalAmount;
-                
+
                 if (newLockedBalance < pendingWithdrawalAmount)
                 {
                     throw new LockedBalanceIsLessThenPendingWithdrawalAmountException(newLockedBalance,
@@ -91,57 +74,78 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
             LockedBalance = newLockedBalance;
         }
 
+        private static void CheckBalanceValue(AccountGroupConfiguration config, decimal balance, decimal lockedBalance)
+        {
+            var minBalance = config.AccountMinBalance ?? PrepaymentConsts.AccountMinBalance;
+            var maxBalance = config.AccountMaxBalance ?? PrepaymentConsts.AccountMaxBalance;
+
+            if (!balance.IsBetween(minBalance, maxBalance))
+            {
+                throw new AmountOverflowException("balance", minBalance, maxBalance);
+            }
+
+            if (lockedBalance < decimal.Zero)
+            {
+                throw new AmountOverflowException("locked balance", decimal.Zero, maxBalance);
+            }
+
+            if (balance - minBalance < lockedBalance)
+            {
+                throw new InsufficientBalanceToLockException(lockedBalance, balance);
+            }
+        }
+
         public void SetPendingTopUpPaymentId(Guid? pendingTopUpPaymentId)
         {
             PendingTopUpPaymentId = pendingTopUpPaymentId;
         }
 
-        public void StartWithdrawal(Guid pendingWithdrawalRecordId, decimal amount)
+        public void StartWithdrawal(AccountGroupConfiguration config, Guid pendingWithdrawalRecordId, decimal amount)
         {
             if (PendingWithdrawalRecordId.HasValue || PendingWithdrawalAmount != decimal.Zero)
             {
                 throw new WithdrawalIsAlreadyInProgressException();
             }
-            
-            ChangeLockedBalance(amount);
+
+            ChangeLockedBalance(config, amount);
 
             SetPendingWithdrawalRecordId(pendingWithdrawalRecordId);
             SetPendingWithdrawalAmount(amount);
         }
-        
-        public void CompleteWithdrawal()
+
+        public void CompleteWithdrawal(AccountGroupConfiguration config)
         {
             var balanceToChange = -PendingWithdrawalAmount;
 
-            ClearPendingWithdrawal();
-            
-            ChangeBalance(balanceToChange);
-        }
-        
-        public void CancelWithdrawal()
-        {
-            ClearPendingWithdrawal();
+            ClearPendingWithdrawal(config);
+
+            ChangeBalance(config, balanceToChange);
         }
 
-        private void ClearPendingWithdrawal()
+        public void CancelWithdrawal(AccountGroupConfiguration config)
+        {
+            ClearPendingWithdrawal(config);
+        }
+
+        private void ClearPendingWithdrawal(AccountGroupConfiguration config)
         {
             if (!PendingWithdrawalRecordId.HasValue || PendingWithdrawalAmount == decimal.Zero)
             {
                 throw new WithdrawalInProgressNotFoundException();
             }
-            
 
-            ChangeLockedBalance(-PendingWithdrawalAmount, true);
+
+            ChangeLockedBalance(config, -1 * PendingWithdrawalAmount, true);
 
             SetPendingWithdrawalRecordId(null);
             SetPendingWithdrawalAmount(0m);
         }
-        
+
         private void SetPendingWithdrawalRecordId(Guid? pendingWithdrawalRecordId)
         {
             PendingWithdrawalRecordId = pendingWithdrawalRecordId;
         }
-        
+
         private void SetPendingWithdrawalAmount(decimal pendingWithdrawalAmount)
         {
             PendingWithdrawalAmount = pendingWithdrawalAmount;
