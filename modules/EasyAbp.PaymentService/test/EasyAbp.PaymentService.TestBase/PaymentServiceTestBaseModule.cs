@@ -1,5 +1,4 @@
-﻿using EasyAbp.PaymentService;
-using EasyAbp.PaymentService.Options;
+﻿using EasyAbp.PaymentService.Options;
 using EasyAbp.PaymentService.Payments;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
@@ -8,6 +7,8 @@ using Volo.Abp.Autofac;
 using Volo.Abp.Data;
 using Volo.Abp.Modularity;
 using Volo.Abp.Threading;
+
+namespace EasyAbp.PaymentService;
 
 [DependsOn(
     typeof(AbpAutofacModule),

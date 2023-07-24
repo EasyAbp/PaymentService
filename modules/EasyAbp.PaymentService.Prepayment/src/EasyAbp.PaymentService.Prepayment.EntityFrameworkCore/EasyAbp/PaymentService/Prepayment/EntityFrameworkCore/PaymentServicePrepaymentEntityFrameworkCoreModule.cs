@@ -5,6 +5,7 @@ using EasyAbp.PaymentService.Prepayment.Accounts;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.Modularity;
+using WithdrawalRequests;
 
 namespace EasyAbp.PaymentService.Prepayment.EntityFrameworkCore
 {

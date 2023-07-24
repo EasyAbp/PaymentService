@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Hosting;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Volo.Abp;
 
-namespace EasyAbp.PaymentService.Prepayment.HttpApi.Client.ConsoleTestApp
+namespace EasyAbp.PaymentService.Prepayment
 {
     public class ConsoleTestAppHostedService : IHostedService
     {

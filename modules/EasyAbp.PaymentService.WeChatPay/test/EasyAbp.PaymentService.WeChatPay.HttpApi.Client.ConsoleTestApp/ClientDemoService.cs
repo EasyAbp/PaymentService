@@ -6,6 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.IdentityModel;
 
+namespace EasyAbp.PaymentService.WeChatPay;
+
 public class ClientDemoService : ITransientDependency
 {
     private readonly IIdentityModelAuthenticationService _authenticationService;
@@ -27,9 +29,9 @@ public class ClientDemoService : ITransientDependency
     }
 
     /* Shows how to perform an HTTP request to the API using ABP's dynamic c# proxy
-         * feature. It is just simple as calling a local service method.
-         * Authorization and HTTP request details are handled by the ABP framework.
-         */
+     * feature. It is just simple as calling a local service method.
+     * Authorization and HTTP request details are handled by the ABP framework.
+     */
     private async Task TestWithDynamicProxiesAsync()
     {
         Console.WriteLine();
@@ -37,8 +39,8 @@ public class ClientDemoService : ITransientDependency
     }
 
     /* Shows how to use HttpClient to perform a request to the HTTP API.
-         * It uses ABP's IIdentityModelAuthenticationService to simplify obtaining access tokens.
-         */
+     * It uses ABP's IIdentityModelAuthenticationService to simplify obtaining access tokens.
+     */
     private async Task TestWithHttpClientAndIdentityModelAuthenticationServiceAsync()
     {
         Console.WriteLine();
@@ -81,9 +83,9 @@ public class ClientDemoService : ITransientDependency
     }
 
     /* Shows how to use HttpClient to perform a request to the HTTP API.
-         * It obtains access token using IdentityServer's API. See its documentation:
-         * https://identityserver4.readthedocs.io/en/latest/quickstarts/2_resource_owner_passwords.html
-         */
+     * It obtains access token using IdentityServer's API. See its documentation:
+     * https://identityserver4.readthedocs.io/en/latest/quickstarts/2_resource_owner_passwords.html
+     */
     private async Task TestAllManuallyAsync()
     {
         Console.WriteLine();

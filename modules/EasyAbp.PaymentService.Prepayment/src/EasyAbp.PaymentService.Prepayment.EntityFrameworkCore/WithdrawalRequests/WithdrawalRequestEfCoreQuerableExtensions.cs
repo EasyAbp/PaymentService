@@ -1,7 +1,7 @@
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
+using EasyAbp.PaymentService.Prepayment.WithdrawalRequests;
 
-namespace EasyAbp.PaymentService.Prepayment.WithdrawalRequests
+namespace WithdrawalRequests
 {
     public static class WithdrawalRequestEfCoreQueryableExtensions
     {

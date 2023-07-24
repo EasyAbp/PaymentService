@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace EasyAbp.PaymentService.Prepayment.HttpApi.Client.ConsoleTestApp
+namespace EasyAbp.PaymentService.Prepayment
 {
     class Program
     {

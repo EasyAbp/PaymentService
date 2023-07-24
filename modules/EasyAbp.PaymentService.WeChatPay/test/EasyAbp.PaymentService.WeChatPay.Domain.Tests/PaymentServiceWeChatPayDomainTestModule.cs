@@ -6,6 +6,8 @@ using Volo.Abp.Modularity;
      * You can switch to MongoDB, however your domain tests should be
      * database independent anyway.
      */
+namespace EasyAbp.PaymentService.WeChatPay;
+
 [DependsOn(
     typeof(PaymentServiceEntityFrameworkCoreTestModule),
     typeof(PaymentServiceWeChatPayEntityFrameworkCoreTestModule)

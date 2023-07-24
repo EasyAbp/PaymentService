@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.Payments.Dtos;
 using Shouldly;
 using Volo.Abp.EventBus.Distributed;
 using Xunit;
 
-namespace Payments
+namespace EasyAbp.PaymentService.Payments
 {
     public class PaymentAppServiceTests : PaymentServiceApplicationTestBase
     {

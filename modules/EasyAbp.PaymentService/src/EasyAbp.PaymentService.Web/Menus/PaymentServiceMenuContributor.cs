@@ -1,14 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using EasyAbp.PaymentService.Authorization;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Localization;
 using EasyAbp.PaymentService.Localization;
-using EasyAbp.PaymentService.Web.Menus;
-using Microsoft.AspNetCore.Authorization;
 using Volo.Abp.UI.Navigation;
 
-namespace EasyAbp.PaymentService.Web
+namespace EasyAbp.PaymentService.Web.Menus
 {
     public class PaymentServiceMenuContributor : IMenuContributor
     {

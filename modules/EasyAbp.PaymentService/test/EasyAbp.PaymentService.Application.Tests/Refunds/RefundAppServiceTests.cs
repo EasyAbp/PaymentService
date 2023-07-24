@@ -1,8 +1,7 @@
 using System.Threading.Tasks;
-using EasyAbp.PaymentService.Refunds;
 using Xunit;
 
-namespace Refunds
+namespace EasyAbp.PaymentService.Refunds
 {
     public class RefundAppServiceTests : PaymentServiceApplicationTestBase
     {

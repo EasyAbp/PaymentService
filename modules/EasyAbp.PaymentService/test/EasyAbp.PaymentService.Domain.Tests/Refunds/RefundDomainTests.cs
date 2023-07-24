@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Refunds
+namespace EasyAbp.PaymentService.Refunds
 {
     public class RefundDomainTests : PaymentServiceDomainTestBase
     {
