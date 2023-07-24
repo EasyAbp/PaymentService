@@ -1,9 +1,10 @@
 using System;
 using EasyAbp.PaymentService.Prepayment.EntityFrameworkCore;
+using EasyAbp.PaymentService.Prepayment.WithdrawalRequests;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 
-namespace EasyAbp.PaymentService.Prepayment.WithdrawalRequests
+namespace WithdrawalRequests
 {
     public class WithdrawalRequestRepository : EfCoreRepository<IPaymentServicePrepaymentDbContext, WithdrawalRequest, Guid>, IWithdrawalRequestRepository
     {

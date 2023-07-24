@@ -1,5 +1,6 @@
-﻿using EasyAbp.PaymentService;
-using Volo.Abp.Modularity;
+﻿using Volo.Abp.Modularity;
+
+namespace EasyAbp.PaymentService;
 
 [DependsOn(
     typeof(PaymentServiceApplicationModule),

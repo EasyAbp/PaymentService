@@ -7,6 +7,8 @@ using Volo.Abp.Testing;
 using Volo.Abp.Uow;
 
 /* All test classes are derived from this class, directly or indirectly. */
+namespace EasyAbp.PaymentService;
+
 public abstract class PaymentServiceTestBase<TStartupModule> : AbpIntegratedTest<TStartupModule> 
     where TStartupModule : IAbpModule
 {

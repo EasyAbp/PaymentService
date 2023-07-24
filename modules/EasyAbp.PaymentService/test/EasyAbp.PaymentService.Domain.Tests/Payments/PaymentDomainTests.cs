@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Payments
+namespace EasyAbp.PaymentService.Payments
 {
     public class PaymentDomainTests : PaymentServiceDomainTestBase
     {

@@ -1,4 +1,4 @@
-namespace EasyAbp.PaymentService.Prepayment.Web.Pages.Prepayment
+namespace EasyAbp.PaymentService.Prepayment.Web.Pages.PaymentService.Prepayment
 {
     public class IndexModel : PrepaymentPageModel
     {

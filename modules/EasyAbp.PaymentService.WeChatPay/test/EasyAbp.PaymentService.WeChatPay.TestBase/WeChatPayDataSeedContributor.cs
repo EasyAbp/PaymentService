@@ -3,6 +3,8 @@ using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Guids;
 
+namespace EasyAbp.PaymentService.WeChatPay;
+
 public class WeChatPayDataSeedContributor : IDataSeedContributor, ITransientDependency
 {
     private readonly IGuidGenerator _guidGenerator;
@@ -16,8 +18,8 @@ public class WeChatPayDataSeedContributor : IDataSeedContributor, ITransientDepe
     public Task SeedAsync(DataSeedContext context)
     {
         /* Instead of returning the Task.CompletedTask, you can insert your test data
-             * at this point!
-             */
+         * at this point!
+         */
 
         return Task.CompletedTask;
     }

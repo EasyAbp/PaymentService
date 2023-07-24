@@ -1,6 +1,7 @@
-﻿using EasyAbp.PaymentService.WeChatPay;
-using Volo.Abp.Http.Client.IdentityModel;
+﻿using Volo.Abp.Http.Client.IdentityModel;
 using Volo.Abp.Modularity;
+
+namespace EasyAbp.PaymentService.WeChatPay;
 
 [DependsOn(
     typeof(PaymentServiceWeChatPayHttpApiClientModule),

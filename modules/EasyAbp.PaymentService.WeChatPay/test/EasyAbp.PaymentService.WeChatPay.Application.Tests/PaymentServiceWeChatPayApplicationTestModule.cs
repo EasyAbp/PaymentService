@@ -1,6 +1,6 @@
-﻿using EasyAbp.PaymentService;
-using EasyAbp.PaymentService.WeChatPay;
-using Volo.Abp.Modularity;
+﻿using Volo.Abp.Modularity;
+
+namespace EasyAbp.PaymentService.WeChatPay;
 
 [DependsOn(
     typeof(PaymentServiceApplicationModule),

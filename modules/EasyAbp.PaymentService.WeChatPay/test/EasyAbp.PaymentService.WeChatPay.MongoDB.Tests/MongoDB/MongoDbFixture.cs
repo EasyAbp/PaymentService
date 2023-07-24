@@ -1,7 +1,7 @@
 using System;
 using EphemeralMongo;
 
-namespace EasyAbp.PaymentService.Prepayment.MongoDB
+namespace EasyAbp.PaymentService.WeChatPay.MongoDB
 {
     public class MongoDbFixture : IDisposable
     {

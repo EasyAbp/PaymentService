@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Volo.Abp;
 
+namespace EasyAbp.PaymentService.WeChatPay;
+
 public class ConsoleTestAppHostedService : IHostedService
 {
     public async Task StartAsync(CancellationToken cancellationToken)
