@@ -20,7 +20,7 @@ namespace EasyAbp.PaymentService.WeChatPay
         public WeChatHandlerType Type => WeChatHandlerType.Paid;
 
         private readonly IDataFilter _dataFilter;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly IBackgroundJobManager _backgroundJobManager;
         private readonly IPaymentManager _paymentManager;
@@ -29,7 +29,7 @@ namespace EasyAbp.PaymentService.WeChatPay
 
         public PaidWeChatPayEventHandler(
             IDataFilter dataFilter,
-            IServiceProvider serviceProvider,
+            IServiceScopeFactory serviceScopeFactory,
             IUnitOfWorkManager unitOfWorkManager,
             IBackgroundJobManager backgroundJobManager,
             IPaymentManager paymentManager,
@@ -37,7 +37,7 @@ namespace EasyAbp.PaymentService.WeChatPay
             IPaymentRepository paymentRepository)
         {
             _dataFilter = dataFilter;
-            _serviceProvider = serviceProvider;
+            _serviceScopeFactory = serviceScopeFactory;
             _unitOfWorkManager = unitOfWorkManager;
             _backgroundJobManager = backgroundJobManager;
             _paymentManager = paymentManager;
@@ -104,15 +104,17 @@ namespace EasyAbp.PaymentService.WeChatPay
 
                     _unitOfWorkManager.Current.OnCompleted(async () =>
                     {
-                        await _backgroundJobManager.EnqueueAsync(args);
+                        using var scope = _serviceScopeFactory.CreateScope();
+                        var backgroundJobManager = scope.ServiceProvider.GetRequiredService<IBackgroundJobManager>();
+                        await backgroundJobManager.EnqueueAsync(args);
                     });
                 }
                 else
                 {
                     _unitOfWorkManager.Current.OnCompleted(async () =>
                     {
-                        var job = _serviceProvider.GetRequiredService<WeChatPayRefundJob>();
-
+                        using var scope = _serviceScopeFactory.CreateScope();
+                        var job = scope.ServiceProvider.GetRequiredService<WeChatPayRefundJob>();
                         await job.ExecuteAsync(args);
                     });
                 }
