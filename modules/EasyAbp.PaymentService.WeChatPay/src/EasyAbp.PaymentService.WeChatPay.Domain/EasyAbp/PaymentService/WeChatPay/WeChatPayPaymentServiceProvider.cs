@@ -23,7 +23,6 @@ namespace EasyAbp.PaymentService.WeChatPay
     public class WeChatPayPaymentServiceProvider : PaymentServiceProvider
     {
         private readonly ISettingProvider _settingProvider;
-        private readonly IServiceProvider _serviceProvider;
         private readonly IGuidGenerator _guidGenerator;
         private readonly ICurrentTenant _currentTenant;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
@@ -33,6 +32,7 @@ namespace EasyAbp.PaymentService.WeChatPay
         private readonly IPaymentRecordRepository _paymentRecordRepository;
         private readonly IPaymentOpenIdProvider _paymentOpenIdProvider;
         private readonly IPaymentRepository _paymentRepository;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly IAbpWeChatPayOptionsProvider _abpWeChatPayOptionsProvider;
         private readonly IAbpWeChatPayServiceFactory _abpWeChatPayServiceFactory;
 
@@ -40,7 +40,6 @@ namespace EasyAbp.PaymentService.WeChatPay
 
         public WeChatPayPaymentServiceProvider(
             ISettingProvider settingProvider,
-            IServiceProvider serviceProvider,
             IGuidGenerator guidGenerator,
             ICurrentTenant currentTenant,
             IUnitOfWorkManager unitOfWorkManager,
@@ -50,11 +49,11 @@ namespace EasyAbp.PaymentService.WeChatPay
             IPaymentRecordRepository paymentRecordRepository,
             IPaymentOpenIdProvider paymentOpenIdProvider,
             IPaymentRepository paymentRepository,
+            IServiceScopeFactory serviceScopeFactory,
             IAbpWeChatPayOptionsProvider abpWeChatPayOptionsProvider,
             IAbpWeChatPayServiceFactory abpWeChatPayServiceFactory)
         {
             _settingProvider = settingProvider;
-            _serviceProvider = serviceProvider;
             _guidGenerator = guidGenerator;
             _currentTenant = currentTenant;
             _unitOfWorkManager = unitOfWorkManager;
@@ -64,6 +63,7 @@ namespace EasyAbp.PaymentService.WeChatPay
             _paymentRecordRepository = paymentRecordRepository;
             _paymentOpenIdProvider = paymentOpenIdProvider;
             _paymentRepository = paymentRepository;
+            _serviceScopeFactory = serviceScopeFactory;
             _abpWeChatPayOptionsProvider = abpWeChatPayOptionsProvider;
             _abpWeChatPayServiceFactory = abpWeChatPayServiceFactory;
         }
@@ -176,14 +176,19 @@ namespace EasyAbp.PaymentService.WeChatPay
                 // Enqueue an empty job to ensure the background job worker is alive.
                 await _backgroundJobManager.EnqueueAsync(new EmptyJobArgs(payment.TenantId));
 
-                _unitOfWorkManager.Current.OnCompleted(async () => { await _backgroundJobManager.EnqueueAsync(args); });
+                _unitOfWorkManager.Current.OnCompleted(async () =>
+                {
+                    using var scope = _serviceScopeFactory.CreateScope();
+                    var backgroundJobManager = scope.ServiceProvider.GetRequiredService<IBackgroundJobManager>();
+                    await backgroundJobManager.EnqueueAsync(args);
+                });
             }
             else
             {
                 _unitOfWorkManager.Current.OnCompleted(async () =>
                 {
-                    var job = _serviceProvider.GetRequiredService<CloseWeChatPayOrderJob>();
-
+                    using var scope = _serviceScopeFactory.CreateScope();
+                    var job = scope.ServiceProvider.GetRequiredService<CloseWeChatPayOrderJob>();
                     await job.ExecuteAsync(args);
                 });
             }
@@ -199,14 +204,19 @@ namespace EasyAbp.PaymentService.WeChatPay
                 // Enqueue an empty job to ensure the background job worker is alive.
                 await _backgroundJobManager.EnqueueAsync(new EmptyJobArgs(payment.TenantId));
 
-                _unitOfWorkManager.Current.OnCompleted(async () => { await _backgroundJobManager.EnqueueAsync(args); });
+                _unitOfWorkManager.Current.OnCompleted(async () =>
+                {
+                    using var scope = _serviceScopeFactory.CreateScope();
+                    var backgroundJobManager = scope.ServiceProvider.GetRequiredService<IBackgroundJobManager>();
+                    await backgroundJobManager.EnqueueAsync(args);
+                });
             }
             else
             {
                 _unitOfWorkManager.Current.OnCompleted(async () =>
                 {
-                    var job = _serviceProvider.GetRequiredService<WeChatPayRefundJob>();
-
+                    using var scope = _serviceScopeFactory.CreateScope();
+                    var job = scope.ServiceProvider.GetRequiredService<WeChatPayRefundJob>();
                     await job.ExecuteAsync(args);
                 });
             }
