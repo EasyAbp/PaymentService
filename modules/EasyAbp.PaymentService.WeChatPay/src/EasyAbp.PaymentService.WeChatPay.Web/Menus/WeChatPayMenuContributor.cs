@@ -38,8 +38,8 @@ namespace EasyAbp.PaymentService.WeChatPay.Web.Menus
 
             if (!weChatPayManagementMenuItem.Items.IsNullOrEmpty())
             {
-                var paymentServiceMenuItem = context.Menu.Items.GetOrAdd(i => i.Name == WeChatPayMenus.ModuleGroupPrefix,
-                    () => new ApplicationMenuItem(WeChatPayMenus.ModuleGroupPrefix, l["Menu:EasyAbpPaymentService"], icon: "fa fa-credit-card"));
+                var paymentServiceMenuItem = context.Menu.GetAdministration().Items.GetOrAdd(i => i.Name == WeChatPayMenus.ModuleGroupPrefix,
+                    () => new ApplicationMenuItem(WeChatPayMenus.ModuleGroupPrefix, l["Menu:PaymentService"], icon: "fa fa-credit-card"));
                 
                 paymentServiceMenuItem.Items.Add(weChatPayManagementMenuItem);
             }

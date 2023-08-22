@@ -1,8 +1,7 @@
 {
   "culture": "tr",
   "texts": {
-    "ManageYourProfile": "Profil yönetimi",
-    "SamplePageMessage": "Prepayment modulünden örnek bir sayfa",
+    "Menu:PaymentService": "Payment service",
     "Menu:PrepaymentManagement": "Prepayment",
     "Permission:Account": "Account",
     "Permission:Create": "Create",

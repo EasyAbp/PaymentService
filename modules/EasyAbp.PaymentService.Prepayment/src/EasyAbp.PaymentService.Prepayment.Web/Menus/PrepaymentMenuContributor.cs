@@ -39,8 +39,8 @@ namespace EasyAbp.PaymentService.Prepayment.Web.Menus
             
             if (!prepaymentManagementMenuItem.Items.IsNullOrEmpty())
             {
-                var paymentServiceMenuItem = context.Menu.Items.GetOrAdd(i => i.Name == PrepaymentMenus.ModuleGroupPrefix,
-                    () => new ApplicationMenuItem(PrepaymentMenus.ModuleGroupPrefix, l["Menu:EasyAbpPaymentService"], icon: "fa fa-credit-card"));
+                var paymentServiceMenuItem = context.Menu.GetAdministration().Items.GetOrAdd(i => i.Name == PrepaymentMenus.ModuleGroupPrefix,
+                    () => new ApplicationMenuItem(PrepaymentMenus.ModuleGroupPrefix, l["Menu:PaymentService"], icon: "fa fa-credit-card"));
                 
                 paymentServiceMenuItem.Items.Add(prepaymentManagementMenuItem);
             }

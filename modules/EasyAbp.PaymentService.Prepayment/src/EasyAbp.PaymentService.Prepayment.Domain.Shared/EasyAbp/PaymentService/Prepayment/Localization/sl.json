@@ -1,7 +1,7 @@
 {
   "culture": "sl",
   "texts": {
-    "ManageYourProfile": "Upravljajte svojim profilom",
+    "Menu:PaymentService": "Payment service",
     "Menu:PrepaymentManagement": "Prepayment",
     "Permission:Account": "Account",
     "Permission:Create": "Create",

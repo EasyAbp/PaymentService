@@ -1,7 +1,7 @@
 {
   "culture": "zh-Hans",
   "texts": {
-    "ManageYourProfile": "管理个人资料",
+    "Menu:PaymentService": "支付服务",
     "Menu:WeChatPayManagement": "微信支付",
     "Menu:RefundRecord": "退款记录",
     "RefundRecord": "退款记录",

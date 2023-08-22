@@ -1,6 +1,7 @@
 {
   "culture": "pl-PL",
   "texts": {
+    "Menu:PaymentService": "Payment service",
     "Menu:PrepaymentManagement": "Prepayment",
     "Permission:Account": "Account",
     "Permission:Create": "Create",

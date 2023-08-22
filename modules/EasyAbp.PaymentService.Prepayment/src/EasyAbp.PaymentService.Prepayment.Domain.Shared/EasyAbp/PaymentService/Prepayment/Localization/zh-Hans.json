@@ -1,7 +1,7 @@
 {
   "culture": "zh-Hans",
   "texts": {
-    "ManageYourProfile": "管理个人资料",
+    "Menu:PaymentService": "支付服务",
     "Menu:PrepaymentManagement": "储值卡",
     "Permission:Account": "账户",
     "Permission:Create": "新建",

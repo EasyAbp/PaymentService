@@ -20,7 +20,8 @@ namespace EasyAbp.PaymentService.Web.Menus
         {
             var l = context.GetLocalizer<PaymentServiceResource>();            //Add main menu items.
 
-            var paymentManagementMenuItem = new ApplicationMenuItem(PaymentServiceMenus.Prefix, l["Menu:PaymentService"], icon: "fa fa-credit-card");
+            var paymentManagementMenuItem = new ApplicationMenuItem(PaymentServiceMenus.Prefix,
+                l["Menu:PaymentService"], icon: "fa fa-credit-card");
 
             if (await context.IsGrantedAsync(PaymentServicePermissions.Payments.Manage))
             {
@@ -38,7 +39,7 @@ namespace EasyAbp.PaymentService.Web.Menus
             
             if (!paymentManagementMenuItem.Items.IsNullOrEmpty())
             {
-                context.Menu.Items.GetOrAdd(i => i.Name == PaymentServiceMenus.Prefix,
+                context.Menu.GetAdministration().Items.GetOrAdd(i => i.Name == PaymentServiceMenus.Prefix,
                     () => paymentManagementMenuItem);
             }
         }

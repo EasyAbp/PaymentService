@@ -1,7 +1,8 @@
 {
   "culture": "pt-BR",
   "texts": {
-    "Menu:WeChatPayManagement": "WeChat pay",
+    "Menu:PaymentService": "Payment service",
+    "Menu:WeChatPayManagement": "WeChat Pay",
     "Menu:RefundRecord": "Refund record",
     "RefundRecord": "Refund record",
     "RefundRecordPaymentId": "Payment ID",
