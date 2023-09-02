@@ -12,12 +12,10 @@ namespace EasyAbp.PaymentService.Authorization
             
             var payment = moduleGroup.AddPermission(PaymentServicePermissions.Payments.Default, L("Permission:Payment"));
             payment.AddChild(PaymentServicePermissions.Payments.Manage, L("Permission:Manage"));
-            payment.AddChild(PaymentServicePermissions.Payments.CrossStore, L("Permission:CrossStore"));
             payment.AddChild(PaymentServicePermissions.Payments.Create, L("Permission:Create"));
             
             var refund = moduleGroup.AddPermission(PaymentServicePermissions.Refunds.Default, L("Permission:Refund"));
             refund.AddChild(PaymentServicePermissions.Refunds.Manage, L("Permission:Manage"));
-            refund.AddChild(PaymentServicePermissions.Refunds.CrossStore, L("Permission:CrossStore"));
             refund.AddChild(PaymentServicePermissions.Refunds.Create, L("Permission:Create"));
 
             var withdrawalRecordPermission = moduleGroup.AddPermission(PaymentServicePermissions.WithdrawalRecord.Default, L("Permission:WithdrawalRecord"));
