@@ -8,8 +8,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.10" />
     <ProjectReference Include="..\..\src\EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore\EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\EasyAbp.PaymentService.WeChatPay.TestBase\EasyAbp.PaymentService.WeChatPay.TestBase.csproj" />
   </ItemGroup>

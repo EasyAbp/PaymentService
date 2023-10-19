@@ -1,6 +1,6 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Volo.Abp.Domain.Repositories;
 
 namespace EasyAbp.PaymentService.WeChatPay.RefundRecords
