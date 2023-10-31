@@ -23,7 +23,7 @@ namespace EasyAbp.PaymentService.Prepayment.Web.Menus
 
              var prepaymentManagementMenuItem = new ApplicationMenuItem(PrepaymentMenus.Prefix, l["Menu:PrepaymentManagement"]);
 
-            if (await context.IsGrantedAsync(PrepaymentPermissions.Account.Manage))
+            if (await context.IsGrantedAsync(PrepaymentPermissions.Account.Manage.ManageDefault))
             {
                 prepaymentManagementMenuItem.AddItem(
                     new ApplicationMenuItem(PrepaymentMenus.Account, l["Menu:Account"], "/PaymentService/Prepayment/Accounts/Account")

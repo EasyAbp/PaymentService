@@ -3,6 +3,12 @@
   "texts": {
     "Menu:PaymentService": "Payment service",
     "Menu:Payment": "Payment",
+    "Permission:PaymentService": "Payment service",
+    "Permission:Payment": "Payment",
+    "Permission:Manage": "Manage",
+    "Permission:Cancel": "Cancel",
+    "Permission:RollbackRefund": "Rollback refund",
+    "Permission:Refund": "Refund",
     "Payment": "Payment",
     "PaymentPaymentMethod": "Payment method",
     "PaymentExternalTradingCode": "External trading code",

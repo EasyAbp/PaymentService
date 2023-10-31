@@ -14,9 +14,15 @@ namespace EasyAbp.PaymentService.Prepayment.Permissions
         public class Account
         {
             public const string Default = GroupName + ".Account";
-            public const string Manage = Default + ".Manage";
             public const string TopUp = Default + ".TopUp";
             public const string Withdraw = Default + ".Withdraw";
+
+            public class Manage
+            {
+                public const string ManageDefault = Default + ".Manage";
+                public const string ChangeBalance = ManageDefault + ".ChangeBalance";
+                public const string ChangeLockedBalance = ManageDefault + ".ChangeLockedBalance";
+            }
         }
 
         public class Transaction

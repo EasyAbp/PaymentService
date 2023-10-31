@@ -3,6 +3,12 @@
   "texts": {
     "Menu:PaymentService": "支付服务",
     "Menu:Payment": "支付",
+    "Permission:PaymentService": "支付服务",
+    "Permission:Payment": "支付",
+    "Permission:Manage": "管理",
+    "Permission:Cancel": "取消",
+    "Permission:RollbackRefund": "回滚退款",
+    "Permission:Refund": "退款",
     "Payment": "支付",
     "PaymentPaymentMethod": "支付方式",
     "PaymentExternalTradingCode": "外部交易编号",

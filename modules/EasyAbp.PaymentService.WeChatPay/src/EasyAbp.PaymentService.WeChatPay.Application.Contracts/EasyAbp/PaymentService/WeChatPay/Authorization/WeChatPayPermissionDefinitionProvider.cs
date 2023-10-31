@@ -8,7 +8,7 @@ namespace EasyAbp.PaymentService.WeChatPay.Authorization
     {
         public override void Define(IPermissionDefinitionContext context)
         {
-            var moduleGroup = context.AddGroup(WeChatPayPermissions.GroupName, L("Permission:WeChatPay"));
+            var moduleGroup = context.AddGroup(WeChatPayPermissions.GroupName, L("Permission:PaymentServiceWeChatPay"));
 
             var paymentRecord = moduleGroup.AddPermission(WeChatPayPermissions.PaymentRecords.Default,
                 L("Permission:PaymentRecord"));
