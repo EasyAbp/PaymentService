@@ -51,7 +51,7 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
 
             if (dto.UserId != CurrentUser.GetId())
             {
-                await AuthorizationService.CheckAsync(PrepaymentPermissions.Account.Manage);
+                await AuthorizationService.CheckAsync(PrepaymentPermissions.Account.Manage.ManageDefault);
             }
 
             return dto;
@@ -68,7 +68,7 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
         {
             if (input.UserId != CurrentUser.GetId())
             {
-                await AuthorizationService.CheckAsync(PrepaymentPermissions.Account.Manage);
+                await AuthorizationService.CheckAsync(PrepaymentPermissions.Account.Manage.ManageDefault);
             }
 
             var result = await base.GetListAsync(input);
@@ -97,7 +97,7 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
             return result;
         }
 
-        [Authorize(PrepaymentPermissions.Account.Manage)]
+        [Authorize(PrepaymentPermissions.Account.Manage.ChangeBalance)]
         public virtual async Task<AccountDto> ChangeBalanceAsync(Guid id, ChangeBalanceInput input)
         {
             var account = await _repository.GetAsync(id);
@@ -120,7 +120,7 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
             return await MapToGetOutputDtoAsync(account);
         }
 
-        [Authorize(PrepaymentPermissions.Account.Manage)]
+        [Authorize(PrepaymentPermissions.Account.Manage.ChangeLockedBalance)]
         public virtual async Task<AccountDto> ChangeLockedBalanceAsync(Guid id, ChangeLockedBalanceInput input)
         {
             var account = await _repository.GetAsync(id);

@@ -23,7 +23,7 @@ namespace EasyAbp.PaymentService.Web.Menus
             var paymentManagementMenuItem = new ApplicationMenuItem(PaymentServiceMenus.Prefix,
                 l["Menu:PaymentService"], icon: "fa fa-credit-card");
 
-            if (await context.IsGrantedAsync(PaymentServicePermissions.Payments.Manage))
+            if (await context.IsGrantedAsync(PaymentServicePermissions.Payments.Manage.ManageDefault))
             {
                 paymentManagementMenuItem.AddItem(
                     new ApplicationMenuItem(PaymentServiceMenus.Payment, l["Menu:Payment"], "/PaymentService/Payments/Payment")

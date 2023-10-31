@@ -8,10 +8,12 @@ namespace EasyAbp.PaymentService.Prepayment.Permissions
     {
         public override void Define(IPermissionDefinitionContext context)
         {
-            var myGroup = context.AddGroup(PrepaymentPermissions.GroupName, L("Permission:Prepayment"));
+            var myGroup = context.AddGroup(PrepaymentPermissions.GroupName, L("Permission:PaymentServicePrepayment"));
 
             var accountPermission = myGroup.AddPermission(PrepaymentPermissions.Account.Default, L("Permission:Account"));
-            accountPermission.AddChild(PrepaymentPermissions.Account.Manage, L("Permission:Manage"));
+            accountPermission.AddChild(PrepaymentPermissions.Account.Manage.ManageDefault, L("Permission:Manage"));
+            accountPermission.AddChild(PrepaymentPermissions.Account.Manage.ChangeBalance, L("Permission:ChangeBalance"));
+            accountPermission.AddChild(PrepaymentPermissions.Account.Manage.ChangeLockedBalance, L("Permission:ChangeLockedBalance"));
             accountPermission.AddChild(PrepaymentPermissions.Account.TopUp, L("Permission:TopUp"));
             accountPermission.AddChild(PrepaymentPermissions.Account.Withdraw, L("Permission:Withdraw"));
 

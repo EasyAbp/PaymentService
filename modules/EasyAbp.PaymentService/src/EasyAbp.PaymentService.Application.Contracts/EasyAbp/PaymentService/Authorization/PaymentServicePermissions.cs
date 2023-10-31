@@ -10,27 +10,23 @@ namespace EasyAbp.PaymentService.Authorization
         {
             return ReflectionHelper.GetPublicConstantsRecursively(typeof(PaymentServicePermissions));
         }
-        
+
         public class Payments
         {
             public const string Default = GroupName + ".Payment";
-            public const string Manage = Default + ".Manage";
-            public const string Create = Default + ".Create";
+
+            public class Manage
+            {
+                public const string ManageDefault = Default + ".Manage";
+                public const string Cancel = ManageDefault + ".Cancel";
+                public const string RollbackRefund = ManageDefault + ".RollbackRefund";
+            }
         }
-        
+
         public class Refunds
         {
             public const string Default = GroupName + ".Refund";
             public const string Manage = Default + ".Manage";
-            public const string Create = Default + ".Create";
-        }
-
-        public class WithdrawalRecord
-        {
-            public const string Default = GroupName + ".WithdrawalRecord";
-            public const string Update = Default + ".Update";
-            public const string Create = Default + ".Create";
-            public const string Delete = Default + ".Delete";
         }
     }
 }

@@ -11,17 +11,12 @@ namespace EasyAbp.PaymentService.Authorization
             var moduleGroup = context.AddGroup(PaymentServicePermissions.GroupName, L("Permission:PaymentService"));
             
             var payment = moduleGroup.AddPermission(PaymentServicePermissions.Payments.Default, L("Permission:Payment"));
-            payment.AddChild(PaymentServicePermissions.Payments.Manage, L("Permission:Manage"));
-            payment.AddChild(PaymentServicePermissions.Payments.Create, L("Permission:Create"));
+            payment.AddChild(PaymentServicePermissions.Payments.Manage.ManageDefault, L("Permission:Manage"));
+            payment.AddChild(PaymentServicePermissions.Payments.Manage.Cancel, L("Permission:Cancel"));
+            payment.AddChild(PaymentServicePermissions.Payments.Manage.RollbackRefund, L("Permission:RollbackRefund"));
             
             var refund = moduleGroup.AddPermission(PaymentServicePermissions.Refunds.Default, L("Permission:Refund"));
             refund.AddChild(PaymentServicePermissions.Refunds.Manage, L("Permission:Manage"));
-            refund.AddChild(PaymentServicePermissions.Refunds.Create, L("Permission:Create"));
-
-            var withdrawalRecordPermission = moduleGroup.AddPermission(PaymentServicePermissions.WithdrawalRecord.Default, L("Permission:WithdrawalRecord"));
-            withdrawalRecordPermission.AddChild(PaymentServicePermissions.WithdrawalRecord.Create, L("Permission:Create"));
-            withdrawalRecordPermission.AddChild(PaymentServicePermissions.WithdrawalRecord.Update, L("Permission:Update"));
-            withdrawalRecordPermission.AddChild(PaymentServicePermissions.WithdrawalRecord.Delete, L("Permission:Delete"));
         }
 
         private static LocalizableString L(string name)

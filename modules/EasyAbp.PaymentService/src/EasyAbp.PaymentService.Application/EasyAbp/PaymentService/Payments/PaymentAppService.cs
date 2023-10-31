@@ -50,7 +50,7 @@ namespace EasyAbp.PaymentService.Payments
 
             if (entity.UserId != CurrentUser.GetId())
             {
-                await AuthorizationService.CheckAsync(PaymentServicePermissions.Payments.Manage);
+                await AuthorizationService.CheckAsync(PaymentServicePermissions.Payments.Manage.ManageDefault);
             }
 
             return await MapToGetOutputDtoAsync(entity);
@@ -62,7 +62,7 @@ namespace EasyAbp.PaymentService.Payments
 
             if (!input.UserId.HasValue || input.UserId.Value != CurrentUser.GetId())
             {
-                await AuthorizationService.CheckAsync(PaymentServicePermissions.Payments.Manage);
+                await AuthorizationService.CheckAsync(PaymentServicePermissions.Payments.Manage.ManageDefault);
             }
             
             var query = await CreateFilteredQueryAsync(input);
@@ -128,7 +128,7 @@ namespace EasyAbp.PaymentService.Payments
             var payment = await _repository.GetAsync(id);
 
             if (payment.UserId != CurrentUser.GetId() &&
-                !await AuthorizationService.IsGrantedAsync(PaymentServicePermissions.Payments.Manage))
+                !await AuthorizationService.IsGrantedAsync(PaymentServicePermissions.Payments.Manage.Cancel))
             {
                 throw new UsingUnauthorizedPaymentException(CurrentUser.GetId(), payment.Id);
             }
@@ -138,7 +138,7 @@ namespace EasyAbp.PaymentService.Payments
             return await MapToGetOutputDtoAsync(payment);
         }
 
-        [Authorize(PaymentServicePermissions.Payments.Manage)]
+        [Authorize(PaymentServicePermissions.Payments.Manage.Cancel)]
         public async Task<PaymentDto> RefundRollbackAsync(Guid id)
         {
             var payment = await _repository.GetAsync(id);
