@@ -138,7 +138,7 @@ namespace EasyAbp.PaymentService.Payments
             return await MapToGetOutputDtoAsync(payment);
         }
 
-        [Authorize(PaymentServicePermissions.Payments.Manage.Cancel)]
+        [Authorize(PaymentServicePermissions.Payments.Manage.RollbackRefund)]
         public async Task<PaymentDto> RefundRollbackAsync(Guid id)
         {
             var payment = await _repository.GetAsync(id);
