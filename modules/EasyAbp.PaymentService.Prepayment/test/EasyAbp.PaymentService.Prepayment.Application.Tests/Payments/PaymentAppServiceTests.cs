@@ -34,11 +34,11 @@ namespace EasyAbp.PaymentService.Prepayment.Payments
         }
 
         [Fact]
-        public async Task<Guid> Should_Create_Payment()
+        public async Task Should_Create_Payment()
         {
             var itemKey1 = Guid.NewGuid().ToString();
             var itemKey2 = Guid.NewGuid().ToString();
-            
+
             await _distributedEventBus.PublishAsync(new CreatePaymentEto(
                 null,
                 PrepaymentTestConsts.UserId,
@@ -59,7 +59,7 @@ namespace EasyAbp.PaymentService.Prepayment.Payments
                         OriginalPaymentAmount = 100m
                     }
                 })), false, false);
-            
+
             var payments = await _paymentAppService.GetListAsync(new GetPaymentListInput());
             payments.Items.Count.ShouldBe(1);
             var payment = payments.Items[0];
@@ -73,7 +73,7 @@ namespace EasyAbp.PaymentService.Prepayment.Payments
             payment.CanceledTime.ShouldBeNull();
             payment.CompletionTime.ShouldBeNull();
             payment.PaymentItems.Count.ShouldBe(2);
-            
+
             var paymentItem1 = payment.PaymentItems.FirstOrDefault(x => x.ItemKey == itemKey1);
             paymentItem1.ShouldNotBeNull();
             paymentItem1.ItemType.ShouldBe("Test");
@@ -82,7 +82,7 @@ namespace EasyAbp.PaymentService.Prepayment.Payments
             paymentItem1.PaymentDiscount.ShouldBe(decimal.Zero);
             paymentItem1.RefundAmount.ShouldBe(decimal.Zero);
             paymentItem1.PendingRefundAmount.ShouldBe(decimal.Zero);
-            
+
             var paymentItem2 = payment.PaymentItems.FirstOrDefault(x => x.ItemKey == itemKey2);
             paymentItem2.ShouldNotBeNull();
             paymentItem2.ItemType.ShouldBe("Test");
@@ -91,17 +91,40 @@ namespace EasyAbp.PaymentService.Prepayment.Payments
             paymentItem2.PaymentDiscount.ShouldBe(decimal.Zero);
             paymentItem2.RefundAmount.ShouldBe(decimal.Zero);
             paymentItem2.PendingRefundAmount.ShouldBe(decimal.Zero);
-
-            return payment.Id;
         }
 
         [Fact]
-        public async Task<PaymentDto> Should_Complete_Payment()
+        public async Task Should_Complete_Payment()
         {
-            var id = await Should_Create_Payment();
+            var itemKey1 = Guid.NewGuid().ToString();
+            var itemKey2 = Guid.NewGuid().ToString();
+
+            await _distributedEventBus.PublishAsync(new CreatePaymentEto(
+                null,
+                PrepaymentTestConsts.UserId,
+                PrepaymentPaymentServiceProvider.PaymentMethod,
+                "CNY",
+                new List<CreatePaymentItemEto>(new[]
+                {
+                    new CreatePaymentItemEto
+                    {
+                        ItemType = "Test",
+                        ItemKey = itemKey1,
+                        OriginalPaymentAmount = 50m
+                    },
+                    new CreatePaymentItemEto
+                    {
+                        ItemType = "Test",
+                        ItemKey = itemKey2,
+                        OriginalPaymentAmount = 100m
+                    }
+                })), false, false);
+
+            var payments = await _paymentAppService.GetListAsync(new GetPaymentListInput());
+            var paymentId = payments.Items[0].Id;
 
             var input = new PayInput();
-            
+
             input.SetProperty(PrepaymentConsts.PaymentAccountIdPropertyName, PrepaymentTestConsts.AccountId);
 
             var account = await _accountRepository.GetAsync(PrepaymentTestConsts.AccountId);
@@ -109,21 +132,51 @@ namespace EasyAbp.PaymentService.Prepayment.Payments
 
             var originalBalance = account.Balance;
 
-            var payment = await _paymentAppService.PayAsync(id, input);
-            
+            var payment = await _paymentAppService.PayAsync(paymentId, input);
+
             account = await _accountRepository.GetAsync(PrepaymentTestConsts.AccountId);
             account.Balance.ShouldNotBe(originalBalance);
             account.Balance.ShouldBe(originalBalance - payment.ActualPaymentAmount);
 
             payment.CompletionTime.ShouldNotBeNull();
-
-            return payment;
         }
 
         [Fact]
-        public async Task<PaymentDto> Should_Refund_A_Part()
+        public async Task Should_Refund_A_Part()
         {
-            var payment = await Should_Complete_Payment();
+            var itemKey1 = Guid.NewGuid().ToString();
+            var itemKey2 = Guid.NewGuid().ToString();
+
+            await _distributedEventBus.PublishAsync(new CreatePaymentEto(
+                null,
+                PrepaymentTestConsts.UserId,
+                PrepaymentPaymentServiceProvider.PaymentMethod,
+                "CNY",
+                new List<CreatePaymentItemEto>(new[]
+                {
+                    new CreatePaymentItemEto
+                    {
+                        ItemType = "Test",
+                        ItemKey = itemKey1,
+                        OriginalPaymentAmount = 50m
+                    },
+                    new CreatePaymentItemEto
+                    {
+                        ItemType = "Test",
+                        ItemKey = itemKey2,
+                        OriginalPaymentAmount = 100m
+                    }
+                })), false, false);
+
+            var payments = await _paymentAppService.GetListAsync(new GetPaymentListInput());
+            var paymentId = payments.Items[0].Id;
+
+            var input = new PayInput();
+
+            input.SetProperty(PrepaymentConsts.PaymentAccountIdPropertyName, PrepaymentTestConsts.AccountId);
+
+            var payment = await _paymentAppService.PayAsync(paymentId, input);
+
             payment.RefundAmount.ShouldBe(decimal.Zero);
             payment.PendingRefundAmount.ShouldBe(decimal.Zero);
 
@@ -150,9 +203,9 @@ namespace EasyAbp.PaymentService.Prepayment.Payments
                     }
                 }
             ), false, false);
-            
+
             payment = await _paymentAppService.GetAsync(payment.Id);
-            
+
             payment.RefundAmount.ShouldBe(10m);
             payment.PendingRefundAmount.ShouldBe(decimal.Zero);
             item1 = payment.PaymentItems.FirstOrDefault(x => x.Id == item1.Id);
@@ -198,29 +251,82 @@ namespace EasyAbp.PaymentService.Prepayment.Payments
             paymentTransaction.TransactionType.ShouldBe(TransactionType.Credit);
             paymentTransaction.AccountUserId.ShouldBe(PrepaymentTestConsts.UserId);
             paymentTransaction.ExternalTradingCode.ShouldBeNull();
-            
+
             var refundTransaction = transactions.Find(x => x.TransactionType == TransactionType.Debit);
             refundTransaction.ShouldNotBeNull();
             refundTransaction.Currency.ShouldBe(payment.Currency);
             refundTransaction.AccountId.ShouldBe(PrepaymentTestConsts.AccountId);
             refundTransaction.ActionName.ShouldBe(PrepaymentConsts.RefundActionName);
             refundTransaction.ChangedBalance.ShouldBe(+10m);
-            refundTransaction.OriginalBalance.ShouldBe(PrepaymentTestConsts.AccountBaseBalance + paymentTransaction.ChangedBalance);
+            refundTransaction.OriginalBalance.ShouldBe(PrepaymentTestConsts.AccountBaseBalance +
+                                                       paymentTransaction.ChangedBalance);
             refundTransaction.PaymentId.ShouldBe(payment.Id);
             refundTransaction.PaymentMethod.ShouldBe(PrepaymentPaymentServiceProvider.PaymentMethod);
             refundTransaction.TransactionType.ShouldBe(TransactionType.Debit);
             refundTransaction.AccountUserId.ShouldBe(PrepaymentTestConsts.UserId);
             refundTransaction.ExternalTradingCode.ShouldBeNull();
-
-            return payment;
         }
 
         [Fact]
         public async Task Should_Refund_The_Rest()
         {
-            var payment = await Should_Refund_A_Part();
+            var itemKey1 = Guid.NewGuid().ToString();
+            var itemKey2 = Guid.NewGuid().ToString();
 
-            var item1 = payment.PaymentItems.FirstOrDefault(x => x.RefundAmount > decimal.Zero);
+            await _distributedEventBus.PublishAsync(new CreatePaymentEto(
+                null,
+                PrepaymentTestConsts.UserId,
+                PrepaymentPaymentServiceProvider.PaymentMethod,
+                "CNY",
+                new List<CreatePaymentItemEto>(new[]
+                {
+                    new CreatePaymentItemEto
+                    {
+                        ItemType = "Test",
+                        ItemKey = itemKey1,
+                        OriginalPaymentAmount = 50m
+                    },
+                    new CreatePaymentItemEto
+                    {
+                        ItemType = "Test",
+                        ItemKey = itemKey2,
+                        OriginalPaymentAmount = 100m
+                    }
+                })), false, false);
+
+            var payments = await _paymentAppService.GetListAsync(new GetPaymentListInput());
+            var paymentId = payments.Items[0].Id;
+
+            var input = new PayInput();
+
+            input.SetProperty(PrepaymentConsts.PaymentAccountIdPropertyName, PrepaymentTestConsts.AccountId);
+
+            var payment = await _paymentAppService.PayAsync(paymentId, input);
+
+            var item1 = payment.PaymentItems.FirstOrDefault();
+
+            await _distributedEventBus.PublishAsync(new RefundPaymentEto(null, new CreateRefundInput
+                {
+                    PaymentId = payment.Id,
+                    DisplayReason = "Test0",
+                    CustomerRemark = "Test1",
+                    StaffRemark = "Test2",
+                    RefundItems = new List<CreateRefundItemInput>
+                    {
+                        new()
+                        {
+                            PaymentItemId = item1.Id,
+                            RefundAmount = 10m,
+                            CustomerRemark = "Test3",
+                            StaffRemark = "Test4",
+                        }
+                    }
+                }
+            ), false, false);
+
+            payment = await _paymentAppService.GetAsync(payment.Id);
+
+            item1 = payment.PaymentItems.FirstOrDefault(x => x.RefundAmount > decimal.Zero);
             item1.ShouldNotBeNull();
             var item2 = payment.PaymentItems.FirstOrDefault(x => x.RefundAmount == decimal.Zero);
             item2.ShouldNotBeNull();
@@ -250,9 +356,9 @@ namespace EasyAbp.PaymentService.Prepayment.Payments
                     }
                 }
             ), false, false);
-            
+
             payment = await _paymentAppService.GetAsync(payment.Id);
-            
+
             payment.RefundAmount.ShouldBe(payment.ActualPaymentAmount);
             payment.PendingRefundAmount.ShouldBe(decimal.Zero);
             payment.PaymentItems.Sum(x => x.RefundAmount).ShouldBe(payment.RefundAmount);
@@ -261,9 +367,63 @@ namespace EasyAbp.PaymentService.Prepayment.Payments
         [Fact]
         public async Task Should_Refund_More_Than_The_Actual_Payment_Amount()
         {
-            var payment = await Should_Refund_A_Part();
+            var itemKey1 = Guid.NewGuid().ToString();
+            var itemKey2 = Guid.NewGuid().ToString();
 
-            var item1 = payment.PaymentItems.FirstOrDefault(x => x.RefundAmount > decimal.Zero);
+            await _distributedEventBus.PublishAsync(new CreatePaymentEto(
+                null,
+                PrepaymentTestConsts.UserId,
+                PrepaymentPaymentServiceProvider.PaymentMethod,
+                "CNY",
+                new List<CreatePaymentItemEto>(new[]
+                {
+                    new CreatePaymentItemEto
+                    {
+                        ItemType = "Test",
+                        ItemKey = itemKey1,
+                        OriginalPaymentAmount = 50m
+                    },
+                    new CreatePaymentItemEto
+                    {
+                        ItemType = "Test",
+                        ItemKey = itemKey2,
+                        OriginalPaymentAmount = 100m
+                    }
+                })), false, false);
+
+            var payments = await _paymentAppService.GetListAsync(new GetPaymentListInput());
+            var paymentId = payments.Items[0].Id;
+
+            var input = new PayInput();
+
+            input.SetProperty(PrepaymentConsts.PaymentAccountIdPropertyName, PrepaymentTestConsts.AccountId);
+
+            var payment = await _paymentAppService.PayAsync(paymentId, input);
+
+            var item1 = payment.PaymentItems.FirstOrDefault();
+
+            await _distributedEventBus.PublishAsync(new RefundPaymentEto(null, new CreateRefundInput
+                {
+                    PaymentId = payment.Id,
+                    DisplayReason = "Test0",
+                    CustomerRemark = "Test1",
+                    StaffRemark = "Test2",
+                    RefundItems = new List<CreateRefundItemInput>
+                    {
+                        new()
+                        {
+                            PaymentItemId = item1.Id,
+                            RefundAmount = 10m,
+                            CustomerRemark = "Test3",
+                            StaffRemark = "Test4",
+                        }
+                    }
+                }
+            ), false, false);
+
+            payment = await _paymentAppService.GetAsync(payment.Id);
+
+            item1 = payment.PaymentItems.FirstOrDefault(x => x.RefundAmount > decimal.Zero);
             item1.ShouldNotBeNull();
 
             await Assert.ThrowsAsync<InvalidRefundAmountException>(async () =>

@@ -22,13 +22,13 @@ namespace EasyAbp.PaymentService.Payments
         }
 
         [Fact]
-        public async Task<Guid> Should_Create_Payment()
+        public async Task Should_Create_Payment()
         {
             var itemKey = Guid.NewGuid().ToString();
-            
+
             await _distributedEventBus.PublishAsync(new CreatePaymentEto(
                 null,
-                _userId, 
+                _userId,
                 "Free",
                 "CNY",
                 new List<CreatePaymentItemEto>(new[]
@@ -40,7 +40,7 @@ namespace EasyAbp.PaymentService.Payments
                         OriginalPaymentAmount = 0
                     }
                 })), false, false);
-            
+
             var payments = await _paymentAppService.GetListAsync(new GetPaymentListInput());
             payments.Items.Count.ShouldBe(1);
             var payment = payments.Items[0];
@@ -61,41 +61,93 @@ namespace EasyAbp.PaymentService.Payments
             payment.PaymentItems[0].PaymentDiscount.ShouldBe(decimal.Zero);
             payment.PaymentItems[0].RefundAmount.ShouldBe(decimal.Zero);
             payment.PaymentItems[0].PendingRefundAmount.ShouldBe(decimal.Zero);
-
-            return payment.Id;
         }
 
         [Fact]
-        public async Task<Guid> Should_Complete_Payment()
+        public async Task Should_Complete_Payment()
         {
-            var id = await Should_Create_Payment();
+            var itemKey = Guid.NewGuid().ToString();
 
-            var payment = await _paymentAppService.PayAsync(id, new PayInput());
-            
+            await _distributedEventBus.PublishAsync(new CreatePaymentEto(
+                null,
+                _userId,
+                "Free",
+                "CNY",
+                new List<CreatePaymentItemEto>(new[]
+                {
+                    new CreatePaymentItemEto
+                    {
+                        ItemType = "Test",
+                        ItemKey = itemKey,
+                        OriginalPaymentAmount = 0
+                    }
+                })), false, false);
+
+            var payments = await _paymentAppService.GetListAsync(new GetPaymentListInput());
+            var paymentId = payments.Items[0].Id;
+
+            var payment = await _paymentAppService.PayAsync(paymentId, new PayInput());
+
             payment.CompletionTime.ShouldNotBeNull();
-
-            return id;
         }
 
         [Fact]
         public async Task Should_Cancel_Payment()
         {
-            var id = await Should_Create_Payment();
-            
-            var payment = await _paymentAppService.CancelAsync(id);
+            var itemKey = Guid.NewGuid().ToString();
+
+            await _distributedEventBus.PublishAsync(new CreatePaymentEto(
+                null,
+                _userId,
+                "Free",
+                "CNY",
+                new List<CreatePaymentItemEto>(new[]
+                {
+                    new CreatePaymentItemEto
+                    {
+                        ItemType = "Test",
+                        ItemKey = itemKey,
+                        OriginalPaymentAmount = 0
+                    }
+                })), false, false);
+
+            var payments = await _paymentAppService.GetListAsync(new GetPaymentListInput());
+            var paymentId = payments.Items[0].Id;
+
+            var payment = await _paymentAppService.CancelAsync(paymentId);
 
             payment.CanceledTime.ShouldNotBeNull();
             payment.CompletionTime.ShouldBeNull();
         }
-        
+
         [Fact]
         public async Task Should_Not_Allowed_To_Cancel_Completed_Payments()
         {
-            var id = await Should_Complete_Payment();
+            var itemKey = Guid.NewGuid().ToString();
+
+            await _distributedEventBus.PublishAsync(new CreatePaymentEto(
+                null,
+                _userId,
+                "Free",
+                "CNY",
+                new List<CreatePaymentItemEto>(new[]
+                {
+                    new CreatePaymentItemEto
+                    {
+                        ItemType = "Test",
+                        ItemKey = itemKey,
+                        OriginalPaymentAmount = 0
+                    }
+                })), false, false);
+
+            var payments = await _paymentAppService.GetListAsync(new GetPaymentListInput());
+            var paymentId = payments.Items[0].Id;
+
+            await _paymentAppService.PayAsync(paymentId, new PayInput());
 
             await Assert.ThrowsAsync<PaymentIsInUnexpectedStageException>(async () =>
             {
-                await _paymentAppService.CancelAsync(id);
+                await _paymentAppService.CancelAsync(paymentId);
             });
         }
     }
