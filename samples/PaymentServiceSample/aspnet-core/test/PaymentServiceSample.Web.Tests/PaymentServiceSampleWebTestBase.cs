@@ -10,15 +10,8 @@ using Volo.Abp.AspNetCore.TestBase;
 
 namespace PaymentServiceSample
 {
-    public abstract class PaymentServiceSampleWebTestBase : AbpAspNetCoreIntegratedTestBase<PaymentServiceSampleWebTestStartup>
+    public abstract class PaymentServiceSampleWebTestBase : AbpWebApplicationFactoryIntegratedTest<Program>
     {
-        protected override IHostBuilder CreateHostBuilder()
-        {
-            return base
-                .CreateHostBuilder()
-                .UseContentRoot(WebContentDirectoryFinder.CalculateContentRootFolder());
-        }
-
         protected virtual async Task<T> GetResponseAsObjectAsync<T>(string url, HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
         {
             var strResponse = await GetResponseAsStringAsync(url, expectedStatusCode);

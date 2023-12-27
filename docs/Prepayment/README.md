@@ -8,10 +8,6 @@
 
 Prepayment implementation of the EasyAbp.PaymentService module.
 
-## Online Demo
-
-We have launched an online demo for this module: [https://pay.samples.easyabp.io](https://pay.samples.easyabp.io)
-
 ## Installation
 
 > Should also install the [PaymentService module](/docs/README.md#getting-started) since this module depends on it.
