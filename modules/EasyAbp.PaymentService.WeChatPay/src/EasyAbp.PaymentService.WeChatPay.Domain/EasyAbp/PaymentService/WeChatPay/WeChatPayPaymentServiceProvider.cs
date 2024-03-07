@@ -83,6 +83,8 @@ namespace EasyAbp.PaymentService.WeChatPay
 
             var mchId = configurations.GetOrDefault("mch_id") as string ??
                         await _settingProvider.GetOrNullAsync(AbpWeChatPaySettings.MchId);
+            var subAppId = configurations.GetOrDefault("sub_appid") as string;
+            var subMchId = configurations.GetOrDefault("sub_mch_id") as string;
 
             Check.NotNullOrWhiteSpace(mchId, "mch_id");
 
@@ -101,9 +103,9 @@ namespace EasyAbp.PaymentService.WeChatPay
 
             var result = await serviceProviderPayService.UnifiedOrderAsync(
                 appId: appId,
-                subAppId: null,
+                subAppId: subAppId,
                 mchId: mchId,
-                subMchId: null,
+                subMchId: subMchId,
                 deviceInfo: PaymentServiceWeChatPayConsts.DeviceInfo,
                 body: configurations.GetOrDefault("body") as string ?? "EasyAbpPaymentService",
                 detail: configurations.GetOrDefault("detail") as string,
