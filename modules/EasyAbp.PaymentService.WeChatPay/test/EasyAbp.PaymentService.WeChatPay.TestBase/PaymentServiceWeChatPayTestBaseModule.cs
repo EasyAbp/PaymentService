@@ -24,7 +24,7 @@ public class PaymentServiceWeChatPayTestBaseModule : AbpModule
         Configure<AbpWeChatPayOptions>(options =>
         {
             options.MchId = "10000100";
-            options.ApiKey = "";
+            options.ApiV3Key = "";
         });
     }
 

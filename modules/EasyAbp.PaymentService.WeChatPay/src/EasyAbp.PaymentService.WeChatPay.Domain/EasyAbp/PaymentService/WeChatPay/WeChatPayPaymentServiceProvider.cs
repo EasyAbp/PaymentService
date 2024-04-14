@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Pay.Options;
 using EasyAbp.Abp.WeChat.Pay.Services;
-using EasyAbp.Abp.WeChat.Pay.Services.Pay;
+using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.AppPayment;
+using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Enums;
+using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.JSPayment;
+using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Models;
+using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.NativePayment;
 using EasyAbp.Abp.WeChat.Pay.Settings;
 using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.Refunds;
@@ -17,6 +21,7 @@ using Volo.Abp.Guids;
 using Volo.Abp.MultiTenancy;
 using Volo.Abp.Settings;
 using Volo.Abp.Uow;
+using CreateOrderRequest = EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.JSPayment.Models.CreateOrderRequest;
 
 namespace EasyAbp.PaymentService.WeChatPay
 {
@@ -82,76 +87,179 @@ namespace EasyAbp.PaymentService.WeChatPay
             }
 
             var mchId = configurations.GetOrDefault("mch_id") as string ??
-                        await _settingProvider.GetOrNullAsync(AbpWeChatPaySettings.MchId);
+                        Check.NotNullOrWhiteSpace(await _settingProvider.GetOrNullAsync(
+                            AbpWeChatPaySettings.MchId), "mchId");
 
             Check.NotNullOrWhiteSpace(mchId, "mch_id");
 
-            var options = await _abpWeChatPayOptionsProvider.GetAsync(mchId);
+            var tradeType = configurations.GetOrDefault("trade_type") as string;
 
-            payment.SetPayeeAccount(mchId);
+            var options = await _abpWeChatPayOptionsProvider.GetAsync(mchId);
 
             var appId = configurations.GetOrDefault("appid") as string;
 
-            var openId = await _paymentOpenIdProvider.FindUserOpenIdAsync(appId, payment.UserId);
-
             var outTradeNo = payment.Id.ToString("N");
 
-            var serviceProviderPayService =
-                await _abpWeChatPayServiceFactory.CreateAsync<ServiceProviderPayWeService>(mchId);
+            var notifyUrl = configurations.GetOrDefault("notify_url") as string ?? options.NotifyUrl;
 
-            var result = await serviceProviderPayService.UnifiedOrderAsync(
-                appId: appId,
-                subAppId: null,
-                mchId: mchId,
-                subMchId: null,
-                deviceInfo: PaymentServiceWeChatPayConsts.DeviceInfo,
-                body: configurations.GetOrDefault("body") as string ?? "EasyAbpPaymentService",
-                detail: configurations.GetOrDefault("detail") as string,
-                attach: configurations.GetOrDefault("attach") as string,
-                outTradeNo: outTradeNo,
-                feeType: payment.Currency,
-                totalFee: _weChatPayFeeConverter.ConvertToWeChatPayFee(payment.ActualPaymentAmount),
-                billCreateIp: "127.0.0.1",
-                timeStart: null,
-                timeExpire: null,
-                goodsTag: configurations.GetOrDefault("goods_tag") as string,
-                notifyUrl: configurations.GetOrDefault("notify_url") as string ?? options.NotifyUrl,
-                tradeType: configurations.GetOrDefault("trade_type") as string,
-                productId: null,
-                limitPay: configurations.GetOrDefault("limit_pay") as string,
-                openId: openId,
-                subOpenId: null,
-                receipt: configurations.GetOrDefault("receipt") as string ?? "N",
-                sceneInfo: null);
+            var description = configurations.GetOrDefault("description") as string ??
+                              PaymentServiceWeChatPayConsts.DefaultDescriptionOnPaymentCreation;
 
-            var dict = result.SelectSingleNode("xml").ToDictionary() ?? throw new NullReferenceException();
-
-            if (dict.GetOrDefault("return_code") != "SUCCESS")
+            switch (tradeType)
             {
-                throw new UnifiedOrderFailedException(dict.GetOrDefault("return_code"),
-                    dict.GetOrDefault("return_msg"));
+                case TradeTypeEnum.JsApi:
+                    await CreateJsApiOrderAsync(payment, appId, mchId, description, notifyUrl, outTradeNo);
+                    break;
+                case TradeTypeEnum.App:
+                    await CreateAppOrderAsync(payment, appId, mchId, description, notifyUrl, outTradeNo);
+                    break;
+                case TradeTypeEnum.Native:
+                    await CreateNativeOrderAsync(payment, appId, mchId, description, notifyUrl, outTradeNo);
+                    break;
+                case TradeTypeEnum.MWeb:
+                    await CreateMWebOrderAsync(payment, appId, mchId, description, notifyUrl, outTradeNo);
+                    break;
+                default:
+                    throw new UnsupportedWeChatPayTradeTypeException(tradeType);
             }
 
-            if (dict.GetOrDefault("result_code") != "SUCCESS")
-            {
-                throw new UnifiedOrderFailedException(
-                    dict.GetOrDefault("return_code"),
-                    dict.GetOrDefault("return_msg"),
-                    dict.GetOrDefault("err_code_des"),
-                    dict.GetOrDefault("err_code")
-                );
-            }
-
-            payment.SetProperty("appid", configurations.GetOrDefault("appid") as string);
-
-            payment.SetProperty("trade_type", dict.GetOrDefault("trade_type"));
-            payment.SetProperty("prepay_id", dict.GetOrDefault("prepay_id"));
-            payment.SetProperty("code_url", dict.GetOrDefault("code_url"));
+            payment.SetPayeeAccount(mchId);
 
             await _paymentRecordRepository.InsertAsync(
                 new PaymentRecord(_guidGenerator.Create(), _currentTenant.Id, payment.Id), true);
 
             await _paymentRepository.UpdateAsync(payment, true);
+        }
+
+        protected virtual async Task CreateJsApiOrderAsync(Payment payment, string appId, string mchId,
+            string description, string notifyUrl, string outTradeNo)
+        {
+            var openId = await _paymentOpenIdProvider.FindUserOpenIdAsync(appId, payment.UserId);
+
+            var jsPaymentService =
+                await _abpWeChatPayServiceFactory.CreateAsync<JsPaymentService>(mchId);
+
+            var response = await jsPaymentService.CreateOrderAsync(new CreateOrderRequest
+            {
+                AppId = appId,
+                MchId = mchId,
+                Description = description,
+                OutTradeNo = outTradeNo,
+                Attach = PaymentServiceWeChatPayConsts.Attach,
+                NotifyUrl = notifyUrl,
+                Amount = new CreateOrderAmountModel
+                {
+                    Total = _weChatPayFeeConverter.ConvertToWeChatPayFee(payment.ActualPaymentAmount),
+                    Currency = payment.Currency
+                },
+                Payer = new CreateOrderRequest.CreateOrderPayerModel
+                {
+                    OpenId = openId
+                }
+            });
+
+            if (!response.Code.IsNullOrEmpty())
+            {
+                throw new UserFriendlyException($"微信支付下单失败，错误信息：[{response.Code}] {response.Message}");
+            }
+
+            payment.SetProperty("appid", appId);
+            payment.SetProperty("trade_type", TradeTypeEnum.JsApi);
+            payment.SetProperty("prepay_id", response.PrepayId);
+        }
+
+        protected virtual async Task CreateAppOrderAsync(Payment payment, string appId, string mchId,
+            string description, string notifyUrl, string outTradeNo)
+        {
+            var appPaymentService =
+                await _abpWeChatPayServiceFactory.CreateAsync<AppPaymentService>(mchId);
+
+            var response = await appPaymentService.CreateOrderAsync(new CreateOrderRequest
+            {
+                AppId = appId,
+                MchId = mchId,
+                Description = description,
+                OutTradeNo = outTradeNo,
+                Attach = PaymentServiceWeChatPayConsts.Attach,
+                NotifyUrl = notifyUrl,
+                Amount = new CreateOrderAmountModel
+                {
+                    Total = _weChatPayFeeConverter.ConvertToWeChatPayFee(payment.ActualPaymentAmount),
+                    Currency = payment.Currency
+                }
+            });
+
+            if (!response.Code.IsNullOrEmpty())
+            {
+                throw new UserFriendlyException($"微信支付下单失败，错误信息：[{response.Code}] {response.Message}");
+            }
+
+            payment.SetProperty("appid", appId);
+            payment.SetProperty("trade_type", TradeTypeEnum.App);
+            payment.SetProperty("prepay_id", response.PrepayId);
+        }
+
+        protected virtual async Task CreateNativeOrderAsync(Payment payment, string appId, string mchId,
+            string description, string notifyUrl, string outTradeNo)
+        {
+            var nativePaymentService =
+                await _abpWeChatPayServiceFactory.CreateAsync<NativePaymentService>(mchId);
+
+            var response = await nativePaymentService.CreateOrderAsync(new CreateOrderRequest
+            {
+                AppId = appId,
+                MchId = mchId,
+                Description = description,
+                OutTradeNo = outTradeNo,
+                Attach = PaymentServiceWeChatPayConsts.Attach,
+                NotifyUrl = notifyUrl,
+                Amount = new CreateOrderAmountModel
+                {
+                    Total = _weChatPayFeeConverter.ConvertToWeChatPayFee(payment.ActualPaymentAmount),
+                    Currency = payment.Currency
+                }
+            });
+
+            if (!response.Code.IsNullOrEmpty())
+            {
+                throw new UserFriendlyException($"微信支付下单失败，错误信息：[{response.Code}] {response.Message}");
+            }
+
+            payment.SetProperty("appid", appId);
+            payment.SetProperty("trade_type", TradeTypeEnum.Native);
+            payment.SetProperty("code_url", response.CodeUrl);
+        }
+
+        protected virtual async Task CreateMWebOrderAsync(Payment payment, string appId, string mchId,
+            string description,
+            string notifyUrl, string outTradeNo)
+        {
+            var appPaymentService =
+                await _abpWeChatPayServiceFactory.CreateAsync<AppPaymentService>(mchId);
+
+            var response = await appPaymentService.CreateOrderAsync(new CreateOrderRequest
+            {
+                AppId = appId,
+                MchId = mchId,
+                Description = description,
+                OutTradeNo = outTradeNo,
+                Attach = PaymentServiceWeChatPayConsts.Attach,
+                NotifyUrl = notifyUrl,
+                Amount = new CreateOrderAmountModel
+                {
+                    Total = _weChatPayFeeConverter.ConvertToWeChatPayFee(payment.ActualPaymentAmount),
+                    Currency = payment.Currency
+                }
+            });
+
+            if (!response.Code.IsNullOrEmpty())
+            {
+                throw new UserFriendlyException($"微信支付下单失败，错误信息：[{response.Code}] {response.Message}");
+            }
+
+            payment.SetProperty("appid", appId);
+            payment.SetProperty("trade_type", TradeTypeEnum.Native);
+            payment.SetProperty("prepay_id", response.PrepayId);
         }
 
         [UnitOfWork(true)]

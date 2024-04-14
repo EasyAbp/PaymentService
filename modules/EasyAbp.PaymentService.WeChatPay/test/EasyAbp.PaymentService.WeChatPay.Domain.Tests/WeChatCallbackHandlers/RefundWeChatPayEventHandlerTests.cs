@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using EasyAbp.Abp.WeChat.Pay.Options;
 using EasyAbp.Abp.WeChat.Pay.RequestHandling;
+using EasyAbp.Abp.WeChat.Pay.RequestHandling.Models;
 using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.Refunds;
 using EasyAbp.PaymentService.WeChatPay.RefundRecords;
@@ -118,43 +119,33 @@ public class RefundWeChatPayEventHandlerTests : WeChatPayDomainTestBase
 
         var refundAmount = refund?.RefundAmount ?? payment.ActualPaymentAmount;
 
-        var xmlDocument = new XmlDocument();
-        xmlDocument.LoadXml(@$"
-<xml>
-  <return_code>SUCCESS</return_code>
-  <appid><![CDATA[wx2421b1c4370ec43b]]></appid>
-  <mch_id><![CDATA[10000100]]></mch_id>
-  <nonce_str><![CDATA[5K8264ILTKCH16CQ2502SI8ZNMTM67VS]]></nonce_str>
-  <req_info><![CDATA[T87GAHG17TGAHG1TGHAHAHA1Y1CIOA9UGJH1GAHV871HAGAGQYQQPOOJMXNBCXBVNMNMAJAA]]></req_info>
-  <return_msg><![CDATA[90]]></return_msg>
-</xml>");
+        var paymentAmountInt = Convert.ToInt32(Math.Floor(payment.ActualPaymentAmount * 100));
+        var refundAmountInt = Convert.ToInt32(Math.Floor(refundAmount * 100));
 
-        var decryptedXmlDocument = new XmlDocument();
-        decryptedXmlDocument.LoadXml(@$"
-<root>
-  <out_refund_no><![CDATA[{outRefundNo}]]></out_refund_no>
-  <out_trade_no><![CDATA[{payment.Id:N}]]></out_trade_no>
-  <refund_account><![CDATA[REFUND_SOURCE_RECHARGE_FUNDS]]></refund_account>
-  <refund_fee><![CDATA[{Math.Floor(refundAmount * 100)}]]></refund_fee>
-  <refund_id><![CDATA[50000408942018111907145868882]]></refund_id>
-  <refund_recv_accout><![CDATA[支付用户零钱]]></refund_recv_accout>
-  <refund_request_source><![CDATA[API]]></refund_request_source>
-  <refund_status><![CDATA[SUCCESS]]></refund_status>
-  <settlement_refund_fee><![CDATA[3960]]></settlement_refund_fee>
-  <settlement_total_fee><![CDATA[3960]]></settlement_total_fee>
-  <success_time><![CDATA[2018-11-19 16:24:13]]></success_time>
-  <total_fee><![CDATA[3960]]></total_fee>
-  <transaction_id><![CDATA[4200000215201811190261405420]]></transaction_id>
-  <cash_refund_fee><![CDATA[90]]></cash_refund_fee>
-</root>
-");
         await WithUnitOfWorkAsync(async () =>
         {
-            (await RefundWeChatPayEventHandler.HandleAsync(new WeChatPayEventModel
+            (await RefundWeChatPayEventHandler.HandleAsync(new WeChatPayEventModel<WeChatPayRefundEventModel>
             {
                 Options = AbpWeChatPayOptions,
-                WeChatRequestXmlData = xmlDocument,
-                DecryptedXmlData = decryptedXmlDocument
+                Resource = new WeChatPayRefundEventModel
+                {
+                    MchId = "1900000100",
+                    OutTradeNo = payment.Id.ToString("N"),
+                    TransactionId = "4200000215201811190261405420",
+                    OutRefundNo = outRefundNo,
+                    RefundId = "50000408942018111907145868882",
+                    RefundStatus = "SUCCESS",
+                    SuccessTime = DateTime.Now,
+                    UserReceivedAccount = "招商银行信用卡0403",
+                    CreateTime = DateTime.Now,
+                    Amount = new WeChatPayRefundEventModel.AmountInfo
+                    {
+                        Total = paymentAmountInt,
+                        Refund = refundAmountInt,
+                        PayerTotal = paymentAmountInt,
+                        PayerRefund = refundAmountInt
+                    }
+                }
             })).Success.ShouldBeTrue();
         });
     }

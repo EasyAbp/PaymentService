@@ -1,8 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Common.RequestHandling;
 using EasyAbp.Abp.WeChat.Pay.RequestHandling;
+using EasyAbp.Abp.WeChat.Pay.RequestHandling.Models;
 using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.WeChatPay.Background;
 using EasyAbp.PaymentService.WeChatPay.PaymentRecords;
@@ -10,16 +10,16 @@ using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.BackgroundJobs;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
+using Volo.Abp.Json;
 using Volo.Abp.MultiTenancy;
 using Volo.Abp.Uow;
 
 namespace EasyAbp.PaymentService.WeChatPay
 {
-    public class PaidWeChatPayEventHandler : IWeChatPayEventHandler, ITransientDependency
+    public class PaidWeChatPayEventHandler : WeChatPayPaidEventHandlerBase, ITransientDependency
     {
-        public WeChatHandlerType Type => WeChatHandlerType.Paid;
-
         private readonly IDataFilter _dataFilter;
+        private readonly IJsonSerializer _jsonSerializer;
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly IBackgroundJobManager _backgroundJobManager;
@@ -29,6 +29,7 @@ namespace EasyAbp.PaymentService.WeChatPay
 
         public PaidWeChatPayEventHandler(
             IDataFilter dataFilter,
+            IJsonSerializer jsonSerializer,
             IServiceScopeFactory serviceScopeFactory,
             IUnitOfWorkManager unitOfWorkManager,
             IBackgroundJobManager backgroundJobManager,
@@ -37,6 +38,7 @@ namespace EasyAbp.PaymentService.WeChatPay
             IPaymentRepository paymentRepository)
         {
             _dataFilter = dataFilter;
+            _jsonSerializer = jsonSerializer;
             _serviceScopeFactory = serviceScopeFactory;
             _unitOfWorkManager = unitOfWorkManager;
             _backgroundJobManager = backgroundJobManager;
@@ -46,42 +48,31 @@ namespace EasyAbp.PaymentService.WeChatPay
         }
 
         [UnitOfWork(true)]
-        public virtual async Task<WeChatRequestHandlingResult> HandleAsync(WeChatPayEventModel model)
+        public override async Task<WeChatRequestHandlingResult> HandleAsync(
+            WeChatPayEventModel<WeChatPayPaidEventModel> model)
         {
-            var dict = model.WeChatRequestXmlData.SelectSingleNode("xml").ToDictionary() ??
-                       throw new NullReferenceException();
-
-            var returnCode = dict.GetOrDefault("return_code");
-            var deviceInfo = dict.GetOrDefault("device_info");
-
-            if (returnCode != "SUCCESS")
-            {
-                return new WeChatRequestHandlingResult(false, $"Unexpected return_code:{returnCode}");
-            }
-
-            if (deviceInfo != PaymentServiceWeChatPayConsts.DeviceInfo)
+            if (model.Resource.Attach != PaymentServiceWeChatPayConsts.Attach)
             {
                 // skip handling
                 return new WeChatRequestHandlingResult(true);
             }
 
+            // todo: don't use _dataFilter.Disable<IMultiTenant>();
             using var disabledDataFilter = _dataFilter.Disable<IMultiTenant>();
 
-            var paymentId = Guid.Parse(dict.GetOrDefault("out_trade_no") ??
-                                       throw new XmlDocumentMissingRequiredElementException("out_trade_no"));
+            var paymentId = Guid.Parse(model.Resource.OutTradeNo);
 
-            await RecordPaymentResultAsync(dict, paymentId);
+            await RecordPaymentResultAsync(model.Resource, paymentId);
 
             var payment = await _paymentRepository.GetAsync(paymentId);
 
             if (payment.IsInProgress())
             {
-                payment.SetExternalTradingCode(dict.GetOrDefault("transaction_id") ??
-                                               throw new XmlDocumentMissingRequiredElementException("transaction_id"));
+                payment.SetExternalTradingCode(model.Resource.TransactionId);
 
                 await _paymentRepository.UpdateAsync(payment, true);
 
-                if (dict.GetOrDefault("result_code") == "SUCCESS")
+                if (model.Resource.TradeState == "SUCCESS")
                 {
                     await _paymentManager.CompletePaymentAsync(payment);
                 }
@@ -102,7 +93,7 @@ namespace EasyAbp.PaymentService.WeChatPay
                     // Enqueue an empty job to ensure the background job worker is alive.
                     await _backgroundJobManager.EnqueueAsync(new EmptyJobArgs(payment.TenantId));
 
-                    _unitOfWorkManager.Current.OnCompleted(async () =>
+                    _unitOfWorkManager.Current!.OnCompleted(async () =>
                     {
                         using var scope = _serviceScopeFactory.CreateScope();
                         var backgroundJobManager = scope.ServiceProvider.GetRequiredService<IBackgroundJobManager>();
@@ -111,7 +102,7 @@ namespace EasyAbp.PaymentService.WeChatPay
                 }
                 else
                 {
-                    _unitOfWorkManager.Current.OnCompleted(async () =>
+                    _unitOfWorkManager.Current!.OnCompleted(async () =>
                     {
                         using var scope = _serviceScopeFactory.CreateScope();
                         var job = scope.ServiceProvider.GetRequiredService<WeChatPayRefundJob>();
@@ -123,64 +114,29 @@ namespace EasyAbp.PaymentService.WeChatPay
             return new WeChatRequestHandlingResult(true);
         }
 
-        protected virtual async Task<PaymentRecord> RecordPaymentResultAsync(Dictionary<string, string> dict,
+        protected virtual async Task<PaymentRecord> RecordPaymentResultAsync(WeChatPayPaidEventModel model,
             Guid paymentId)
         {
-            var couponCount = ConvertToNullableInt32(dict.GetOrDefault("coupon_count"));
-
             var record = await _paymentRecordRepository.GetByPaymentId(paymentId);
 
             record.SetResult(
-                returnCode: dict.GetOrDefault("return_code"),
-                returnMsg: dict.GetOrDefault("return_msg"),
-                appId: dict.GetOrDefault("appid"),
-                mchId: dict.GetOrDefault("mch_id"),
-                deviceInfo: dict.GetOrDefault("device_info"),
-                resultCode: dict.GetOrDefault("result_code"),
-                errCode: dict.GetOrDefault("err_code"),
-                errCodeDes: dict.GetOrDefault("err_code_des"),
-                openid: dict.GetOrDefault("openid"),
-                isSubscribe: dict.GetOrDefault("is_subscribe"),
-                tradeType: dict.GetOrDefault("trade_type"),
-                bankType: dict.GetOrDefault("bank_type"),
-                totalFee: ConvertToInt32(dict.GetOrDefault("total_fee")),
-                settlementTotalFee: ConvertToNullableInt32(dict.GetOrDefault("total_fee")),
-                feeType: dict.GetOrDefault("fee_type"),
-                cashFee: ConvertToInt32(dict.GetOrDefault("cash_fee")),
-                cashFeeType: dict.GetOrDefault("cash_fee_type"),
-                couponFee: ConvertToNullableInt32(dict.GetOrDefault("coupon_fee")),
-                couponCount: couponCount,
-                couponTypes: couponCount != null
-                    ? dict.JoinNodesInnerTextAsString("coupon_type_", couponCount.Value)
-                    : null,
-                couponIds: couponCount != null
-                    ? dict.JoinNodesInnerTextAsString("coupon_id_", couponCount.Value)
-                    : null,
-                couponFees: couponCount != null
-                    ? dict.JoinNodesInnerTextAsString("coupon_fee_", couponCount.Value)
-                    : null,
-                transactionId: dict.GetOrDefault("transaction_id"),
-                outTradeNo: dict.GetOrDefault("out_trade_no"),
-                attach: dict.GetOrDefault("attach"),
-                timeEnd: dict.GetOrDefault("time_end")
+                appId: model.AppId,
+                mchId: model.MchId,
+                outTradeNo: model.OutTradeNo,
+                transactionId: model.TransactionId,
+                tradeType: model.TradeType,
+                tradeState: model.TradeState,
+                tradeStateDesc: model.TradeStateDesc,
+                bankType: model.BankType,
+                attach: model.Attach,
+                successTime: model.SuccessTime?.ToString("yyyy-MM-ddTHH:mm:sszzz"),
+                payer: _jsonSerializer.Serialize(model.Payer),
+                amount: _jsonSerializer.Serialize(model.Amount),
+                sceneInfo: _jsonSerializer.Serialize(model.SceneInfo),
+                promotionDetail: _jsonSerializer.Serialize(model.PromotionDetails)
             );
 
             return await _paymentRecordRepository.UpdateAsync(record, true);
-        }
-
-        private static int? ConvertToNullableInt32(string text)
-        {
-            if (text.IsNullOrEmpty())
-            {
-                return null;
-            }
-
-            return Convert.ToInt32(text);
-        }
-
-        private static int ConvertToInt32(string text)
-        {
-            return Convert.ToInt32(text);
         }
     }
 }
