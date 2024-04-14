@@ -8,13 +8,29 @@ namespace EasyAbp.PaymentService.WeChatPay.PaymentRecords.Dtos
     {
         public Guid PaymentId { get; set; }
 
-        public string ReturnCode { get; set; }
-
-        public string ReturnMsg { get; set; }
+        #region Common
 
         public string AppId { get; set; }
 
         public string MchId { get; set; }
+
+        public string OutTradeNo { get; set; }
+
+        public string TransactionId { get; set; }
+
+        public string TradeType { get; set; }
+
+        public string BankType { get; set; }
+
+        public string Attach { get; set; }
+
+        #endregion
+
+        #region V2-only
+
+        public string ReturnCode { get; set; }
+
+        public string ReturnMsg { get; set; }
 
         public string DeviceInfo { get; set; }
 
@@ -27,10 +43,6 @@ namespace EasyAbp.PaymentService.WeChatPay.PaymentRecords.Dtos
         public string Openid { get; set; }
 
         public string IsSubscribe { get; set; }
-
-        public string TradeType { get; set; }
-
-        public string BankType { get; set; }
 
         public int TotalFee { get; set; }
 
@@ -52,12 +64,38 @@ namespace EasyAbp.PaymentService.WeChatPay.PaymentRecords.Dtos
 
         public string CouponFees { get; set; }
 
-        public string TransactionId { get; set; }
-
-        public string OutTradeNo { get; set; }
-
-        public string Attach { get; set; }
-
         public string TimeEnd { get; set; }
+
+        #endregion
+
+        #region V3-only
+
+        public string TradeState { get; set; }
+
+        public string TradeStateDesc { get; set; }
+
+        public string SuccessTime { get; set; }
+
+        /// <summary>
+        /// Serialized Payer object
+        /// </summary>
+        public string Payer { get; set; }
+
+        /// <summary>
+        /// Serialized Amount object
+        /// </summary>
+        public string Amount { get; set; }
+
+        /// <summary>
+        /// Serialized SceneInfo object
+        /// </summary>
+        public string SceneInfo { get; set; }
+
+        /// <summary>
+        /// Serialized PromotionDetail object
+        /// </summary>
+        public string PromotionDetail { get; set; }
+
+        #endregion
     }
 }

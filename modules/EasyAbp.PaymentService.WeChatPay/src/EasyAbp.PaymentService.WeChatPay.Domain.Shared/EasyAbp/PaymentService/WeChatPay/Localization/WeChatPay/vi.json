@@ -35,6 +35,13 @@
     "RefundRecordRefundRecvAccout": "RefundRecvAccout",
     "RefundRecordRefundAccount": "RefundAccount",
     "RefundRecordRefundRequestSource": "RefundRequestSource",
+    "RefundRecordChannel": "Channel",
+    "RefundRecordUserReceivedAccount": "UserReceivedAccount",
+    "RefundRecordCreateTime": "CreateTime",
+    "RefundRecordStatus": "Status",
+    "RefundRecordFundsAccount": "FundsAccount",
+    "RefundRecordAmount": "Amount",
+    "RefundRecordPromotionDetail": "PromotionDetail",
     "SuccessfullyDeleted": "Successfully deleted",
     "Menu:PaymentRecord": "Payment record",
     "PaymentRecord": "Payment record",
@@ -64,6 +71,13 @@
     "PaymentRecordTransactionId": "TransactionId",
     "PaymentRecordOutTradeNo": "OutTradeNo",
     "PaymentRecordAttach": "Attach",
-    "PaymentRecordTimeEnd": "TimeEnd"
+    "PaymentRecordTimeEnd": "TimeEnd",
+    "PaymentRecordTradeState": "TradeState",
+    "PaymentRecordTradeStateDesc": "TradeStateDesc",
+    "PaymentRecordSuccessTime": "SuccessTime",
+    "PaymentRecordPayer": "Payer",
+    "PaymentRecordAmount": "Amount",
+    "PaymentRecordSceneInfo": "SceneInfo",
+    "PaymentRecordPromotionDetail": "PromotionDetail"
   }
 }

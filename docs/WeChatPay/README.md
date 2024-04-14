@@ -74,11 +74,13 @@ WeChatPay implementation of the EasyAbp.PaymentService module.
         {
             "extraProperties": {
                 "trade_type": "JSAPI",
-                "appid": "wx81a2956875268fk8" // You can specify an appid or get it from the input from the client.
+                "appid": "wx81a2956875268fk8"
                 "mch_id": "10000100" // If it's null, use the default settings/options value you configured in the Abp.WeChat.Pay module.
             }
         }
         ```
+
+        Then you can get a `prepay_id` or `code_url` from the extraProperty in the result. Refer to the [WeChatPay V3 docs](https://pay.weixin.qq.com/docs/merchant/products/jsapi-payment/introduction.html) to continue the payment. This module can receive and allow you to handle the payment success event.
 
     > Skip the following steps if you are using the [EasyAbp.EShop](https://github.com/EasyAbp/EShop).
 

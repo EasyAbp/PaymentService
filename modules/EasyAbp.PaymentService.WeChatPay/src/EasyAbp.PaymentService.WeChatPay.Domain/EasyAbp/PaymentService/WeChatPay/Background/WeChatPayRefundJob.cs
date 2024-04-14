@@ -3,17 +3,20 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Pay.Options;
 using EasyAbp.Abp.WeChat.Pay.Services;
-using EasyAbp.Abp.WeChat.Pay.Services.Pay;
+using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment;
+using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Models;
 using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.Refunds;
 using EasyAbp.PaymentService.WeChatPay.PaymentRecords;
 using EasyAbp.PaymentService.WeChatPay.RefundRecords;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
+using Volo.Abp;
 using Volo.Abp.BackgroundJobs;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Guids;
+using Volo.Abp.Json;
 using Volo.Abp.MultiTenancy;
 using Volo.Abp.Uow;
 
@@ -23,6 +26,7 @@ namespace EasyAbp.PaymentService.WeChatPay.Background
     {
         private readonly IGuidGenerator _guidGenerator;
         private readonly ICurrentTenant _currentTenant;
+        private readonly IJsonSerializer _jsonSerializer;
         private readonly ILogger<WeChatPayRefundJob> _logger;
         private readonly IRefundRepository _refundRepository;
         private readonly IPaymentManager _paymentManager;
@@ -36,6 +40,7 @@ namespace EasyAbp.PaymentService.WeChatPay.Background
         public WeChatPayRefundJob(
             IGuidGenerator guidGenerator,
             ICurrentTenant currentTenant,
+            IJsonSerializer jsonSerializer,
             ILogger<WeChatPayRefundJob> logger,
             IRefundRepository refundRepository,
             IPaymentManager paymentManager,
@@ -48,6 +53,7 @@ namespace EasyAbp.PaymentService.WeChatPay.Background
         {
             _guidGenerator = guidGenerator;
             _currentTenant = currentTenant;
+            _jsonSerializer = jsonSerializer;
             _logger = logger;
             _refundRepository = refundRepository;
             _paymentManager = paymentManager;
@@ -92,12 +98,12 @@ namespace EasyAbp.PaymentService.WeChatPay.Background
 
             var paymentRecord = await _paymentRecordRepository.GetByPaymentId(payment.Id);
 
-            Dictionary<string, string> dict;
+            RefundOrderResponse response;
 
             try
             {
-                dict = await RequestWeChatPayRefundAsync(payment, paymentRecord, args.RefundAmount, args.OutRefundNo,
-                    args.DisplayReason);
+                response = await RequestWeChatPayRefundAsync(
+                    payment, paymentRecord, args.RefundAmount, args.OutRefundNo, args.DisplayReason);
             }
             catch (Exception e)
             {
@@ -107,108 +113,76 @@ namespace EasyAbp.PaymentService.WeChatPay.Background
 
             if (refund is not null)
             {
-                var externalTradingCode = dict.GetOrDefault("refund_id");
+                var externalTradingCode = response.RefundId;
 
                 refund.SetExternalTradingCode(externalTradingCode);
 
                 await _refundRepository.UpdateAsync(refund, true);
 
-                if (dict.GetOrDefault("result_code") != "SUCCESS")
+                if (response.Status != "SUCCESS" && response.Status != "PROCESSING")
                 {
+                    _logger.LogError("Failed to refund WeChatPay payment, response: {Response}",
+                        _jsonSerializer.Serialize(response));
+
                     await _paymentManager.RollbackRefundAsync(payment, refund);
                 }
             }
         }
 
         protected virtual async Task CreateWeChatPayRefundRecordEntitiesAsync(Payment payment,
-            Dictionary<string, string> dict)
+            RefundOrderResponse response)
         {
-            var settlementTotalFeeString = dict.GetOrDefault("settlement_total_fee");
-            var settlementRefundFeeString = dict.GetOrDefault("settlement_refund_fee");
-            var cashRefundFeeString = dict.GetOrDefault("cash_refund_fee");
-            var couponRefundFeeString = dict.GetOrDefault("coupon_refund_fee");
-            var couponRefundCountString = dict.GetOrDefault("coupon_refund_count");
-            var couponRefundCount = couponRefundCountString.IsNullOrEmpty()
-                ? (int?)null
-                : Convert.ToInt32(couponRefundCountString);
-
             await _refundRecordRepository.InsertAsync(new RefundRecord(
                 id: _guidGenerator.Create(),
                 tenantId: _currentTenant.Id,
                 paymentId: payment.Id,
-                returnCode: dict.GetOrDefault("return_code"),
-                returnMsg: dict.GetOrDefault("return_msg"),
-                appId: dict.GetOrDefault("appid"),
-                mchId: dict.GetOrDefault("mch_id"),
-                transactionId: dict.GetOrDefault("transaction_id"),
-                outTradeNo: dict.GetOrDefault("out_trade_no"),
-                refundId: dict.GetOrDefault("refund_id"),
-                outRefundNo: dict.GetOrDefault("out_refund_no"),
-                totalFee: Convert.ToInt32(dict.GetOrDefault("total_fee")),
-                settlementTotalFee: settlementTotalFeeString.IsNullOrEmpty()
-                    ? null
-                    : Convert.ToInt32(settlementTotalFeeString),
-                refundFee: Convert.ToInt32(dict.GetOrDefault("refund_fee")),
-                settlementRefundFee: settlementRefundFeeString.IsNullOrEmpty()
-                    ? null
-                    : Convert.ToInt32(settlementRefundFeeString),
-                feeType: dict.GetOrDefault("fee_type"),
-                cashFee: Convert.ToInt32(dict.GetOrDefault("cash_fee")),
-                cashFeeType: dict.GetOrDefault("cash_fee_type"),
-                cashRefundFee: cashRefundFeeString.IsNullOrEmpty() ? null : Convert.ToInt32(cashRefundFeeString),
-                couponRefundFee: couponRefundFeeString.IsNullOrEmpty()
-                    ? null
-                    : Convert.ToInt32(couponRefundFeeString),
-                couponRefundCount: couponRefundCount,
-                couponTypes: couponRefundCount != null
-                    ? dict.JoinNodesInnerTextAsString("coupon_type_", couponRefundCount.Value)
-                    : null,
-                couponIds: couponRefundCount != null
-                    ? dict.JoinNodesInnerTextAsString("coupon_id_", couponRefundCount.Value)
-                    : null,
-                couponRefundFees: couponRefundCount != null
-                    ? dict.JoinNodesInnerTextAsString("coupon_refund_fee_", couponRefundCount.Value)
-                    : null
+                refundId: response.RefundId,
+                outRefundNo: response.OutRefundNo,
+                transactionId: response.TransactionId,
+                outTradeNo: response.OutTradeNo,
+                channel: response.Channel,
+                userReceivedAccount: response.UserReceivedAccount,
+                successTime: response.SuccessTime?.ToString("yyyy-MM-ddTHH:mm:sszzz"),
+                createTime: response.CreateTime?.ToString("yyyy-MM-ddTHH:mm:sszzz"),
+                status: response.Status,
+                fundsAccount: response.FundsAccount,
+                amount: _jsonSerializer.Serialize(response.Amount),
+                promotionDetail: _jsonSerializer.Serialize(response.PromotionDetail)
             ), true);
         }
 
-        private async Task<Dictionary<string, string>> RequestWeChatPayRefundAsync(Payment payment,
+        private async Task<RefundOrderResponse> RequestWeChatPayRefundAsync(Payment payment,
             PaymentRecord paymentRecord, decimal refundAmount, [NotNull] string outRefundNo,
             [CanBeNull] string displayReason)
         {
             var mchId = payment.PayeeAccount;
             var options = await _abpWeChatPayOptionsProvider.GetAsync(mchId);
 
-            var serviceProviderPayService =
-                await _abpWeChatPayServiceFactory.CreateAsync<ServiceProviderPayWeService>(mchId);
+            var basicPaymentService = await _abpWeChatPayServiceFactory.CreateAsync<BasicPaymentService>(mchId);
 
-            var result = await serviceProviderPayService.RefundAsync(
-                appId: payment.GetProperty<string>("appid"),
-                mchId: mchId,
-                subAppId: null,
-                subMchId: null,
-                transactionId: paymentRecord.TransactionId,
-                outTradeNo: payment.Id.ToString("N"),
-                outRefundNo: outRefundNo,
-                totalFee: paymentRecord.TotalFee,
-                refundFee: _weChatPayFeeConverter.ConvertToWeChatPayFee(refundAmount),
-                refundFeeType: null,
-                refundDesc: displayReason,
-                refundAccount: null,
-                notifyUrl: options.RefundNotifyUrl
-            );
-
-            var dict = new Dictionary<string, string>(result.SelectSingleNode("xml").ToDictionary() ??
-                                                      throw new NullReferenceException());
-
-            if (dict.GetOrDefault("return_code") != "SUCCESS")
+            var response = await basicPaymentService.RefundAsync(new RefundOrderRequest
             {
-                throw new RefundFailedException(dict.GetOrDefault("return_code"), dict.GetOrDefault("return_msg"));
+                TransactionId = paymentRecord.TransactionId,
+                OutTradeNo = payment.Id.ToString("N"),
+                OutRefundNo = outRefundNo,
+                Reason = displayReason,
+                NotifyUrl = options.RefundNotifyUrl,
+                Amount = new RefundOrderRequest.AmountInfo
+                {
+                    Refund = _weChatPayFeeConverter.ConvertToWeChatPayFee(refundAmount),
+                    Total = paymentRecord.TotalFee,
+                    Currency = paymentRecord.FeeType
+                }
+            });
+
+            if (!response.Code.IsNullOrEmpty())
+            {
+                throw new AbpException($"微信支付自动退款失败，错误信息：[{response.Code}] {response.Message}");
             }
 
-            await CreateWeChatPayRefundRecordEntitiesAsync(payment, dict);
+            await CreateWeChatPayRefundRecordEntitiesAsync(payment, response);
 
-            return dict;
+            return response;
         }
     }
 }

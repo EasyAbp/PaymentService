@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Xml;
 using EasyAbp.Abp.WeChat.Pay.Options;
 using EasyAbp.Abp.WeChat.Pay.RequestHandling;
+using EasyAbp.Abp.WeChat.Pay.RequestHandling.Models;
 using EasyAbp.Abp.WeChat.Pay.Services;
-using EasyAbp.Abp.WeChat.Pay.Services.Pay;
+using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment;
+using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Models;
 using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.WeChatPay.PaymentRecords;
 using EasyAbp.PaymentService.WeChatPay.RefundRecords;
@@ -16,6 +17,7 @@ using Shouldly;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.Json;
 using Xunit;
 
 namespace EasyAbp.PaymentService.WeChatPay.WeChatCallbackHandlers;
@@ -28,12 +30,14 @@ public class PaidWeChatPayEventHandlerTests : WeChatPayDomainTestBase
     protected IRefundRecordRepository RefundRecordRepository { get; set; }
     protected PaidWeChatPayEventHandler PaidWeChatPayEventHandler { get; set; }
     protected IAbpWeChatPayServiceFactory AbpWeChatPayServiceFactory { get; set; }
+    protected IJsonSerializer JsonSerializer { get; set; }
 
     public PaidWeChatPayEventHandlerTests()
     {
         AbpWeChatPayOptions = ServiceProvider.GetRequiredService<IOptions<AbpWeChatPayOptions>>().Value;
         PaidWeChatPayEventHandler = ServiceProvider.GetRequiredService<PaidWeChatPayEventHandler>();
         RefundRecordRepository = ServiceProvider.GetRequiredService<IRefundRecordRepository>();
+        JsonSerializer = ServiceProvider.GetRequiredService<IJsonSerializer>();
     }
 
     protected override void AfterAddApplication(IServiceCollection services)
@@ -79,7 +83,10 @@ public class PaidWeChatPayEventHandlerTests : WeChatPayDomainTestBase
         {
             var refundRecord = await RefundRecordRepository.FirstOrDefaultAsync(x => x.PaymentId == payment.Id);
             refundRecord.ShouldNotBeNull();
-            refundRecord.RefundFee.ShouldBe(10000);
+            refundRecord.Amount.ShouldNotBeNull();
+            var amount = JsonSerializer.Deserialize<RefundOrderResponse.AmountInfo>(refundRecord.Amount);
+            amount.Refund.ShouldBe(10000);
+            amount.Currency.ShouldBe("CNY");
         });
     }
 
@@ -96,7 +103,7 @@ public class PaidWeChatPayEventHandlerTests : WeChatPayDomainTestBase
         payment.SetProperty("trade_type", "JSAPI");
         payment.SetProperty("prepay_id", "123456");
         payment.SetProperty("code_url", "123456");
-        
+
         payment.SetPayeeAccount("10000100");
 
         return payment;
@@ -104,71 +111,76 @@ public class PaidWeChatPayEventHandlerTests : WeChatPayDomainTestBase
 
     protected virtual async Task HandleAsync(Payment payment)
     {
-        PaymentRepository.GetAsync(payment.Id).Returns(payment);
+        PaymentRepository.GetAsync(payment.Id).Returns(_ => payment);
 
         var paymentRecord = new PaymentRecord(Guid.NewGuid(), null, payment.Id);
 
-        PaymentRecordRepository.GetByPaymentId(payment.Id).Returns(paymentRecord);
+        PaymentRecordRepository.GetByPaymentId(payment.Id).Returns(_ => paymentRecord);
 
-        var xmlDocument = new XmlDocument();
-        xmlDocument.LoadXml(@$"
-<xml>
-  <appid><![CDATA[wx2421b1c4370ec43b]]></appid>
-  <attach><![CDATA[支付测试]]></attach>
-  <bank_type><![CDATA[CFT]]></bank_type>
-  <fee_type><![CDATA[CNY]]></fee_type>
-  <is_subscribe><![CDATA[Y]]></is_subscribe>
-  <mch_id><![CDATA[10000100]]></mch_id>
-  <nonce_str><![CDATA[5d2b6c2a8db53831f7eda20af46e531c]]></nonce_str>
-  <openid><![CDATA[oUpF8uMEb4qRXf22hE3X68TekukE]]></openid>
-  <out_trade_no><![CDATA[{payment.Id:N}]]></out_trade_no>
-  <result_code><![CDATA[SUCCESS]]></result_code>
-  <return_code><![CDATA[SUCCESS]]></return_code>
-  <sign><![CDATA[B552ED6B279343CB493C5DD0D78AB241]]></sign>
-  <time_end><![CDATA[20140903131540]]></time_end>
-  <total_fee>{Math.Floor(payment.ActualPaymentAmount * 100)}</total_fee>
-  <trade_type><![CDATA[JSAPI]]></trade_type>
-  <transaction_id><![CDATA[1004400740201409030005092168]]></transaction_id>
-  <device_info><![CDATA[EasyAbpPaymentService]]></device_info>
-</xml>
-");
-
-        var xmlDocumentRefund = new XmlDocument();
-        xmlDocumentRefund.LoadXml(@$"
-<xml>
-   <return_code><![CDATA[SUCCESS]]></return_code>
-   <return_msg><![CDATA[OK]]></return_msg>
-   <appid><![CDATA[wx2421b1c4370ec43b]]></appid>
-   <mch_id><![CDATA[10000100]]></mch_id>
-   <nonce_str><![CDATA[NfsMFbUFpdbEhPXP]]></nonce_str>
-   <sign><![CDATA[B7274EB9F8925EB93100DD2085FA56C0]]></sign>
-   <result_code><![CDATA[SUCCESS]]></result_code>
-   <transaction_id><![CDATA[1008450740201411110005820873]]></transaction_id>
-  <out_refund_no><![CDATA[{payment.Id}]]></out_refund_no>
-  <out_trade_no><![CDATA[{payment.Id:N}]]></out_trade_no>
-   <refund_id><![CDATA[2008450740201411110000174436]]></refund_id>
-   <refund_fee>{Math.Floor(payment.ActualPaymentAmount * 100)}</refund_fee>
-</xml>
-");
-
-        var serviceProviderPayWeService =
-            Substitute.For<ServiceProviderPayWeService>(AbpWeChatPayOptions,
+        var basicPaymentService =
+            Substitute.For<BasicPaymentService>(AbpWeChatPayOptions,
                 new AbpLazyServiceProvider(ServiceProvider));
 
-        AbpWeChatPayServiceFactory.CreateAsync<ServiceProviderPayWeService>()
-            .ReturnsForAnyArgs(serviceProviderPayWeService);
+        AbpWeChatPayServiceFactory.CreateAsync<BasicPaymentService>()
+            .ReturnsForAnyArgs(_ => basicPaymentService);
 
-        serviceProviderPayWeService
-            .RefundAsync(null, null, null, null, null, null, null, 0, 0, null, null, null, null)
-            .ReturnsForAnyArgs(_ => xmlDocumentRefund);
+        var amount = Convert.ToInt32(Math.Floor(payment.ActualPaymentAmount * 100));
+        var response = new RefundOrderResponse
+        {
+            RefundId = "2008450740201411110000174436",
+            OutRefundNo = payment.Id.ToString(),
+            TransactionId = "1008450740201411110005820873",
+            OutTradeNo = payment.Id.ToString("N"),
+            Channel = "ORIGINAL",
+            UserReceivedAccount = "招商银行信用卡0403",
+            SuccessTime = DateTime.Now,
+            CreateTime = DateTime.Now,
+            Status = "SUCCESS",
+            Amount = new RefundOrderResponse.AmountInfo
+            {
+                Total = amount,
+                Refund = amount,
+                PayerTotal = amount,
+                PayerRefund = amount,
+                SettlementRefund = amount,
+                SettlementTotal = amount,
+                DiscountRefund = 0,
+                Currency = payment.Currency
+            }
+        };
+
+        basicPaymentService
+            .RefundAsync(Arg.Any<RefundOrderRequest>())
+            .Returns(_ => response);
 
         await WithUnitOfWorkAsync(async () =>
         {
-            (await PaidWeChatPayEventHandler.HandleAsync(new WeChatPayEventModel
+            (await PaidWeChatPayEventHandler.HandleAsync(new WeChatPayEventModel<WeChatPayPaidEventModel>
             {
                 Options = AbpWeChatPayOptions,
-                WeChatRequestXmlData = xmlDocument,
-                DecryptedXmlData = null
+                Resource = new WeChatPayPaidEventModel
+                {
+                    AppId = "wx2421b1c4370ec43b",
+                    MchId = "10000100",
+                    OutTradeNo = payment.Id.ToString("N"),
+                    TransactionId = "1008450740201411110005820873",
+                    TradeType = "JSAPI",
+                    TradeState = "SUCCESS",
+                    BankType = "CMC",
+                    Attach = PaymentServiceWeChatPayConsts.Attach,
+                    SuccessTime = DateTime.Now,
+                    Payer = new WeChatPayPaidEventModel.QueryOrderPayerModel
+                    {
+                        OpenId = "oUpF8uMEb4qRXf22hE3X68TekukE"
+                    },
+                    Amount = new WeChatPayPaidEventModel.QueryOrderAmountModel
+                    {
+                        Total = amount,
+                        PayerTotal = amount,
+                        Currency = payment.Currency,
+                        PayerCurrency = payment.Currency
+                    }
+                }
             })).Success.ShouldBeTrue();
         });
     }

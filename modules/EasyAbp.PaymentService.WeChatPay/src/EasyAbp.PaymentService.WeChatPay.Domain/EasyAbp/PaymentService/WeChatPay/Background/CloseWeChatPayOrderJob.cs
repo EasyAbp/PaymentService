@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using EasyAbp.Abp.WeChat.Pay.Services;
-using EasyAbp.Abp.WeChat.Pay.Services.Pay;
+using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment;
+using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Models;
 using Volo.Abp.BackgroundJobs;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.MultiTenancy;
@@ -26,26 +26,20 @@ public class CloseWeChatPayOrderJob : IAsyncBackgroundJob<CloseWeChatPayOrderJob
     {
         using var change = _currentTenant.Change(args.TenantId);
 
-        var serviceProviderPayService =
-            await _abpWeChatPayServiceFactory.CreateAsync<ServiceProviderPayWeService>(args.MchId);
+        var basicPaymentService =
+            await _abpWeChatPayServiceFactory.CreateAsync<BasicPaymentService>(args.MchId);
 
-        var orderQueryResult = await serviceProviderPayService.CloseOrderAsync(
-            appId: args.AppId,
-            mchId: args.MchId,
-            subAppId: null,
-            subMchId: null,
-            outTradeNo: args.OutTradeNo
-        );
-
-        var dict = orderQueryResult.SelectSingleNode("xml").ToDictionary() ?? throw new NullReferenceException();
-        var resultCode = dict.GetOrDefault("result_code");
-        var errCode = dict.GetOrDefault("err_code");
-        var errCodeDes = dict.GetOrDefault("err_code_des");
+        var response = await basicPaymentService.CloseOrderAsync(
+            new CloseOrderRequest
+            {
+                MchId = args.MchId,
+                OutTradeNo = args.OutTradeNo
+            });
 
         // ignore the "ORDERCLOSED" status.
-        if (resultCode != "SUCCESS" && errCode != "ORDERCLOSED")
+        if (!response.Code.IsNullOrEmpty() && response.Code != "ORDERCLOSED")
         {
-            throw new WeChatPayBusinessErrorException(args.OutTradeNo, errCode, errCodeDes);
+            throw new WeChatPayBusinessErrorException(args.OutTradeNo, response.Code, response.Message);
         }
     }
 }
