@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="8.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="8.0.4" />
     <ProjectReference Include="..\..\..\EasyAbp.PaymentService\src\EasyAbp.PaymentService.EntityFrameworkCore\EasyAbp.PaymentService.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\..\src\EasyAbp.PaymentService.Prepayment.EntityFrameworkCore\EasyAbp.PaymentService.Prepayment.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\EasyAbp.PaymentService.Prepayment.TestBase\EasyAbp.PaymentService.Prepayment.TestBase.csproj" />
