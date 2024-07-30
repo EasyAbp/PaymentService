@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
 using Volo.Abp.EntityFrameworkCore;
+using Volo.Abp.EntityFrameworkCore.Sqlite;
 using Volo.Abp.Modularity;
 using Volo.Abp.Uow;
 using Volo.Abp.Uow;
@@ -12,9 +13,10 @@ using Volo.Abp.Uow;
 namespace PaymentServiceSample.EntityFrameworkCore
 {
     [DependsOn(
+        typeof(AbpEntityFrameworkCoreSqliteModule),
         typeof(PaymentServiceSampleEntityFrameworkCoreModule),
         typeof(PaymentServiceSampleTestBaseModule)
-        )]
+    )]
     public class PaymentServiceSampleEntityFrameworkCoreTestModule : AbpModule
     {
         private SqliteConnection _sqliteConnection;
@@ -42,7 +44,7 @@ namespace PaymentServiceSample.EntityFrameworkCore
 
         private static SqliteConnection CreateDatabaseAndGetConnection()
         {
-            var connection = new SqliteConnection("Data Source=:memory:");
+            var connection = new AbpUnitTestSqliteConnection("Data Source=:memory:");
             connection.Open();
 
             var options = new DbContextOptionsBuilder<PaymentServiceSampleDbContext>()
