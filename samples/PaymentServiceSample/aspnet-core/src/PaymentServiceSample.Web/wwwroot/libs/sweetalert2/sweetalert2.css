@@ -261,6 +261,18 @@ div:where(.swal2-container) div:where(.swal2-popup):focus {
 div:where(.swal2-container) div:where(.swal2-popup).swal2-loading {
   overflow-y: hidden;
 }
+div:where(.swal2-container) div:where(.swal2-popup).swal2-draggable {
+  cursor: grab;
+}
+div:where(.swal2-container) div:where(.swal2-popup).swal2-draggable div:where(.swal2-icon) {
+  cursor: grab;
+}
+div:where(.swal2-container) div:where(.swal2-popup).swal2-dragging {
+  cursor: grabbing;
+}
+div:where(.swal2-container) div:where(.swal2-popup).swal2-dragging div:where(.swal2-icon) {
+  cursor: grabbing;
+}
 div:where(.swal2-container) h2:where(.swal2-title) {
   position: relative;
   max-width: 100%;
@@ -272,6 +284,7 @@ div:where(.swal2-container) h2:where(.swal2-title) {
   text-align: center;
   text-transform: none;
   word-wrap: break-word;
+  cursor: initial;
 }
 div:where(.swal2-container) div:where(.swal2-actions) {
   display: flex;
@@ -365,6 +378,7 @@ div:where(.swal2-container) div:where(.swal2-footer) {
   color: inherit;
   font-size: 1em;
   text-align: center;
+  cursor: initial;
 }
 div:where(.swal2-container) .swal2-timer-progress-bar-container {
   position: absolute;
@@ -384,6 +398,7 @@ div:where(.swal2-container) div:where(.swal2-timer-progress-bar) {
 div:where(.swal2-container) img:where(.swal2-image) {
   max-width: 100%;
   margin: 2em auto 1em;
+  cursor: initial;
 }
 div:where(.swal2-container) button:where(.swal2-close) {
   z-index: 2;
@@ -418,7 +433,7 @@ div:where(.swal2-container) button:where(.swal2-close):focus-visible {
 div:where(.swal2-container) button:where(.swal2-close)::-moz-focus-inner {
   border: 0;
 }
-div:where(.swal2-container) .swal2-html-container {
+div:where(.swal2-container) div:where(.swal2-html-container) {
   z-index: 1;
   justify-content: center;
   margin: 0;
@@ -431,6 +446,7 @@ div:where(.swal2-container) .swal2-html-container {
   text-align: center;
   word-wrap: break-word;
   word-break: break-word;
+  cursor: initial;
 }
 div:where(.swal2-container) input:where(.swal2-input),
 div:where(.swal2-container) input:where(.swal2-file),
