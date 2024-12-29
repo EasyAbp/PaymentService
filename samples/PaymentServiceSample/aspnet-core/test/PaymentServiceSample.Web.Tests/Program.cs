@@ -3,7 +3,9 @@ using PaymentServiceSample;
 using Volo.Abp.AspNetCore.TestBase;
 
 var builder = WebApplication.CreateBuilder();
-await builder.RunAbpModuleAsync<PaymentServiceSampleWebTestModule>();
+
+builder.Environment.ContentRootPath = GetWebProjectContentRootPathHelper.Get("PaymentServiceSample.Web.csproj");
+await builder.RunAbpModuleAsync<PaymentServiceSampleWebTestModule>(applicationName: "PaymentServiceSample.Web" );
 
 public partial class Program
 {
