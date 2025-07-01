@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
     <ProjectReference Include="..\..\..\EasyAbp.PaymentService\test\EasyAbp.PaymentService.EntityFrameworkCore.Tests\EasyAbp.PaymentService.EntityFrameworkCore.Tests.csproj" />
     <ProjectReference Include="..\EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore.Tests\EasyAbp.PaymentService.WeChatPay.EntityFrameworkCore.Tests.csproj" />
   </ItemGroup>
