@@ -7,8 +7,9 @@
 @inject IPageLayout PageLayout
 @inject IHtmlLocalizer<WeChatPayResource> L
 @{
-    PageLayout.Content.Title = L["PaymentRecord"].Value;
-    PageLayout.Content.BreadCrumb.Add(L["Menu:PaymentRecord"].Value);
+    PageLayout.Content.Title = L["Menu:PaymentRecord"].Value;
+    PageLayout.Content.BreadCrumb.Add(L["Menu:WeChatPayManagement"].Value);
+    PageLayout.Content.BreadCrumb.Add(L["Menu:PaymentService"].Value);
     PageLayout.Content.MenuItemName = "EasyAbpPaymentServiceWeChatPayPaymentRecord";
 }
 
@@ -22,13 +23,6 @@
 }
 
 <abp-card>
-    <abp-card-header>
-        <abp-row>
-            <abp-column size-md="_6">
-                <abp-card-title>@L["PaymentRecord"]</abp-card-title>
-            </abp-column>
-        </abp-row>
-    </abp-card-header>
     <abp-card-body>
         <abp-table striped-rows="true" id="PaymentRecordTable" class="nowrap">
             <thead>

@@ -10,10 +10,6 @@
 @inject IHtmlLocalizer<PrepaymentResource> L
 @inject IAuthorizationService Authorization
 @{
-    PageLayout.Content.Title = L["WithdrawalRecord"].Value;
-    PageLayout.Content.BreadCrumb.Add(L["Menu:WithdrawalRecord"].Value);
-    PageLayout.Content.MenuItemName = PrepaymentMenus.Account;
-    
     var title = L["WithdrawalRecord"].Value;
     if (!Model.UserName.IsNullOrEmpty())
     {
@@ -23,6 +19,12 @@
     {
         title += $" ({L[Model.AccountGroupName].Value})";
     }
+
+    PageLayout.Content.Title = title;
+    PageLayout.Content.BreadCrumb.Add(L["Menu:Account"].Value);
+    PageLayout.Content.BreadCrumb.Add(L["Menu:PrepaymentManagement"].Value);
+    PageLayout.Content.BreadCrumb.Add(L["Menu:PaymentService"].Value);
+    PageLayout.Content.MenuItemName = PrepaymentMenus.Account;
 }
 
 @section scripts
@@ -39,15 +41,6 @@
 </script>
 
 <abp-card>
-    <abp-card-header>
-        <abp-row>
-            <abp-column size-md="_6">
-                <abp-card-title>@L["WithdrawalRecord"]</abp-card-title>
-            </abp-column>
-            <abp-column size-md="_6" class="text-end">
-            </abp-column>
-        </abp-row>
-    </abp-card-header>
     <abp-card-body>
         <abp-table striped-rows="true" id="WithdrawalRecordTable" class="nowrap">
             <thead>

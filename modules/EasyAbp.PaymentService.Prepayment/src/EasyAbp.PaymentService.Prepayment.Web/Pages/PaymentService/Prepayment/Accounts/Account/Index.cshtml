@@ -10,8 +10,9 @@
 @inject IHtmlLocalizer<PrepaymentResource> L
 @inject IAuthorizationService Authorization
 @{
-    PageLayout.Content.Title = L["Account"].Value;
-    PageLayout.Content.BreadCrumb.Add(L["Menu:Account"].Value);
+    PageLayout.Content.Title = L["Menu:Account"].Value;
+    PageLayout.Content.BreadCrumb.Add(L["Menu:PrepaymentManagement"].Value);
+    PageLayout.Content.BreadCrumb.Add(L["Menu:PaymentService"].Value);
     PageLayout.Content.MenuItemName = PrepaymentMenus.Account;
 }
 
@@ -32,13 +33,6 @@
 {
     <form data-ajaxForm="true" asp-page="Index">
         <abp-card>
-            <abp-card-header>
-                <abp-row>
-                    <abp-column size-md="_6">
-                        <abp-card-title>@L["Account"]</abp-card-title>
-                    </abp-column>
-                </abp-row>
-            </abp-card-header>
             <abp-card-body>
                 <abp-input asp-for="UserId" />
             </abp-card-body>
@@ -51,15 +45,6 @@
 else
 {
     <abp-card>
-        <abp-card-header>
-            <abp-row>
-                <abp-column size-md="_6">
-                    <abp-card-title>@L["Account"]</abp-card-title>
-                </abp-column>
-                <abp-column size-md="_6" class="text-end">
-                </abp-column>
-            </abp-row>
-        </abp-card-header>
         <abp-card-body>
             <abp-table striped-rows="true" id="AccountTable" class="nowrap">
                 <thead>

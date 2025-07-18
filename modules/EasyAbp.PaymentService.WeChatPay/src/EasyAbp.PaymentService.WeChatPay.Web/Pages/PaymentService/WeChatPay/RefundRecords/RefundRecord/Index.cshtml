@@ -7,8 +7,9 @@
 @inject IPageLayout PageLayout
 @inject IHtmlLocalizer<WeChatPayResource> L
 @{
-    PageLayout.Content.Title = L["RefundRecord"].Value;
-    PageLayout.Content.BreadCrumb.Add(L["Menu:RefundRecord"].Value);
+    PageLayout.Content.Title = L["Menu:RefundRecord"].Value;
+    PageLayout.Content.BreadCrumb.Add(L["Menu:WeChatPayManagement"].Value);
+    PageLayout.Content.BreadCrumb.Add(L["Menu:PaymentService"].Value);
     PageLayout.Content.MenuItemName = "EasyAbpPaymentServiceWeChatPayRefundRecord";
 }
 
@@ -22,13 +23,6 @@
 }
 
 <abp-card>
-    <abp-card-header>
-        <abp-row>
-            <abp-column size-md="_6">
-                <abp-card-title>@L["RefundRecord"]</abp-card-title>
-            </abp-column>
-        </abp-row>
-    </abp-card-header>
     <abp-card-body>
         <abp-table striped-rows="true" id="RefundRecordTable" class="nowrap">
             <thead>
