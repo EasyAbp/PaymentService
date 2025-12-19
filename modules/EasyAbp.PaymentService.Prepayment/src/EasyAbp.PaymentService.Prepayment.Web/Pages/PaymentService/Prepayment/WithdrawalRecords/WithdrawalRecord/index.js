@@ -29,8 +29,8 @@ $(function () {
             { data: "accountId" },
             { data: "withdrawalMethod" },
             { data: "amount" },
-            { data: "completionTime" },
-            { data: "cancellationTime" },
+            { data: "completionTime", dataFormat: 'datetime' },
+            { data: "cancellationTime", dataFormat: 'datetime' },
             { data: "resultErrorCode" },
             { data: "resultErrorMessage" },
         ]

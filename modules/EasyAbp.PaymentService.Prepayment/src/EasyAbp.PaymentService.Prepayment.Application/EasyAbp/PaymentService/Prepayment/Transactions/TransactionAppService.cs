@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using EasyAbp.PaymentService.Prepayment.Accounts;
+using EasyAbp.PaymentService.Prepayment.Localization;
 using EasyAbp.PaymentService.Prepayment.Permissions;
 using EasyAbp.PaymentService.Prepayment.Transactions.Dtos;
 using Microsoft.AspNetCore.Authorization;
@@ -26,6 +27,9 @@ namespace EasyAbp.PaymentService.Prepayment.Transactions
         {
             _accountRepository = accountRepository;
             _repository = repository;
+
+            LocalizationResource = typeof(PrepaymentResource);
+            ObjectMapperContext = typeof(PaymentServicePrepaymentApplicationModule);
         }
 
         public override async Task<TransactionDto> GetAsync(Guid id)

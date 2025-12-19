@@ -35,8 +35,8 @@ $(function () {
             { data: "displayReason" },
             { data: "customerRemark" },
             { data: "staffRemark" },
-            { data: "completedTime" },
-            { data: "canceledTime" },
+            { data: "completedTime", dataFormat: 'datetime' },
+            { data: "canceledTime", dataFormat: 'datetime' },
         ]
     }));
 });

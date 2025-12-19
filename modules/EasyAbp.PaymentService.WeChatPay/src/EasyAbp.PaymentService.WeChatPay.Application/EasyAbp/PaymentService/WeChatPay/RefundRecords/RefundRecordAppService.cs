@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using EasyAbp.PaymentService.WeChatPay.Authorization;
+using EasyAbp.PaymentService.WeChatPay.Localization;
 using EasyAbp.PaymentService.WeChatPay.RefundRecords.Dtos;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
@@ -19,6 +20,9 @@ namespace EasyAbp.PaymentService.WeChatPay.RefundRecords
         public RefundRecordAppService(IRefundRecordRepository repository) : base(repository)
         {
             _repository = repository;
+
+            LocalizationResource = typeof(WeChatPayResource);
+            ObjectMapperContext = typeof(PaymentServiceWeChatPayApplicationModule);
         }
     }
 }

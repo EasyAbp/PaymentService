@@ -1,4 +1,5 @@
 using System;
+using EasyAbp.PaymentService.Prepayment.Localization;
 using EasyAbp.PaymentService.Prepayment.Permissions;
 using EasyAbp.PaymentService.Prepayment.WithdrawalRecords.Dtos;
 using Volo.Abp.Application.Dtos;
@@ -17,6 +18,9 @@ namespace EasyAbp.PaymentService.Prepayment.WithdrawalRecords
         public WithdrawalRecordAppService(IWithdrawalRecordRepository repository) : base(repository)
         {
             _repository = repository;
+
+            LocalizationResource = typeof(PrepaymentResource);
+            ObjectMapperContext = typeof(PaymentServicePrepaymentApplicationModule);
         }
     }
 }

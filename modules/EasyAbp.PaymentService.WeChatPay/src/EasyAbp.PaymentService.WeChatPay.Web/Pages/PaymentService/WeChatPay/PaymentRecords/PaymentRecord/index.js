@@ -36,7 +36,7 @@ $(function () {
             { data: "attach" },
             { data: "tradeState" },
             { data: "tradeStateDesc" },
-            { data: "successTime" },
+            { data: "successTime", dataFormat: 'datetime' },
             { data: "payer" },
             { data: "amount" },
             { data: "sceneInfo" },

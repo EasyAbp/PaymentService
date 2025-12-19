@@ -16,7 +16,7 @@ public class AutoMapperTests : WeChatPayApplicationTestBase
     [Fact]
     public async Task Should_Map_Payment_ExtraProperties()
     {
-        var objectMapper = ServiceProvider.GetRequiredService<IObjectMapper>();
+        var objectMapper = ServiceProvider.GetRequiredService<IObjectMapper<PaymentServiceApplicationModule>>();
 
         var payment = new Payment(Guid.NewGuid(), null, Guid.NewGuid(), "Free", "CNY", 0m, new List<PaymentItem>());
         

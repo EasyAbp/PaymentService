@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using EasyAbp.PaymentService.Authorization;
+using EasyAbp.PaymentService.Localization;
 using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.Payments.Dtos;
 using EasyAbp.PaymentService.Refunds.Dtos;
@@ -27,6 +28,9 @@ namespace EasyAbp.PaymentService.Refunds
         {
             _repository = repository;
             _paymentRepository = paymentRepository;
+
+            LocalizationResource = typeof(PaymentServiceResource);
+            ObjectMapperContext = typeof(PaymentServiceApplicationModule);
         }
         
         public override async Task<RefundDto> GetAsync(Guid id)

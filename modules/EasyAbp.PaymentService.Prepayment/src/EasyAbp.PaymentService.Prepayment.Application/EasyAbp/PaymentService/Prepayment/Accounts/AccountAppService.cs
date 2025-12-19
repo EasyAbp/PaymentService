@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.Prepayment.Permissions;
 using EasyAbp.PaymentService.Prepayment.Accounts.Dtos;
+using EasyAbp.PaymentService.Prepayment.Localization;
 using EasyAbp.PaymentService.Prepayment.Options;
 using EasyAbp.PaymentService.Prepayment.Options.AccountGroups;
 using EasyAbp.PaymentService.Prepayment.Transactions;
@@ -43,6 +44,9 @@ namespace EasyAbp.PaymentService.Prepayment.Accounts
             _distributedEventBus = distributedEventBus;
             _transactionRepository = transactionRepository;
             _repository = repository;
+
+            LocalizationResource = typeof(PrepaymentResource);
+            ObjectMapperContext = typeof(PaymentServicePrepaymentApplicationModule);
         }
 
         public override async Task<AccountDto> GetAsync(Guid id)

@@ -40,6 +40,9 @@ namespace EasyAbp.PaymentService.Payments
             _paymentServiceResolver = paymentServiceResolver;
             _refundRepository = refundRepository;
             _repository = repository;
+
+            LocalizationResource = typeof(PaymentServiceResource);
+            ObjectMapperContext = typeof(PaymentServiceApplicationModule);
         }
 
         public override async Task<PaymentDto> GetAsync(Guid id)

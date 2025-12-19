@@ -58,7 +58,7 @@ $(function () {
             { data: "accountId" },
             { data: "accountUserId" },
             { data: "amount" },
-            { data: "reviewTime" },
+            { data: "reviewTime", dataFormat: 'datetime' },
             { data: "reviewerUserId" },
             { data: "isApproved" },
         ]

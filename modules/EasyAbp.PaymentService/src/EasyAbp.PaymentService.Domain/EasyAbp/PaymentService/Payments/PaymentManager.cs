@@ -23,7 +23,7 @@ namespace EasyAbp.PaymentService.Payments
 
         public PaymentManager(
             IClock clock,
-            IObjectMapper objectMapper,
+            IObjectMapper<PaymentServiceDomainModule> objectMapper,
             IRefundRepository refundRepository,
             IPaymentRepository paymentRepository,
             IPaymentServiceResolver paymentServiceResolver,

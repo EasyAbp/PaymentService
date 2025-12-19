@@ -87,8 +87,8 @@ namespace PaymentServiceSample
                 }
             });
 
-            app.MapAbpStaticAssets();
             app.UseRouting();
+            app.MapAbpStaticAssets();
             app.UseAuthentication();
             app.UseAuthorization();
 
