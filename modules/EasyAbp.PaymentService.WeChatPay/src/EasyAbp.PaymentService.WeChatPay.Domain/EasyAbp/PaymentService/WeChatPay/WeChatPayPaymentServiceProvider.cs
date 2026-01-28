@@ -5,6 +5,7 @@ using EasyAbp.Abp.WeChat.Pay.Options;
 using EasyAbp.Abp.WeChat.Pay.Services;
 using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.AppPayment;
 using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Enums;
+using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.H5Payment;
 using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.JSPayment;
 using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.Models;
 using EasyAbp.Abp.WeChat.Pay.Services.BasicPayment.NativePayment;
@@ -234,10 +235,10 @@ namespace EasyAbp.PaymentService.WeChatPay
             string description,
             string notifyUrl, string outTradeNo)
         {
-            var appPaymentService =
-                await _abpWeChatPayServiceFactory.CreateAsync<AppPaymentService>(mchId);
+            var h5PaymentService =
+                await _abpWeChatPayServiceFactory.CreateAsync<H5PaymentService>(mchId);
 
-            var response = await appPaymentService.CreateOrderAsync(new CreateOrderRequest
+            var response = await h5PaymentService.CreateOrderAsync(new CreateOrderRequest
             {
                 AppId = appId,
                 MchId = mchId,
@@ -258,7 +259,7 @@ namespace EasyAbp.PaymentService.WeChatPay
             }
 
             payment.SetProperty("appid", appId);
-            payment.SetProperty("trade_type", TradeTypeEnum.Native);
+            payment.SetProperty("trade_type", TradeTypeEnum.MWeb);
             payment.SetProperty("prepay_id", response.PrepayId);
         }
 
