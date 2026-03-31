@@ -21,7 +21,7 @@ using PaymentServiceSample.EntityFrameworkCore;
 using PaymentServiceSample.Localization;
 using PaymentServiceSample.MultiTenancy;
 using PaymentServiceSample.Web.Menus;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Volo.Abp;
 using Volo.Abp.Account.Web;
 using Volo.Abp.AspNetCore.Authentication.JwtBearer;
