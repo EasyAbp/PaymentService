@@ -4,7 +4,7 @@ using EasyAbp.PaymentService.Localization;
 using EasyAbp.PaymentService.Web.Menus;
 using Volo.Abp.AspNetCore.Mvc.Localization;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
-using Volo.Abp.AutoMapper;
+using Volo.Abp.Mapperly;
 using Volo.Abp.Modularity;
 using Volo.Abp.UI.Navigation;
 using Volo.Abp.VirtualFileSystem;
@@ -14,7 +14,7 @@ namespace EasyAbp.PaymentService.Web
     [DependsOn(
         typeof(PaymentServiceApplicationContractsModule),
         typeof(AbpAspNetCoreMvcUiThemeSharedModule),
-        typeof(AbpAutoMapperModule)
+        typeof(AbpMapperlyModule)
         )]
     public class PaymentServiceWebModule : AbpModule
     {
@@ -43,11 +43,7 @@ namespace EasyAbp.PaymentService.Web
                 options.FileSets.AddEmbedded<PaymentServiceWebModule>();
             });
 
-            context.Services.AddAutoMapperObjectMapper<PaymentServiceWebModule>();
-            Configure<AbpAutoMapperOptions>(options =>
-            {
-                options.AddMaps<PaymentServiceWebModule>(validate: true);
-            });
+            context.Services.AddMapperlyObjectMapper<PaymentServiceWebModule>();
 
             Configure<RazorPagesOptions>(options =>
             {

@@ -1,7 +1,7 @@
 ﻿using EasyAbp.PaymentService.Payments;
 using EasyAbp.PaymentService.Refunds;
 using Microsoft.Extensions.DependencyInjection;
-using Volo.Abp.AutoMapper;
+using Volo.Abp.Mapperly;
 using Volo.Abp.Domain.Entities.Events.Distributed;
 using Volo.Abp.Modularity;
 using Volo.Abp.ObjectExtending;
@@ -9,7 +9,7 @@ using Volo.Abp.ObjectExtending;
 namespace EasyAbp.PaymentService
 {
     [DependsOn(
-        typeof(AbpAutoMapperModule),
+        typeof(AbpMapperlyModule),
         typeof(AbpObjectExtendingModule),
         typeof(PaymentServiceDomainSharedModule)
         )]
@@ -29,12 +29,7 @@ namespace EasyAbp.PaymentService
 
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            context.Services.AddAutoMapperObjectMapper<PaymentServiceDomainModule>();
-
-            Configure<AbpAutoMapperOptions>(options =>
-            {
-                options.AddProfile<PaymentServiceDomainAutoMapperProfile>(validate: false); // todo: https://github.com/abpframework/abp/issues/15404
-            });
+            context.Services.AddMapperlyObjectMapper<PaymentServiceDomainModule>();
         }
     }
 }

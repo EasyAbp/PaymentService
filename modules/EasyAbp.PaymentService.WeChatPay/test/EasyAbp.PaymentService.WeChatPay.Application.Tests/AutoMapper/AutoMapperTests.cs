@@ -18,15 +18,24 @@ public class AutoMapperTests : WeChatPayApplicationTestBase
     {
         var objectMapper = ServiceProvider.GetRequiredService<IObjectMapper<PaymentServiceApplicationModule>>();
 
-        var payment = new Payment(Guid.NewGuid(), null, Guid.NewGuid(), "Free", "CNY", 0m, new List<PaymentItem>());
-        
+        var userId = Guid.NewGuid();
+        var payment = new Payment(Guid.NewGuid(), null, userId, "Free", "CNY", 100m, new List<PaymentItem>());
+
         payment.SetProperty("appid", "myappid");
         payment.SetProperty("trade_type", "mytradetype");
         payment.SetProperty("prepay_id", "myprepayid");
         payment.SetProperty("code_url", "mycodeurl");
-        
+
         var dto = objectMapper.Map<Payment, PaymentDto>(payment);
-        
+
+        // Regular properties.
+        dto.Id.ShouldBe(payment.Id);
+        dto.UserId.ShouldBe(userId);
+        dto.PaymentMethod.ShouldBe("Free");
+        dto.Currency.ShouldBe("CNY");
+        dto.OriginalPaymentAmount.ShouldBe(100m);
+
+        // Extra properties.
         dto.GetProperty<string>("appid").ShouldBe("myappid");
         dto.GetProperty<string>("trade_type").ShouldBe("mytradetype");
         dto.GetProperty<string>("prepay_id").ShouldBe("myprepayid");
