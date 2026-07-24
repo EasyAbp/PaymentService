@@ -4,7 +4,7 @@ using EasyAbp.PaymentService.Prepayment.Localization;
 using EasyAbp.PaymentService.Prepayment.Web.Menus;
 using Volo.Abp.AspNetCore.Mvc.Localization;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
-using Volo.Abp.AutoMapper;
+using Volo.Abp.Mapperly;
 using Volo.Abp.Modularity;
 using Volo.Abp.UI.Navigation;
 using Volo.Abp.VirtualFileSystem;
@@ -16,7 +16,7 @@ namespace EasyAbp.PaymentService.Prepayment.Web
     [DependsOn(
         typeof(PaymentServicePrepaymentApplicationContractsModule),
         typeof(AbpAspNetCoreMvcUiThemeSharedModule),
-        typeof(AbpAutoMapperModule),
+        typeof(AbpMapperlyModule),
         typeof(AbpUsersAbstractionModule)
     )]
     public class PaymentServicePrepaymentWebModule : AbpModule
@@ -46,11 +46,7 @@ namespace EasyAbp.PaymentService.Prepayment.Web
                 options.FileSets.AddEmbedded<PaymentServicePrepaymentWebModule>();
             });
 
-            context.Services.AddAutoMapperObjectMapper<PaymentServicePrepaymentWebModule>();
-            Configure<AbpAutoMapperOptions>(options =>
-            {
-                options.AddMaps<PaymentServicePrepaymentWebModule>(validate: true);
-            });
+            context.Services.AddMapperlyObjectMapper<PaymentServicePrepaymentWebModule>();
 
             Configure<RazorPagesOptions>(options =>
             {

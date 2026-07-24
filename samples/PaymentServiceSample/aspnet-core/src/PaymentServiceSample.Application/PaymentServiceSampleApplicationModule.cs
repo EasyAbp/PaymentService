@@ -2,7 +2,6 @@
 using EasyAbp.PaymentService.Prepayment;
 using EasyAbp.PaymentService.WeChatPay;
 using Volo.Abp.Account;
-using Volo.Abp.AutoMapper;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
 using Volo.Abp.Modularity;
@@ -25,12 +24,5 @@ namespace PaymentServiceSample
         )]
     public class PaymentServiceSampleApplicationModule : AbpModule
     {
-        public override void ConfigureServices(ServiceConfigurationContext context)
-        {
-            Configure<AbpAutoMapperOptions>(options =>
-            {
-                options.AddMaps<PaymentServiceSampleApplicationModule>();
-            });
-        }
     }
 }

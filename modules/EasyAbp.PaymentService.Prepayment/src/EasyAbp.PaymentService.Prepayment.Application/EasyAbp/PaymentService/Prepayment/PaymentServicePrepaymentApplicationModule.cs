@@ -1,6 +1,6 @@
 ﻿using EasyAbp.PaymentService.Prepayment.ObjectExtending;
 using Microsoft.Extensions.DependencyInjection;
-using Volo.Abp.AutoMapper;
+using Volo.Abp.Mapperly;
 using Volo.Abp.Modularity;
 using Volo.Abp.Application;
 
@@ -10,7 +10,7 @@ namespace EasyAbp.PaymentService.Prepayment
         typeof(PaymentServicePrepaymentDomainModule),
         typeof(PaymentServicePrepaymentApplicationContractsModule),
         typeof(AbpDddApplicationModule),
-        typeof(AbpAutoMapperModule)
+        typeof(AbpMapperlyModule)
         )]
     public class PaymentServicePrepaymentApplicationModule : AbpModule
     {
@@ -21,11 +21,7 @@ namespace EasyAbp.PaymentService.Prepayment
 
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            context.Services.AddAutoMapperObjectMapper<PaymentServicePrepaymentApplicationModule>();
-            Configure<AbpAutoMapperOptions>(options =>
-            {
-                options.AddMaps<PaymentServicePrepaymentApplicationModule>(validate: false); // todo: https://github.com/abpframework/abp/issues/15404
-            });
+            context.Services.AddMapperlyObjectMapper<PaymentServicePrepaymentApplicationModule>();
         }
     }
 }

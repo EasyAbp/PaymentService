@@ -4,7 +4,7 @@ using EasyAbp.PaymentService.WeChatPay.Localization;
 using EasyAbp.PaymentService.WeChatPay.Web.Menus;
 using Volo.Abp.AspNetCore.Mvc.Localization;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
-using Volo.Abp.AutoMapper;
+using Volo.Abp.Mapperly;
 using Volo.Abp.Modularity;
 using Volo.Abp.UI.Navigation;
 using Volo.Abp.VirtualFileSystem;
@@ -14,7 +14,7 @@ namespace EasyAbp.PaymentService.WeChatPay.Web
     [DependsOn(
         typeof(PaymentServiceWeChatPayApplicationContractsModule),
         typeof(AbpAspNetCoreMvcUiThemeSharedModule),
-        typeof(AbpAutoMapperModule)
+        typeof(AbpMapperlyModule)
         )]
     public class PaymentServiceWeChatPayWebModule : AbpModule
     {
@@ -43,11 +43,7 @@ namespace EasyAbp.PaymentService.WeChatPay.Web
                 options.FileSets.AddEmbedded<PaymentServiceWeChatPayWebModule>();
             });
 
-            context.Services.AddAutoMapperObjectMapper<PaymentServiceWeChatPayWebModule>();
-            Configure<AbpAutoMapperOptions>(options =>
-            {
-                options.AddMaps<PaymentServiceWeChatPayWebModule>(validate: true);
-            });
+            context.Services.AddMapperlyObjectMapper<PaymentServiceWeChatPayWebModule>();
 
             Configure<RazorPagesOptions>(options =>
             {

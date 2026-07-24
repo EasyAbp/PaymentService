@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Volo.Abp.AutoMapper;
+using Volo.Abp.Mapperly;
 using Volo.Abp.Modularity;
 using Volo.Abp.Application;
 
@@ -9,17 +9,13 @@ namespace EasyAbp.PaymentService
         typeof(PaymentServiceDomainModule),
         typeof(PaymentServiceApplicationContractsModule),
         typeof(AbpDddApplicationModule),
-        typeof(AbpAutoMapperModule)
+        typeof(AbpMapperlyModule)
         )]
     public class PaymentServiceApplicationModule : AbpModule
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            context.Services.AddAutoMapperObjectMapper<PaymentServiceApplicationModule>();
-            Configure<AbpAutoMapperOptions>(options =>
-            {
-                options.AddMaps<PaymentServiceApplicationModule>(validate: false); // todo: https://github.com/abpframework/abp/issues/15404
-            });
+            context.Services.AddMapperlyObjectMapper<PaymentServiceApplicationModule>();
         }
     }
 }
