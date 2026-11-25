@@ -12,7 +12,7 @@ namespace EasyAbp.PaymentService.WeChatPay
 
         public virtual decimal ConvertToDecimalFee(int fee)
         {
-            return Convert.ToDecimal(fee / 100);
+            return fee / 100m;
         }
     }
 }
